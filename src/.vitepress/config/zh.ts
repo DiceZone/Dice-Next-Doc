@@ -13,7 +13,7 @@ export const zh = defineConfig({
     sidebar: sidebarGuide(),
 
     editLink: {
-      pattern: 'https://github.com/DiceZone/dice-next/edit/main/docs/src/:path',
+      pattern: 'https://github.com/DiceZone/Dice-Next-Doc/edit/main/src/:path',
       text: '在 GitHub 上编辑此页面'
     },
 
