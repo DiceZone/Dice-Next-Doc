@@ -1,0 +1,27 @@
+{
+  "name": "dicenext.docs",
+  "version": "3.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "dev": "vitepress dev src",
+    "docs:dev": "vitepress dev src",
+    "docs:build": "vitepress build src",
+    "docs:preview": "vitepress preview src"
+  },
+  "author": "",
+  "dependencies": {
+    "canvas-confetti": "^1.9.3",
+    "mermaid": "^11.10.1",
+    "vitepress": "^1.6.4",
+    "vitepress-plugin-mermaid": "^2.0.17",
+    "vue": "^3.5.20"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.10",
+    "@vitejs/plugin-vue": "^6.0.7",
+    "typescript": "^5.9.2"
+  }
+}

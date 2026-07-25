@@ -1,0 +1,112 @@
+/* ─── Hero 渐变标题 ─── */
+.VPHomeHero .main .text,
+.VPHomeHero .main .name span {
+    --tw-gradient-from: #a8d8ea;
+    --tw-gradient-via: #aa96da;
+    --tw-gradient-to: #fcbad3;
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to);
+    background-image: linear-gradient(to right, var(--tw-gradient-stops));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+/* ─── 品牌按钮粉色 ─── */
+.VPButton.brand {
+    background-color: #f472b6 !important;
+}
+
+/* ─── Glassmorphism 导航栏 ─── */
+.VPNavBar:not(.has-sidebar):not(.home.top) {
+    background-color: rgba(255, 255, 255, 0);
+    backdrop-filter: blur(10px);
+}
+
+/* ─── 搜索框透明 ─── */
+.DocSearch-Button {
+    background-color: rgba(255, 255, 255, 0);
+    backdrop-filter: blur(10px);
+}
+
+/* ─── Feature 玻璃卡片 ─── */
+.VPFeature {
+    border: none;
+    box-shadow: 0 10px 30px 0 rgb(0 0 0 / 15%);
+    background-color: transparent;
+}
+
+/* ─── 文档页侧边栏顶部透明 ─── */
+.curtain {
+    background-color: rgba(255, 255, 255, 0);
+    backdrop-filter: blur(10px);
+}
+
+@media (min-width: 960px) {
+    /* 文档页导航中间透明 */
+    .VPNavBar:not(.home.top) .content-body {
+        background-color: rgba(255, 255, 255, 0);
+        backdrop-filter: blur(10px);
+    }
+}
+
+/* ─── 移动端大纲栏透明 ─── */
+.VPLocalNav {
+    background-color: rgba(255, 255, 255, 0);
+    backdrop-filter: blur(10px);
+}
+
+/* ─── 搜索高亮 ─── */
+.VPLocalSearchBox #localsearch-list mark {
+    background-color: rgba(255, 138, 128, 0.3);
+}
+
+/* ─── 夜间模式 mermaid 图表样式修复 ─── */
+.dark .mermaid .label-container {
+    background-color: #1e1e1e !important;
+    fill: #1e1e1e !important;
+}
+
+.dark .mermaid .nodeLabel {
+    color: #e0e0e0 !important;
+}
+
+.dark .mermaid .edgeLabel {
+    background-color: #2d2d2d !important;
+    color: #e0e0e0 !important;
+}
+
+.dark .mermaid .cluster rect {
+    fill: #2d2d2d !important;
+    stroke: #555 !important;
+}
+
+.dark .mermaid .cluster-label .nodeLabel {
+    color: #e0e0e0 !important;
+}
+
+/* ─── 滚动条美化 ─── */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: #4b5563;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+}

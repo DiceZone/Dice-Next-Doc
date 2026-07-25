@@ -1,0 +1,816 @@
+[
+  {
+    "cmd": ".r",
+    "title": {
+      "zh-Hans": "掷骰",
+      "zh-Hant": "擲骰",
+      "en": "Roll"
+    },
+    "category": "通用",
+    "sources": [
+      "原版",
+      "青果",
+      "海豹"
+    ],
+    "example": ".r 3d6+2 攻击 / .rh 暗骰 / .r 2#d20",
+    "descKey": "help.topic.r",
+    "replyKeys": [
+      "dice.roll.result",
+      "dice.roll.result_reason",
+      "dice.roll.multi",
+      "dice.roll.multi_reason"
+    ],
+    "replyExamples": {
+      "dice.roll.result": ".r 3d6+2",
+      "dice.roll.result_reason": ".r 3d6+2 攻击",
+      "dice.roll.multi": ".r 2#d20",
+      "dice.roll.multi_reason": ".r 2#d20 连击"
+    }
+  },
+  {
+    "cmd": ".ww",
+    "title": {
+      "zh-Hans": "WOD 骰池",
+      "zh-Hant": "WOD 骰池",
+      "en": "WOD Pool"
+    },
+    "category": "通用",
+    "sources": [
+      "原版",
+      "青果",
+      "海豹"
+    ],
+    "example": ".ww 8 / .ww 8 7",
+    "descKey": "help.topic.ww",
+    "replyKeys": [
+      "dice.pool.result"
+    ]
+  },
+  {
+    "cmd": ".dx",
+    "title": {
+      "zh-Hans": "双十字",
+      "zh-Hant": "雙十字",
+      "en": "Double Cross"
+    },
+    "category": "通用",
+    "sources": [
+      "原版",
+      "青果",
+      "海豹"
+    ],
+    "example": ".dx 3c8 / .dx 5 10",
+    "descKey": "help.topic.dx",
+    "replyKeys": [
+      "dice.dx.usage"
+    ]
+  },
+  {
+    "cmd": ".rav",
+    "title": {
+      "zh-Hans": "对抗检定",
+      "zh-Hant": "對抗檢定",
+      "en": "Opposed Check"
+    },
+    "category": "COC",
+    "sources": [
+      "原版",
+      "青果",
+      "海豹"
+    ],
+    "example": ".rav 侦查 @某人",
+    "descKey": "help.topic.rav",
+    "replyKeys": [
+      "dice.rav.result"
+    ]
+  },
+  {
+    "cmd": ".ra",
+    "title": {
+      "zh-Hans": "技能检定",
+      "zh-Hant": "技能檢定",
+      "en": "Skill Check"
+    },
+    "category": "COC",
+    "sources": [
+      "原版",
+      "青果",
+      "海豹"
+    ],
+    "example": ".ra 侦查 / .ra 力量60 / .ra 困难侦查",
+    "descKey": "help.topic.ra",
+    "replyKeys": [
+      "dice.check.result",
+      "dice.check.result_reason"
+    ],
+    "replyExamples": {
+      "dice.check.result": ".ra 侦查",
+      "dice.check.result_reason": ".ra 侦查 找线索"
+    }
+  },
+  {
+    "cmd": ".rb/.rp",
+    "title": {
+      "zh-Hans": "奖励/惩罚骰",
+      "zh-Hant": "獎勵/懲罰骰",
+      "en": "Bonus/Penalty"
+    },
+    "category": "COC",
+    "sources": [
+      "原版",
+      "青果"
+    ],
+    "example": ".rb 侦查 / .rp2 60",
+    "descKey": "help.topic.rb",
+    "replyKeys": [
+      "dice.bp.bonus",
+      "dice.bp.penalty"
+    ],
+    "replyExamples": {
+      "dice.bp.bonus": ".rb 侦查",
+      "dice.bp.penalty": ".rp2 60"
+    }
+  },
+  {
+    "cmd": ".sc",
+    "title": {
+      "zh-Hans": "理智检定",
+      "zh-Hant": "理智檢定",
+      "en": "Sanity Check"
+    },
+    "category": "COC",
+    "sources": [
+      "原版",
+      "青果",
+      "海豹"
+    ],
+    "example": ".sc 1/1d6 / .sc 1d3/1d10 50",
+    "descKey": "help.topic.sc",
+    "replyKeys": [
+      "card.sc.result",
+      "card.sc.result_noloss"
+    ],
+    "replyExamples": {
+      "card.sc.result": ".sc 1/1d6",
+      "card.sc.result_noloss": ".sc 0/0"
+    }
+  },
+  {
+    "cmd": ".st",
+    "title": {
+      "zh-Hans": "人物卡",
+      "zh-Hant": "人物卡",
+      "en": "Character Card"
+    },
+    "category": "工具",
+    "sources": [
+      "原版",
+      "青果",
+      "海豹"
+    ],
+    "example": ".st 力量50 / .st show / .st show 40",
+    "descKey": "help.topic.st",
+    "replyKeys": [
+      "card.st.done"
+    ]
+  },
+  {
+    "cmd": ".pc",
+    "title": {
+      "zh-Hans": "多角色卡",
+      "zh-Hant": "多角色卡",
+      "en": "Multi-Card"
+    },
+    "category": "工具",
+    "sources": [
+      "原版",
+      "青果",
+      "海豹"
+    ],
+    "example": ".pc new 张三 / .pc list",
+    "descKey": "help.topic.pc",
+    "replyKeys": [
+      "pc.new",
+      "pc.bound",
+      "pc.deleted",
+      "pc.list",
+      "pc.usage"
+    ],
+    "replyExamples": {
+      "pc.new": ".pc new 张三",
+      "pc.bound": ".pc tag 张三",
+      "pc.deleted": ".pc del 张三",
+      "pc.list": ".pc list",
+      "pc.usage": ".pc"
+    }
+  },
+  {
+    "cmd": ".en",
+    "title": {
+      "zh-Hans": "技能成长",
+      "zh-Hant": "技能成長",
+      "en": "Skill Growth"
+    },
+    "category": "COC",
+    "sources": [
+      "原版",
+      "青果",
+      "海豹"
+    ],
+    "example": ".en 侦查 / .en 幸运 +1D3/1D10 / .en 侦查 聆听",
+    "descKey": "help.topic.en",
+    "replyKeys": [
+      "card.en.success",
+      "card.en.fail",
+      "card.en.fail_grow"
+    ],
+    "replyExamples": {
+      "card.en.success": ".en 侦查",
+      "card.en.fail": ".en 侦查",
+      "card.en.fail_grow": ".en 幸运 +1D3/1D10"
+    }
+  },
+  {
+    "cmd": ".coc",
+    "title": {
+      "zh-Hans": "COC 制卡",
+      "zh-Hant": "COC 制卡",
+      "en": "COC Gen"
+    },
+    "category": "COC",
+    "sources": [
+      "原版",
+      "青果",
+      "海豹"
+    ],
+    "example": ".coc / .coc 5",
+    "descKey": "help.topic.coc",
+    "replyKeys": [
+      "dice.coc.build"
+    ]
+  },
+  {
+    "cmd": ".ti/.li",
+    "title": {
+      "zh-Hans": "疯狂症状",
+      "zh-Hant": "瘋狂症狀",
+      "en": "Madness"
+    },
+    "category": "COC",
+    "sources": [
+      "原版",
+      "青果",
+      "海豹"
+    ],
+    "example": ".ti / .li",
+    "descKey": "help.topic.ti",
+    "replyKeys": [
+      "card.insane.temp",
+      "card.insane.long"
+    ],
+    "replyExamples": {
+      "card.insane.temp": ".ti",
+      "card.insane.long": ".li"
+    }
+  },
+  {
+    "cmd": ".setcoc",
+    "title": {
+      "zh-Hans": "COC 房规",
+      "zh-Hant": "COC 房規",
+      "en": "House Rule"
+    },
+    "category": "COC",
+    "sources": [
+      "原版",
+      "青果",
+      "海豹"
+    ],
+    "example": ".setcoc 0-7 / .setcoc show / .setcoc clr",
+    "descKey": "help.topic.setcoc",
+    "replyKeys": [
+      "setcoc.set",
+      "setcoc.show",
+      "setcoc.cleared"
+    ],
+    "replyExamples": {
+      "setcoc.set": ".setcoc 2",
+      "setcoc.show": ".setcoc show",
+      "setcoc.cleared": ".setcoc clr"
+    }
+  },
+  {
+    "cmd": ".dnd",
+    "title": {
+      "zh-Hans": "DND 制卡",
+      "zh-Hant": "DND 制卡",
+      "en": "DND Gen"
+    },
+    "category": "DND",
+    "sources": [
+      "原版",
+      "青果",
+      "海豹"
+    ],
+    "example": ".dnd / .dnd 3",
+    "descKey": "help.topic.dnd",
+    "replyKeys": [
+      "dice.dnd.build"
+    ]
+  },
+  {
+    "cmd": ".bot",
+    "title": {
+      "zh-Hans": "开关骰子",
+      "zh-Hant": "開關骰子",
+      "en": "Bot Toggle"
+    },
+    "category": "管理",
+    "sources": [
+      "原版",
+      "青果",
+      "海豹"
+    ],
+    "example": ".bot / .bot on / .bot off",
+    "descKey": "help.topic.bot",
+    "replyKeys": [
+      "bot.on",
+      "bot.off",
+      "bot.already_on",
+      "bot.already_off"
+    ],
+    "replyExamples": {
+      "bot.on": ".bot on",
+      "bot.off": ".bot off",
+      "bot.already_on": ".bot on",
+      "bot.already_off": ".bot off"
+    }
+  },
+  {
+    "cmd": ".group",
+    "title": {
+      "zh-Hans": "群设定",
+      "zh-Hant": "群設定",
+      "en": "Group Settings"
+    },
+    "category": "管理",
+    "sources": [
+      "原版"
+    ],
+    "example": ".group",
+    "descKey": "help.topic.group",
+    "replyKeys": [
+      "group.info"
+    ]
+  },
+  {
+    "cmd": ".ob",
+    "title": {
+      "zh-Hans": "旁观",
+      "zh-Hant": "旁觀",
+      "en": "Observe"
+    },
+    "category": "管理",
+    "sources": [
+      "原版",
+      "青果",
+      "海豹"
+    ],
+    "example": ".ob / .ob list / .ob exit",
+    "descKey": "help.topic.ob",
+    "replyKeys": [
+      "ob.on",
+      "ob.list"
+    ],
+    "replyExamples": {
+      "ob.on": ".ob",
+      "ob.list": ".ob list"
+    }
+  },
+  {
+    "cmd": ".send",
+    "title": {
+      "zh-Hans": "给Master留言",
+      "zh-Hant": "給Master留言",
+      "en": "Message Master"
+    },
+    "category": "管理",
+    "sources": [
+      "原版",
+      "青果",
+      "海豹"
+    ],
+    "example": ".send 反馈内容",
+    "descKey": "help.topic.send",
+    "replyKeys": [
+      "send.from_private"
+    ]
+  },
+  {
+    "cmd": ".log",
+    "title": {
+      "zh-Hans": "跑团日志",
+      "zh-Hant": "跑團日誌",
+      "en": "Game Log"
+    },
+    "category": "工具",
+    "sources": [
+      "原版",
+      "青果",
+      "海豹"
+    ],
+    "example": ".log new / .log on / .log end",
+    "descKey": "help.topic.log",
+    "replyKeys": [
+      "log.new",
+      "log.on",
+      "log.off",
+      "log.ended",
+      "log.exists",
+      "log.resumed"
+    ],
+    "replyExamples": {
+      "log.new": ".log new",
+      "log.on": ".log on",
+      "log.off": ".log off",
+      "log.ended": ".log end",
+      "log.exists": ".log new",
+      "log.resumed": ".log on 上次日志"
+    }
+  },
+  {
+    "cmd": ".jrrp",
+    "title": {
+      "zh-Hans": "今日人品",
+      "zh-Hant": "今日人品",
+      "en": "Daily Luck"
+    },
+    "category": "娱乐",
+    "sources": [
+      "原版",
+      "青果",
+      "海豹"
+    ],
+    "example": ".jrrp",
+    "descKey": "help.topic.jrrp",
+    "replyKeys": [
+      "fun.jrrp"
+    ]
+  },
+  {
+    "cmd": ".mrrp",
+    "title": {
+      "zh-Hans": "明日人品",
+      "zh-Hant": "明日人品",
+      "en": "Tomorrow's Luck"
+    },
+    "category": "娱乐",
+    "sources": [
+      "青果"
+    ],
+    "example": ".mrrp",
+    "descKey": "help.topic.mrrp",
+    "replyKeys": [
+      "fun.mrrp"
+    ]
+  },
+  {
+    "cmd": ".zrrp",
+    "title": {
+      "zh-Hans": "昨日人品",
+      "zh-Hant": "昨日人品",
+      "en": "Yesterday's Luck"
+    },
+    "category": "娱乐",
+    "sources": [
+      "青果"
+    ],
+    "example": ".zrrp",
+    "descKey": "help.topic.zrrp",
+    "replyKeys": [
+      "fun.zrrp"
+    ]
+  },
+  {
+    "cmd": ".name",
+    "title": {
+      "zh-Hans": "随机姓名",
+      "zh-Hant": "隨機姓名",
+      "en": "Random Name"
+    },
+    "category": "工具",
+    "sources": [
+      "原版",
+      "青果",
+      "海豹"
+    ],
+    "example": ".name / .name en 3",
+    "descKey": "help.topic.name",
+    "replyKeys": [
+      "fun.name.result"
+    ]
+  },
+  {
+    "cmd": ".nn",
+    "title": {
+      "zh-Hans": "改名",
+      "zh-Hant": "改名",
+      "en": "Rename"
+    },
+    "category": "工具",
+    "sources": [
+      "原版",
+      "青果",
+      "海豹"
+    ],
+    "example": ".nn 阿强 / .nn",
+    "descKey": "help.topic.nn",
+    "replyKeys": [
+      "fun.nn.set",
+      "fun.nn.clear"
+    ],
+    "replyExamples": {
+      "fun.nn.set": ".nn 阿强",
+      "fun.nn.clear": ".nn"
+    }
+  },
+  {
+    "cmd": ".set",
+    "title": {
+      "zh-Hans": "默认骰面",
+      "zh-Hant": "預設骰面",
+      "en": "Default Die"
+    },
+    "category": "通用",
+    "sources": [
+      "原版",
+      "青果",
+      "海豹"
+    ],
+    "example": ".set 20 / .set",
+    "descKey": "help.topic.set",
+    "replyKeys": [
+      "fun.set.done"
+    ]
+  },
+  {
+    "cmd": ".deck",
+    "title": {
+      "zh-Hans": "牌堆抽取",
+      "zh-Hant": "牌堆抽取",
+      "en": "Deck Draw"
+    },
+    "category": "娱乐",
+    "sources": [
+      "原版",
+      "青果",
+      "海豹"
+    ],
+    "example": ".deck / .draw 塔罗牌",
+    "descKey": "help.topic.deck",
+    "replyKeys": [
+      "deck.result"
+    ]
+  },
+  {
+    "cmd": ".lang",
+    "title": {
+      "zh-Hans": "语言切换",
+      "zh-Hant": "語言切換",
+      "en": "Language"
+    },
+    "category": "系统",
+    "sources": [
+      "DiceNext"
+    ],
+    "example": ".lang 简体 / .lang en / .lang clr",
+    "descKey": "help.topic.lang",
+    "replyKeys": [
+      "lang.current",
+      "lang.current_default",
+      "lang.cleared",
+      "lang.set",
+      "lang.set_user"
+    ],
+    "replyExamples": {
+      "lang.current": ".lang",
+      "lang.current_default": ".lang",
+      "lang.cleared": ".lang clr",
+      "lang.set": ".lang 简体",
+      "lang.set_user": ".lang en"
+    }
+  },
+  {
+    "cmd": ".sleep",
+    "title": {
+      "zh-Hans": "休息",
+      "zh-Hant": "休息",
+      "en": "Rest"
+    },
+    "category": "娱乐",
+    "sources": [
+      "原版"
+    ],
+    "example": ".sleep",
+    "descKey": "help.topic.sleep",
+    "replyKeys": [
+      "fun.sleep"
+    ]
+  },
+  {
+    "cmd": ".favor",
+    "title": {
+      "zh-Hans": "好感度",
+      "zh-Hant": "好感度",
+      "en": "Favor"
+    },
+    "category": "娱乐",
+    "sources": [
+      "原版"
+    ],
+    "example": "好感 / 好感排行 / .好感增加 50",
+    "descKey": "help.topic.favor",
+    "replyKeys": [
+      "favor.show",
+      "favor.rank",
+      "favor.grew",
+      "favor.added",
+      "favor.no_perm"
+    ],
+    "replyExamples": {
+      "favor.show": "好感",
+      "favor.rank": "好感排行",
+      "favor.grew": ".好感成长",
+      "favor.added": ".好感增加 50",
+      "favor.no_perm": ".好感增加 50"
+    }
+  },
+  {
+    "cmd": ".hiy",
+    "title": {
+      "zh-Hans": "检定统计",
+      "zh-Hant": "檢定統計",
+      "en": "Roll Stats"
+    },
+    "category": "工具",
+    "sources": [
+      "海豹",
+      "青果"
+    ],
+    "example": ".hiy / .hiy 侦查",
+    "descKey": "help.topic.hiy",
+    "replyKeys": [
+      "hiy.result",
+      "hiy.skill_result",
+      "hiy.empty"
+    ],
+    "replyExamples": {
+      "hiy.result": ".hiy",
+      "hiy.skill_result": ".hiy 侦查",
+      "hiy.empty": ".hiy"
+    }
+  },
+  {
+    "cmd": ".setsn",
+    "title": {
+      "zh-Hans": "设群名片属性",
+      "zh-Hant": "設群名片屬性",
+      "en": "Set Card Attrs"
+    },
+    "category": "工具",
+    "sources": [
+      "原版"
+    ],
+    "example": ".setsn hp san dex",
+    "descKey": "help.topic.setsn",
+    "replyKeys": [
+      "setsn.show",
+      "setsn.set",
+      "setsn.cleared",
+      "setsn.no_perm"
+    ],
+    "replyExamples": {
+      "setsn.show": ".setsn",
+      "setsn.set": ".setsn hp san dex",
+      "setsn.cleared": ".setsn clr",
+      "setsn.no_perm": ".setsn hp"
+    }
+  },
+  {
+    "cmd": ".sn",
+    "title": {
+      "zh-Hans": "设定群名片",
+      "zh-Hant": "設定群名片",
+      "en": "Set Group Card"
+    },
+    "category": "工具",
+    "sources": [
+      "海豹",
+      "青果"
+    ],
+    "example": ".sn / .sn off",
+    "descKey": "help.topic.sn",
+    "replyKeys": [
+      "sn.done",
+      "sn.cleared"
+    ],
+    "replyExamples": {
+      "sn.done": ".sn",
+      "sn.cleared": ".sn off"
+    }
+  },
+  {
+    "cmd": ".ri/.init",
+    "title": {
+      "zh-Hans": "先攻列表",
+      "zh-Hant": "先攻列表",
+      "en": "Initiative"
+    },
+    "category": "DND",
+    "sources": [
+      "原版",
+      "海豹",
+      "青果"
+    ],
+    "example": ".ri +2 / .init / .init clr",
+    "descKey": "help.topic.ri",
+    "replyKeys": [
+      "init.added",
+      "init.list",
+      "init.cleared"
+    ],
+    "replyExamples": {
+      "init.added": ".ri +2",
+      "init.list": ".init",
+      "init.cleared": ".init clr"
+    }
+  },
+  {
+    "cmd": ".welcome",
+    "title": {
+      "zh-Hans": "入群欢迎词",
+      "zh-Hant": "入群歡迎詞",
+      "en": "Welcome"
+    },
+    "category": "管理",
+    "sources": [
+      "原版",
+      "海豹",
+      "青果"
+    ],
+    "example": ".welcome 文本 / .welcome off",
+    "descKey": "help.topic.welcome",
+    "replyKeys": [
+      "welcome.set",
+      "welcome.off",
+      "welcome.none"
+    ],
+    "replyExamples": {
+      "welcome.set": ".welcome 欢迎新人",
+      "welcome.off": ".welcome off",
+      "welcome.none": ".welcome off"
+    }
+  },
+  {
+    "cmd": ".dismiss",
+    "title": {
+      "zh-Hans": "退群",
+      "zh-Hant": "退群",
+      "en": "Leave"
+    },
+    "category": "管理",
+    "sources": [
+      "原版",
+      "海豹"
+    ],
+    "example": ".dismiss",
+    "descKey": "help.topic.dismiss",
+    "replyKeys": [
+      "dismiss.bye"
+    ]
+  },
+  {
+    "cmd": ".rules",
+    "title": {
+      "zh-Hans": "规则速查",
+      "zh-Hant": "規則速查",
+      "en": "Rules Lookup"
+    },
+    "category": "工具",
+    "sources": [
+      "原版"
+    ],
+    "example": ".rules 大失败 / .rules coc:困难成功 / .ruleset dnd",
+    "descKey": "help.topic.rules",
+    "replyKeys": [
+      "rule.result",
+      "rule.not_found",
+      "rule.book_set"
+    ],
+    "replyExamples": {
+      "rule.result": ".rules coc:大失败",
+      "rule.not_found": ".rules 不存在的词条",
+      "rule.book_set": ".ruleset dnd"
+    }
+  }
+]
