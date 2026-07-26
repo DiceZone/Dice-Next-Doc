@@ -39,7 +39,7 @@ Dice!Next 采用插件式适配器架构。请在 [管理面板 → 适配器管
 | 字段 | 说明 |
 |------|------|
 | `name` | 适配器显示名 |
-| `type` | 协议类型，目前为 `onebot_v11` |
+| `type` | 协议类型；OneBot v11 使用 `onebot_v11` |
 | `connection_mode` | `forward_ws` / `reverse_ws` |
 | `endpoint` | 正向：OneBot 端的 WS 地址；反向：监听端口号 |
 | `access_token` | 连接令牌，留空则不携带（正向连接时以 `Authorization: Bearer` 头发送，与 OneBot 端保持一致） |
@@ -47,15 +47,35 @@ Dice!Next 采用插件式适配器架构。请在 [管理面板 → 适配器管
 
 ## 通过管理面板配置
 
-进入 **管理面板 → 适配器管理**，新建连接，选择正向 / 反向 WS，填入端点与 Token，保存并启用即可。面板修改即时生效，无需重启。
+进入 **管理面板 → 适配器管理**，新建连接并按平台填写连接信息，保存并启用即可。面板修改即时生效，无需重启。
 
 ## 多适配器
 
 可以添加多个适配器，连接不同账号或作为备用连接。
 
-## 协议扩展
+## QQ 官方机器人 2.0
 
-适配器架构便于未来扩展新协议（如 Discord，已在开发计划中），只需实现 `IAdapter` 接口。详见[适配器开发](/develop/adapter-dev)。
+在适配器管理页选择 **QQ 官方机器人 2.0**。可填写 AppID 与 AppSecret，或使用面板中的扫码绑定完成授权；连接建立后会通过官方 Gateway WebSocket 收发官方群和私聊消息。
+
+QQ 官方平台以 OpenID 标识用户和群聊，而不是直接提供真实 QQ 号。Dice!Next 可将已验证的 OneBot QQ 身份与官方 OpenID 关联，使人物卡、群设置和日志沿用同一记录；使用 `.info` 可查看当前窗口的身份和绑定指引。
+
+::: warning 群权限说明
+当前 QQ 官方 API 尚未提供可供验证的群成员角色字段。因此基础群管理指令暂可由官方群成员执行；骰主与信任级权限不会由官方 OpenID 获得。待平台开放角色鉴权后会恢复真实校验。
+:::
+
+## Discord
+
+在适配器管理页选择 **Discord**，填入 Discord Developer Portal 创建的 Bot Token 即可。适配器通过 Discord Gateway 接收服务器频道和私聊消息，支持 `@机器人 指令`、频道消息和私聊消息。
+
+请在 Discord Developer Portal 的 Bot 设置中开启 **Message Content Intent**，否则 Discord 不会向机器人提供普通消息正文。
+
+## KOOK
+
+在适配器管理页选择 **KOOK**，填入机器人 Token。适配器通过 KOOK Gateway 与 REST API 连接，支持服务器频道、私聊、文本与 KMarkdown 消息，以及 `@机器人 指令`。
+
+## 适配器开发
+
+适配器按统一接口接入，便于继续扩展其他平台。开发方式详见[适配器开发](/develop/adapter-dev)。
 
 ## 常见问题
 

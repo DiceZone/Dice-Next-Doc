@@ -3,7 +3,7 @@ import { defineConfig, type DefaultTheme } from 'vitepress'
 export const zh = defineConfig({
   lang: 'zh-CN',
   title: 'Dice!Next',
-  description: '新一代 TRPG 骰子机器人 · 基于 OneBot v11 协议 · 前后端分离 · 即插即用',
+  description: '新一代 TRPG 骰子机器人 · QQ / Discord / KOOK 多平台 · 前后端分离 · 即插即用',
 
   themeConfig: {
     logo: '/logo.svg',

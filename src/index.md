@@ -7,7 +7,7 @@ titleTemplate: 新一代 TRPG 骰子机器人
 hero:
   name: Dice!Next
   text: 新一代 TRPG 骰子机器人
-  tagline: 高性能 C++ 后端 · 现代 Web 管理面板 · 跨平台一键部署
+  tagline: 高性能 C++ 后端 · 现代 Web 管理面板 · 多平台跑团骰子机器人
   actions:
     - theme: brand
       text: 快速开始
@@ -40,10 +40,10 @@ features:
     details: 内置简体中文 / 繁體中文 / English / 日本語，可按群或按用户切换，支持自定义语言包，所有文案均可在面板编辑。
   - icon: 🔌
     title: 多协议适配
-    details: OneBot v11 开箱即用，正向 / 反向 WebSocket + HTTP 三种传输模式，插件式适配器架构便于扩展。
+    details: QQ 可通过 OneBot v11 或 QQ 官方机器人 2.0 接入；同时支持 Discord 与 KOOK。频道、私聊和 @ 指令均走统一骰子逻辑，适配器可在面板独立管理。
   - icon: 📦
     title: 即插即用
-    details: 单文件可执行，首次启动自动生成配置并进系统托盘，一键迁移旧版数据，Windows 解压即用。
+    details: 提供 Windows、Linux（amd64 / arm64）、macOS（arm64）构建与 Docker 镜像；首次启动自动生成配置，Windows 解压即用，并可一键迁移旧版数据。
 ---
 
 <Confetti />
