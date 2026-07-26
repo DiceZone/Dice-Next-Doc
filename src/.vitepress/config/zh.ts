@@ -119,9 +119,11 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
         { text: '牌堆与随机', link: '/deck' },
         { text: '规则速查', link: '/rules' },
         { text: '娱乐与互动', link: '/fun' },
+        { text: '团务管理', link: '/game' },
         { text: '跑团记录', link: '/log' },
         { text: '关键词回复', link: '/reply' },
-        { text: '群管与系统', link: '/admin' }
+        { text: '群管与系统', link: '/admin' },
+        { text: '帮助与语言', link: '/help' }
       ]
     },
     {
@@ -133,9 +135,16 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
         { text: '适配器管理', link: '/adapter-manager' },
         { text: '规则管理', link: '/rules' },
         { text: '回复管理', link: '/replies' },
+        { text: '指令列表', link: '/commands' },
         { text: '群组管理', link: '/groups' },
         { text: '玩家管理', link: '/players' },
+        { text: '权限设置', link: '/permissions' },
+        { text: '通知设置', link: '/notice' },
         { text: '定时任务', link: '/schedules' },
+        { text: '人工智能', link: '/ai' },
+        { text: '插件管理', link: '/plugins' },
+        { text: '帮助文档', link: '/help-docs' },
+        { text: '指令测试', link: '/playground' },
         { text: '系统设置', link: '/settings' }
       ]
     },
