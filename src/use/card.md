@@ -75,7 +75,7 @@ Dice!Next 内置完整的人物卡系统，支持多角色卡、随机生成、�
 .pc redo           → 先清空当前卡再重新生成
 ```
 
-模板可自定义：把 JSON 模板放进 `card-templates/`（或 `data/card-templates/`）目录即可追加新的生成参数，支持骰点公式、牌堆抽取文本与 JS 表达式，也可随[规则包](/develop/rulepack)分发。
+模板可自定义：把 JSON 模板放进 `card-templates/`（或 `data/card-templates/`）目录并重启骰娘，即可追加新的生成参数，支持骰点公式、牌堆抽取文本与 JS 表达式（暂不支持随[规则包](/develop/rulepack)分发，需手动放置）。
 
 ### `.pc lock` 卡片锁定
 

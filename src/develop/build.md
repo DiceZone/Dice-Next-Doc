@@ -11,16 +11,19 @@ drogon · nlohmann-json · sqlite-orm · spdlog · yaml-cpp
 quickjs-ng · lua (5.4.x) · zstd
 ```
 
-::: warning 同级依赖 onedice-cpp-lib
-`server/CMakeLists.txt` 通过 `add_subdirectory(../../onedice-cpp-lib)` 引入 OneDice 掷骰库，它需要与 `dice-next` **并列放在同一个父目录**下：
+::: warning 多仓布局：并列放在同一个父目录下
+Dice!Next 拆分为多个仓库，构建/打包脚本按**同级目录**互相寻找，请这样摆放：
 
 ```
 你的工作目录/
-├── dice-next/          ← 本仓库
-└── onedice-cpp-lib/    ← OneDice V1 表达式引擎（配套项目）
+├── Dice-Next/          ← 后端主仓（server/ CMake 工程、package.ps1）
+├── Dice-Next-WebUI/    ← Web 管理面板（Vite + React）
+├── Dice-Next-Doc/      ← 本文档站（VitePress）
+├── Dice-Next-Docker/   ← 容器化部署（可选）
+└── onedice-cpp-lib/    ← OneDice V1 表达式引擎（CMake 必需）
 ```
 
-缺少该目录时 CMake 配置会直接失败。
+`server/CMakeLists.txt` 通过 `add_subdirectory(../../onedice-cpp-lib)` 引入掷骰库，缺它 CMake 配置直接失败；打包脚本默认在同级找 `Dice-Next-WebUI/dist` 与 `Dice-Next-Doc`（也可用环境变量 `DICENEXT_WEB_ROOT` / `DICENEXT_DOC_ROOT` 指定别处）。
 :::
 
 ## Windows（推荐 / 已验证）
@@ -39,10 +42,10 @@ cd C:/dev/vcpkg
 
 ### 构建
 
-CMake 工程位于仓库的 `server/` 目录：
+CMake 工程位于主仓的 `server/` 目录：
 
 ```powershell
-cd dice-next
+cd Dice-Next
 
 cmake -B server/build -S server -DCMAKE_TOOLCHAIN_FILE=C:/dev/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release
 cmake --build server/build --config Release -j
@@ -68,8 +71,8 @@ Linux 构建在理论上可行（drogon / vcpkg 跨平台），但目前主要�
 
 ```bash
 git clone https://github.com/Microsoft/vcpkg.git ~/vcpkg && ~/vcpkg/bootstrap-vcpkg.sh
-# dice-next 与 onedice-cpp-lib 需在同一父目录下
-cd dice-next
+# Dice-Next 与 onedice-cpp-lib 需在同一父目录下
+cd Dice-Next
 cmake -B server/build -S server \
   -DCMAKE_TOOLCHAIN_FILE=$HOME/vcpkg/scripts/buildsystems/vcpkg.cmake \
   -DCMAKE_BUILD_TYPE=Release
@@ -78,21 +81,21 @@ cmake --build server/build -j$(nproc)
 
 ## 前端与文档
 
-前端管理面板与文档站用 npm 构建：
+前端管理面板与文档站是**独立仓库**，各自用 npm 构建：
 
 ```bash
-# 管理面板（构建产物 web/dist 由后端托管）
-cd web && npm install && npm run build      # 或 npm run dev 本地开发
+# 管理面板（Dice-Next-WebUI 仓；构建产物 dist/ 由后端托管、被打包脚本收集）
+cd Dice-Next-WebUI && npm install && npm run build   # 或 npm run dev 本地开发
 
-# 文档站（启用死链检查，改动后建议本地过一遍 build）
-cd docs && npm install
+# 文档站（Dice-Next-Doc 仓；启用死链检查，改动后建议本地过一遍 build）
+cd Dice-Next-Doc && npm install
 npm run docs:dev      # 本地预览
 npm run docs:build    # 构建（含死链检查）
 ```
 
 ## 打包
 
-仓库根的 `package.ps1` 一键打包 Windows release zip（输出到 `release/`，文件名含版本号 / 构建号 / 时间戳）：
+主仓 `Dice-Next` 根目录的 `package.ps1` 一键打包 Windows release zip（输出到 `release/`，文件名含版本号 / 构建号 / 时间戳；前端 dist 与文档数据默认从同级仓库收集）：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File package.ps1

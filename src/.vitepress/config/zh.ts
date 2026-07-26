@@ -154,6 +154,9 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
       collapsed: true,
       items: [
         { text: '系统架构', link: '/architecture' },
+        { text: '插件开发快速上手', link: '/plugin-quickstart' },
+        { text: 'JS 插件 API 参考', link: '/js-plugin-api' },
+        { text: 'Lua mod 参考', link: '/lua-mod' },
         { text: '规则包编写', link: '/rulepack' },
         { text: '实战：转化海豹规则插件', link: '/rulepack-example-fu' },
         { text: '从源码构建', link: '/build' },

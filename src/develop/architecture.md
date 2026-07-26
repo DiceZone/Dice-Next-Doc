@@ -87,7 +87,7 @@ server/src/
 └── common/                  # 日志 / 热重载 / 工具 / 版本
 ```
 
-前端在 `web/`（Vite + React，`src/pages`、`src/components`、`src/i18n`），文档站在 `docs/`（VitePress）。
+前端是独立仓库 `Dice-Next-WebUI`（Vite + React，`src/pages`、`src/components`、`src/i18n`），文档站是独立仓库 `Dice-Next-Doc`（VitePress）；后端主仓 `Dice-Next` 只含 `server/` 与打包脚本，编译另需同级的 `onedice-cpp-lib` 仓。
 
 ## 数据库拆分
 

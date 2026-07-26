@@ -29,12 +29,24 @@ git push origin feature/my-feature
 
 ## 开发环境
 
-后端 CMake 工程在 `server/`，前端在 `web/`，文档在 `docs/`。完整步骤见[从源码构建](/develop/build)，简要：
+项目拆分为多个仓库，按贡献内容选择要 clone 的仓：
+
+| 仓库 | 内容 |
+| --- | --- |
+| `Dice-Next` | 后端主仓（C++，CMake 工程在 `server/`） |
+| `Dice-Next-WebUI` | Web 管理面板（Vite + React + TS） |
+| `Dice-Next-Doc` | 本文档站（VitePress） |
+| `Dice-Next-Docker` | 容器化部署 |
+| `onedice-cpp-lib` | OneDice 表达式引擎（编译后端必需，与主仓放同级目录） |
+
+完整步骤与目录摆放见[从源码构建](/develop/build)，简要：
 
 ```bash
+# 后端（Dice-Next 仓；onedice-cpp-lib 需在同级目录）
 cmake -B server/build -S server -DCMAKE_TOOLCHAIN_FILE=<vcpkg>/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release
 cmake --build server/build --config Release
-cd web && npm install && npm run build
+# 前端（Dice-Next-WebUI 仓）
+npm install && npm run build
 ```
 
 ## ⚠️ 注意事项（重要）

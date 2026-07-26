@@ -13,9 +13,14 @@
 |------|------|
 | `.js` | JS 插件 |
 | `.lua` | Lua 单文件插件 |
-| `.zip` | Lua 目录型模组（含 reply 因果回复 / speech 模板 / 人物卡等） |
+| `.json` | Lua mod 描述档（纯查询类 mod，如技能/法术查询） |
+| `.zip` | Lua mod 包——支持原版「`<名>.json` + 目录」成对包、一包多个 mod 的整库压缩包、仅含 `model/`/`rulebook/` 的规则类包 |
 
-也可以直接把文件放进数据目录（Lua 放 `data/mod`）再点「重新加载」——重载会同时刷新 JS 与 Lua 两侧，无需重启。
+也可以直接把文件放进数据目录（Lua mod 放 `data/mod`，单文件插件放 `data/plugin`）再点「重新加载」——重载会同时刷新 JS 与 Lua 两侧，无需重启。停用与删除按钮会把 mod 的描述档与资源目录**成对**处理，不会留下残件。
+
+::: tip 想自己写插件？
+从[插件开发快速上手](/develop/plugin-quickstart)开始；完整 API 见 [JS 插件 API 参考](/develop/js-plugin-api)与 [Lua mod 参考](/develop/lua-mod)。
+:::
 
 ## 插件卡片
 
