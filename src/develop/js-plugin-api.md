@@ -232,6 +232,97 @@ const mctx = seal.getCtxProxyFirst(ctx, cmdArgs) || ctx;  // 有 @ 目标则代�
 | `seal.getVersion()` | `{version, versionSimple, versionCode, ...}` |
 | `seal.getEndPoints()` | 占位，恒空数组 |
 
+## 完整 JS API 清单与签名
+
+下面是当前运行时导出的完整公开 API。标为“兼容占位”的项目可以安全调用，但不具备海豹原版的完整行为；不要把它们当作功能已实现。
+
+### `seal.ext`、扩展与配置
+
+| API | 参数 / 返回值 | 状态与说明 |
+| --- | --- | --- |
+| `seal.ext.new(name, author, version)` | `ext` | 新建扩展对象，内含 `name`、`author`、`version`、`cmdMap`、`storageGet/Set`。 |
+| `seal.ext.register(ext)` | — | 注册扩展。 |
+| `seal.ext.find(name)` | `ext` 或 `null` | 查找已注册扩展。 |
+| `seal.ext.newCmdItemInfo()` | `cmd` | 新建指令对象。 |
+| `seal.ext.newCmdExecuteResult(solved?)` | `{solved, showHelp}` | solve 的标准返回值。 |
+| `seal.ext.registerTask(ext, type, value, fn, key?, desc?, group?)` | — | `daily` + `HH:MM`，或每日等价 `cron`：`M H * * *`。key/desc/group 当前仅为兼容参数。 |
+| `seal.ext.newConfigItem(key?, defaultValue?, desc?)` | ConfigItem | 批量配置入口；对象字段含 `key`、`defaultValue`、`type`、`description`。 |
+| `seal.ext.registerConfig(ext, ...items)` | — | 批量注册 ConfigItem。 |
+| `seal.ext.getConfig(ext, key)` | `{key, value}` | 返回配置对象；读取值使用 `.value`。 |
+| `seal.ext.registerStringConfig / registerIntConfig / registerFloatConfig / registerBoolConfig(ext, key, defaultValue, desc?)` | — | 注册对应类型配置。 |
+| `seal.ext.registerTemplateConfig(ext, key, defaultArray, desc?)` | — | 注册字符串数组模板配置。 |
+| `seal.ext.registerOptionConfig(ext, key, defaultValue, options, desc?)` | — | 注册下拉配置；options 为数组。 |
+| `seal.ext.getStringConfig / getIntConfig / getFloatConfig / getBoolConfig / getTemplateConfig / getOptionConfig(ext, key)` | 值 | 分别返回 string / number / number / boolean / string[] / string。 |
+| `seal.ext.unregisterConfig(ext)` | `0` | **兼容占位**，当前不移除已注册配置。 |
+
+### 消息、上下文与回复
+
+| API | 参数 / 返回值 | 说明 |
+| --- | --- | --- |
+| `seal.replyToSender(ctx, msg, text)` | — | 回到原消息窗口。 |
+| `seal.replyGroup(ctx, msg, text)` | — | 当前与 `replyToSender` 行为相同。 |
+| `seal.replyPerson(ctx, msg, text)` | — | 始终私聊发送者；临时 msg 没有 sender 时用 `ctx.player.userId`。 |
+| `seal.newMessage()` | `{}` | 新建空消息对象；按需补 `platform`、`messageType`、`groupId`、`sender` 后可配合回复 API 使用。 |
+| `seal.createTempCtx()` | `{player:{userId,name}, group:{groupId}}` | 新建最小上下文；需自行补齐 userId / groupId。 |
+| `seal.getCtxProxyFirst(ctx, msgOrArgs)` | `ctx` | 有 @ 目标时返回以第一个目标为 `ctx.player` 的代理；无目标时返回原 ctx。 |
+| `seal.getCtxProxyAtPos(ctx, msgOrArgs, pos)` | `ctx` | 同上，pos 从 0 开始。 |
+| `seal.setPlayerGroupCard(ctx, template)` | — | 设置当前发送者的群名片；需要平台具备该能力与足够权限。 |
+| `seal.applyPlayerGroupCardByTemplate(ctx, template)` | `0` | **兼容占位**，当前不执行设置。 |
+| `seal.memberBan(ctx, groupId, userId, durationSec?)` | — | 禁言；平台不支持或权限不足时不会生效。 |
+| `seal.memberKick(ctx, groupId, userId)` | — | 踢人；平台不支持或权限不足时不会生效。 |
+
+`ctx.player` 公开字段为 `userId`、`name`、`card`；`ctx.group` 为 `groupId`、`logOn`、`logCurName`。`msg.sender` 为 `userId`、`nickname`、`card`。跨平台 ID 均为字符串，不能假定为 QQ 数字。
+
+### 变量、人物卡、牌堆与规则
+
+| API | 参数 / 返回值 | 说明 |
+| --- | --- | --- |
+| `seal.setVarInt(ctx, name, value)` / `seal.vars.intSet(...)` | — | 写整数变量；无 `$` 前缀时写当前人物卡属性。 |
+| `seal.setVarStr(ctx, name, value)` / `seal.vars.strSet(...)` | — | 写字符串变量；无 `$` 前缀时写人物卡文本/表达式属性。 |
+| `seal.vars.intGet(ctx, name)` | `[number, ok]` | 读整数变量或人物卡数值。 |
+| `seal.vars.strGet(ctx, name)` | `[string, ok]` | 读字符串变量、人物卡表达式属性；`$t玩家` / `$t玩家_RAW` 返回显示名。 |
+| `seal.vars.computedGet / computedSet(ctx, name, value?)` | 同 `strGet/strSet` | **兼容近似**：目前等价于字符串读写，不执行完整 RollVM 计算。 |
+| `seal.format(ctx, text)` / `seal.formatTmpl(ctx, text)` | string | `{$变量}` 求值，`{1d100}` 等骰式由真实掷骰引擎处理。 |
+| `seal.deck.draw(ctx, name, shuffle?)` | `{exists, err, result}` | 抽公共牌堆；shuffle 参数当前保留兼容。 |
+| `seal.deck.reload()` | `0` | **兼容占位**，牌堆由管理面板或文件重载。 |
+| `seal.gameSystem.newTemplate(jsonText)` / `newTemplateByYaml(yamlText)` | `{}` | 标记规则类插件，并登记属性模板供 `.st/.ra` 使用。 |
+| `seal.coc.newRule()` / `newRuleCheckResult()` | `{}` | **兼容占位**，只返回空对象。 |
+| `seal.coc.registerRule(rule)` | `0` | 标记规则类插件；不会接管内置 `.ra` 判定内核。 |
+
+### 名单、工具与标准全局
+
+| API | 参数 / 返回值 | 说明 |
+| --- | --- | --- |
+| `seal.ban.addBan(ctx, id, place?, reason?)` | — | 加入黑名单；place 当前仅兼容参数。 |
+| `seal.ban.addTrust(ctx, id, place?, reason?)` | — | 加入信任/白名单。 |
+| `seal.ban.remove(ctx, id)` | — | 移出名单。 |
+| `seal.ban.getList()` | array | 返回全部名单记录。 |
+| `seal.ban.getUser(id)` | object 或 `null` | 返回单条名单记录。 |
+| `seal.getVersion()` | object | 返回 `version`、`versionSimple`、`versionCode`、`versionDetail`。 |
+| `seal.getEndPoints()` | `[]` | **兼容占位**，当前不会列出端点。 |
+| `setTimeout(fn, ms)` / `setInterval(fn, ms)` | timerId | 真定时器；间隔最小 200ms，最多 256 个活动计时器。 |
+| `clearTimeout(id)` / `clearInterval(id)` | — | 取消计时器。 |
+| `fetch(url, options?)` | `Promise<Response>` | Response 含 `ok`、`status`、`statusText`、异步 `text()` / `json()`；底层请求仍会同步阻塞。 |
+| `btoa(text)` / `atob(text)` | string | Base64 编解码；`atob` 接受 `data:*;base64,` 前缀。 |
+| `console.log/info/warn/error(...values)` | — | 写入运行日志。 |
+
+## 最小可运行示例：读取群名片与人物卡
+
+```javascript
+const ext = seal.ext.new('api-example', 'Dice!Next', '1.0.0');
+const cmd = seal.ext.newCmdItemInfo();
+cmd.name = '卡片示例';
+cmd.help = '读取群名片和侦查值';
+cmd.solve = (ctx, msg) => {
+  const card = ctx.player.card || '未设群名片';
+  const [spot, exists] = seal.vars.intGet(ctx, '侦查');
+  seal.replyToSender(ctx, msg, `${ctx.player.name}（${card}）\n侦查：${exists ? spot : '未记录'}`);
+  return seal.ext.newCmdExecuteResult(true);
+};
+ext.cmdMap['卡片示例'] = cmd;
+seal.ext.register(ext);
+```
+
 ## 当前限制一览
 
 写插件前值得知道的边界（也是我们的改进路线）：

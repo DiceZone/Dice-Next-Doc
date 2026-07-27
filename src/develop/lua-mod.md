@@ -97,7 +97,8 @@ end
 | 成员 | 说明 |
 | --- | --- |
 | `msg.uid` / `msg.gid` | 发送者 / 群（数字；私聊 gid 为 0） |
-| `msg.nick` / `msg.card` | 昵称 / 群名片 |
+| `msg.nick` | 发送者的 QQ 昵称（群名片不覆盖它） |
+| `msg.card` | **当前群名片**；未设置或私聊时为 `""` |
 | `msg.fromMsg` | 消息全文；`msg.suffix` 为前缀触发的剩余文本 |
 | `msg:echo(text)` | 模板展开后主动发消息 |
 | `msg:format(text)` | 只做模板展开 |
@@ -107,6 +108,15 @@ end
 | `msg.game` | 团务对象（`.game new` 开团后可用，`msg.game:message(text)` 群发） |
 | `msg.at` | `[CQ:at,qq=发送者]` 文本 |
 
+```lua
+-- 当前消息发送者的群名片；没有时回退 QQ 昵称
+local displayName = msg.card ~= '' and msg.card or msg.nick
+
+-- 当前群绑定人物卡上的属性。第五个参数 false 可强制把 gid 当群作用域，
+-- 对 Discord、KOOK、QQ 官方机器人等非数字群 ID 必须带上。
+local skill = getPlayerCardAttr(msg.uid, msg.gid, '侦查', -1, false)
+```
+
 ## 全局函数参考
 
 **基础**
@@ -114,7 +124,7 @@ end
 | 函数 | 说明 |
 | --- | --- |
 | `log(...)` | 写运行日志 |
-| `ranint(a, b)` | [a,b] 随机整数 |
+| `ranint(a?, b?)` | 闭区间随机整数；默认 `ranint()` 为 1–100，a>b 时自动交换 |
 | `getDiceDir()` | 数据目录绝对路径（`data`） |
 | `getDiceQQ()` | 骰娘账号 |
 | `mkDirs(path)` | 建目录 |
@@ -135,9 +145,10 @@ end
 | 函数 | 说明 |
 | --- | --- |
 | `getPlayerCard(uid, scope)` | 返回 Actor 对象：`pc.hp` 直接读写、`pc:set{...}` 批量、`pc:rollDice(exp)`、`pc:lock('w'/'r')` / `pc:unlock` |
-| `getPlayerCardAttr(uid, scope, attr, default)` | 读属性；`scope` 传卡名字符串则按卡名 |
-| `setPlayerCardAttr(uid, scope, attr, val)` | 写属性 |
-| `lockPlayerCard / unlockPlayerCard / isPlayerCardLocked` | 卡片锁定（`w` 锁写 `.st`，`r` 锁读 `.st show`） |
+| `getPlayerCardAttr(uid, scope, attr, default?, byName?)` | 读属性；缺失时返回 default（未给则 `nil`）。`scope` 为数字/`nil` 时是群作用域，为字符串时默认视为卡名；`byName=false` 可强制按群读取，适合非数字群 ID |
+| `setPlayerCardAttr(uid, scope, attr, val, byName?)` | 写属性；val 为 `nil` 时删除属性 |
+| `lockPlayerCard(uid, scope, key, byName?)` / `unlockPlayerCard(...)` | 锁定/解锁卡片属性；`key='w'` 锁 `.st` 写入，`key='r'` 锁 `.st show` 读取 |
+| `isPlayerCardLocked(uid, scope, key, byName?)` | 返回布尔值 |
 
 **动作**
 
@@ -158,6 +169,69 @@ end
 | `Set`、`getSelfData(名)`、`Actor`、`GameTable` | 原版对象层：SelfData 落盘 `data/self_data/<名>.json`；GameTable 对接 `.game` 团务 |
 
 `package.path` 已包含 mod 目录与 `data/plugin`，跨插件 `require` 可用（如社区常见的 `lua_useful_extensions`）。
+
+## 完整 Lua API 签名与对象方法
+
+本节列出当前运行时直接注册的全部 Lua 插件 API。参数名中的 `?` 表示可选；除特别说明外，写入函数没有返回值。
+
+### 数据、消息与平台
+
+| API | 参数与返回值 | 说明 |
+| --- | --- | --- |
+| `getUserConf(uid, key, default?)` | 值 / `default` / `nil` | 用户持久化配置。uid 为 `nil` 时返回 `{[uid]=value}` 表，可用于排行。 |
+| `setUserConf(uid, key, value)` | — | value 为 `nil` 时删除。 |
+| `getGroupConf(gid, key, default?)` / `setGroupConf(gid, key, value)` | 值 / — | 群持久化配置；value 为 `nil` 时删除。 |
+| `getUserToday(uid, key, default?)` / `setUserToday(uid, key, value)` | 值 / — | 按当前日期隔离；未命中默认返回 0。 |
+| `sendMsg(text, gid?, uid?)` | — | gid 非空时向群发；gid 为空时向 uid 私聊。 |
+| `eventMsg(text, gid?, uid?)` | — | 将文本作为该用户发出的消息重新进入完整指令/回复管线。也可传 `{fromMsg=, gid=, uid=}`。 |
+| `drawDeck(gid, uid, deckName)` | 字符串 | 原版三参数签名；也兼容 `drawDeck(deckName)`。当前抽取公共牌堆。 |
+| `askExtra({action=..., params=...})` | 表 / 字符串 / `nil` | 透传原生平台动作。当前只有 OneBot 适配器可响应；QQ 官方、Discord、KOOK 返回 `nil`。 |
+| `getDiceQQ()` / `getDiceDir()` | 字符串 | 骰娘自身账号 / `data` 目录绝对路径。 |
+| `mkDirs(path)` | boolean | 创建目录。 |
+| `loadLua(name)` | 脚本返回值 | 执行当前 mod 的 `script/<name>.lua`；`a.b` 映射为 `script/a/b.lua`。 |
+| `sleepTime(ms)` | — | 兼容空操作，不会阻塞消息线程。 |
+
+`key` 以 `&` 开头时，会先解析当前 mod 的 speech 词条；这是旧版 mod 常见的字段别名写法。
+
+### 人物卡与 Actor
+
+```lua
+-- 当前群绑定卡：QQ 数字群可用 getPlayerCard；跨平台请用 Actor 明确传 false。
+local pc = Actor(msg.uid, msg.gid, false)
+local hp = pc:get('hp') or 0
+pc:set('hp', hp - 1)
+pc.san = 60                 -- 字段赋值等价于 set
+
+-- 按卡名读取（第二参是字符串卡名，或显式 byName=true）
+local named = getPlayerCardAttr(msg.uid, '备用卡', 'hp', 0, true)
+```
+
+| Actor API | 参数与返回值 | 说明 |
+| --- | --- | --- |
+| `Actor(uid, scope, byName?)` | Actor | 建立人物卡代理；跨平台群 ID 请显式传 `false`，使 scope 按群处理。 |
+| `getPlayerCard(uid, scope)` | Actor | 旧版兼容入口：数字 scope 按群处理，字符串 scope 按卡名处理。 |
+| `pc:get(key)` / `pc[key]` | 值或 `nil` | 读数值、文本或关联属性原文。 |
+| `pc:set(key, value)` / `pc:set({key=value,...})` / `pc[key]=value` | 单字段返回 1；批量返回写入数 | 写入真实人物卡；value 为 `nil` 删除。 |
+| `pc:rollDice(exp?)` | `{expr,sum,expansion}` 或 `{expr,error}` | 使用人物卡 `__DefaultDiceExp` / `__DefaultDice`；未设置时为 `1D` / d100。 |
+| `pc:lock(key)` / `pc:unlock(key)` / `pc:locked(key)` | boolean | 操作真实人物卡的字段锁。 |
+
+### 内置对象与编码库
+
+| API | 参数与返回值 | 说明 |
+| --- | --- | --- |
+| `getSelfData(name)` | SelfData 代理 | 自动持久化到 `data/self_data/<name>.json`；支持 `obj[key]`、`obj:get(key, default)`、`obj:set(key,value)`、`obj:__totable()`。 |
+| `Set.new()` | Set 对象 | `:add(value)`、`:remove(value)`、`:in(value)`、`:totable()`；`#set` 返回元素数量。 |
+| `GameTable(gid)` / `msg.game` | 团务表代理 | `obj[key]` 与 `obj:set(key,value)` 读写当前团共享数据，`:message(text)` 向当前群发消息。未开团时 `msg.game` 为 `nil`。 |
+| `msg.user` / `msg.grp` | 用户/群配置代理 | `obj[key]` 读，`obj[key]=value` 写；`msg.user.nick/name/nn` 为昵称，`msg.user.trust` 为信任等级。 |
+| `json.encode(value)` / `json.decode(text)` | string / Lua 值或 `nil` | 同时支持 `require('json')`。 |
+| `yaml.parse(text)` / `yaml.dump(value)` | Lua 值或 `nil` / string | 同时支持 `require('yaml')`。 |
+| `http.get(url)` | `ok, body` | HTTP GET；受外置 API 开关与白名单限制。 |
+| `http.post(url, body, headers?)` | `ok, body` | body 为 table 时自动 JSON 编码；headers 可为 table 或字符串。 |
+| `http.urlEncode(text)` / `http.urlDecode(text)` | string | URL 编解码。 |
+
+::: warning 内部 `__dnx_*` 函数
+`__dnx_roll`、`__dnx_fmt`、`__dnx_conf`、`__dnx_sd_load`、`__dnx_sd_save` 是对象层的内部桥接函数。它们会随实现调整，插件应使用本页的 `Actor`、`msg:format`、`GameTable`、`getSelfData` 等公开 API。
+:::
 
 ## 模板词条（speech）
 
