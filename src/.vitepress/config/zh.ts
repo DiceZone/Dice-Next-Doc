@@ -170,7 +170,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
       base: '/other',
       collapsed: true,
       items: [
-        { text: '开发计划', link: '/roadmap' },
+        { text: '开发计划', link: '/other/roadmap' },
         { text: '关于项目', link: '/about' },
         { text: '更新日志', link: '/changelog' },
         { text: '开源协议', link: '/license' }

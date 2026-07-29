@@ -64,6 +64,7 @@ Dice!Next 使用 `config/` 目录保存 **JSON 格式**配置；首次启动会�
 | `console_start_hidden` | 启动即隐藏控制台最小化到托盘（默认 `true`） |
 | `api_enabled` / `api_whitelist` / `api_timeout` | 回复中 `{api:URL}` 外部请求开关、域名白名单与超时 |
 | `image_send` | 图片发送方式（`base64` 或经 `host` 中转） |
+| `message_format` | 出站消息形式：`traditional`（默认）或 `card`；详见[适配器配置](/config/adapter#富消息与卡片模式) |
 | `save_log_images` | 跑团日志是否落地消息内图片 |
 | `logsite_url` / `logsite_format` | 日志站上传地址（留空 = 官方站）与协议格式 |
 | `aliases` | 账号别名（`{platform, alias, main}`，`.alias` 指令维护） |
