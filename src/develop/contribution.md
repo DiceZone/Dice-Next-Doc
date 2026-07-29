@@ -71,7 +71,7 @@ Dice!Next 的核心目标是让老 Dice! 用户**无痛迁移**。新增 / 改�
 
 ### 4. 绝不提交密钥 / Token
 
-OneBot Access Token、API Key 等**不得**写进提交。`config/default_config.json` 是运行时自动生成的，注意不要把含真实 Token 的本地配置提交上去。
+OneBot Access Token、API Key 等**不得**写进提交。`config/` 是运行时自动生成的本地目录，注意不要把含真实 Token 的本地配置提交上去。
 
 ### 5. Windows 平台坑
 

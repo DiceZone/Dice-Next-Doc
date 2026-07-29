@@ -35,9 +35,9 @@ Dice!Next 是 Dice! 的全新重构版本，从原有的 CoolQ 单体 DLL 架构
 | 场景 | 要求 |
 |------|------|
 | 运行发行包 | 64 位 Windows 10 / 11（压缩包已附带常见运行库） |
-| Linux / Docker | 计划中 |
+| Linux / Docker | Linux amd64 / arm64 发行包与 Docker 镜像；具体部署见发行说明 |
 | 从源码构建 | Visual Studio 2019+ / cmake ≥ 3.20 / vcpkg，见[从源码构建](/develop/build) |
 
 ## 版本说明
 
-当前为 **Dice!Next 3.0 盲测（Beta）** 阶段，以 AGPLv3 协议开源。欢迎反馈问题。
+当前为 **Dice!Next 3.0 公测（Beta）** 阶段，以 AGPLv3 协议开源。欢迎通过 [GitHub Issues](https://github.com/DiceZone/Dice-Next/issues) 反馈问题。

@@ -83,7 +83,7 @@ server/src/
 ├── platform/                # 平台特定（Windows 托盘 / 自启 / 崩溃诊断 / 单实例）
 ├── i18n/                    # 多语言引擎 + 语言解析
 ├── message/                 # CQ 码解析 / 消息格式化
-├── config/                  # 配置管理（config/default_config.json）
+├── config/                  # 配置管理（config/*.json，按功能区拆分）
 └── common/                  # 日志 / 热重载 / 工具 / 版本
 ```
 

@@ -1,6 +1,6 @@
 # 从源码构建
 
-面向开发者，说明如何从源码编译 Dice!Next 后端。后端为 C++20（CMake + vcpkg），目前在 **Windows + MSVC** 上验证。
+面向开发者，说明如何从源码编译 Dice!Next 后端、构建 WebUI 与生成本地测试包。后端为 C++20（CMake + vcpkg）；日常本地开发推荐 Windows + MSVC，Release 工作流会构建 Windows、Linux 与 macOS 发行包。
 
 ## 依赖
 
@@ -61,7 +61,7 @@ cd server
 .\build\Release\dice-next-server.exe
 ```
 
-启动后访问 `http://localhost:18088`（首次运行自动生成 `config/default_config.json`）。
+启动后访问 `http://localhost:18088`。首次运行会生成 `config/` 目录和 `data/` 目录；管理端口在 `config/server.json` 的 `port` 修改。
 
 ## Linux
 
@@ -93,17 +93,21 @@ npm run docs:dev      # 本地预览
 npm run docs:build    # 构建（含死链检查）
 ```
 
-## 打包
+## 生成 Windows 本地测试包
 
 主仓 `Dice-Next` 根目录的 `package.ps1` 一键打包 Windows release zip（输出到 `release/`，文件名含版本号 / 构建号 / 时间戳；前端 dist 与文档数据默认从同级仓库收集）：
 
 ```powershell
+$env:DICENEXT_WEB_ROOT = "..\Dice-Next-WebUI"
+$env:DICENEXT_DOC_ROOT = "..\Dice-Next-Doc"
 powershell -ExecutionPolicy Bypass -File package.ps1
 ```
 
+默认输出到主仓的 `release/`。可通过 `DICENEXT_RELEASE_ROOT` 指定输出目录。脚本会检查后端构建产物与 WebUI 的 `dist/`，缺少任一项时会停止，避免生成不完整的测试包。
+
 打包内容：
 
-- `dice-next-server.exe` + 依赖 DLL + MSVC 运行库（免装 VC++ 运行库）
+- `dice-next.exe` 启动管理器、`app/dice-next-core.exe` 服务核心，以及 `lib/` 中集中收纳的依赖与 MSVC 运行库
 - `i18n/` 语言包
 - `data/`：`decks/`、`rules/`、`helpdoc/`、`card-templates/`、`rulepacks/`、自带示例 JS 插件
 - `docs/roadmap.md`、`docs/commands.json`（开发计划页 / 指令表页数据源）

@@ -1,6 +1,6 @@
 # 适配器配置
 
-Dice!Next 采用插件式适配器架构。请在 [管理面板 → 适配器管理](/manage/adapter-manager) 里添加和管理适配器——**适配器保存在数据库中**，配置文件里的 `adapters` 数组仅在首次启动（数据库为空）时用于播种初始适配器。
+Dice!Next 采用插件式适配器架构。请在 [管理面板 → 适配器管理](/manage/adapter-manager) 里添加和管理适配器；配置会保存到 `config/adapters.json`，并在下次启动时直接加载。
 
 ## OneBot v11 适配器
 
@@ -19,7 +19,7 @@ Dice!Next 采用插件式适配器架构。请在 [管理面板 → 适配器管
 
 ## 配置文件字段
 
-首次启动播种用的 `adapters` 数组写在 `config/default_config.json`：
+适配器数组写在 `config/adapters.json`：
 
 ```json
 {

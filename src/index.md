@@ -7,14 +7,14 @@ titleTemplate: 新一代 TRPG 骰子机器人
 hero:
   name: Dice!Next
   text: 新一代 TRPG 骰子机器人
-  tagline: 高性能 C++ 后端 · 现代 Web 管理面板 · 多平台跑团骰子机器人
+  tagline: 高性能 C++ 后端 · 现代 Web 管理面板 · 多平台跑团骰子机器人 · 公测进行中
   actions:
     - theme: brand
       text: 快速开始
       link: /guide/quickstart
     - theme: alt
-      text: GitHub
-      link: https://github.com/DiceZone/dice-next
+      text: 提交 Issue
+      link: https://github.com/DiceZone/Dice-Next/issues
   image:
     src: /logo.svg
     alt: Dice!Next Logo

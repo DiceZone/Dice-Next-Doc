@@ -8,8 +8,10 @@
 
 ```
 DiceNext/
-├── dice-next-server.exe
-├── config/            # 配置（default_config.json，首次启动自动生成）
+├── dice-next.exe       # Windows 启动管理器
+├── app/                # 服务核心（Windows 为 dice-next-core.exe）
+├── lib/                # Windows 运行依赖
+├── config/             # 配置（按功能区拆分的 JSON，首次启动自动生成）
 ├── data/              # 你的数据都在这里
 │   ├── dice.db        #   主数据库（另有 cards.db / logs.db / chat.db 等）
 │   ├── decks/         #   牌堆

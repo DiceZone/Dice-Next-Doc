@@ -1,55 +1,34 @@
 # 基础配置
 
-Dice!Next 的配置文件是 **JSON 格式**：`config/default_config.json`，**首次启动时自动生成**。
+Dice!Next 使用 `config/` 目录保存 **JSON 格式**配置；首次启动会生成各功能区的文件。
 
 绝大多数配置都能在 [Web 管理面板](/manage/dashboard) 里修改，通常无需手动改文件。首次生成的文件只含少量键，**很多键在你通过面板设置后才会出现在文件里**（缺省时使用内置默认值）。
 
 ## 配置文件结构
 
-顶层共七大节：`server` / `adapters` / `dice` / `events` / `i18n` / `log` / `hot_reload`。结构示例（节选，实际以自动生成的为准）：
+每个功能区单独保存，面板保存和通过热重载校验的手工修改都会回写对应文件：
+
+| 文件 | 内容 |
+| --- | --- |
+| `server.json` | WebUI/API 监听、数据库路径与日志级别 |
+| `webui.json` | WebUI 登录设置 |
+| `adapters.json` | 适配器连接配置 |
+| `dice.json` | 骰子行为、骰主、规则与 AI 设置 |
+| `events.json` | 好友、群邀请与事件策略 |
+| `i18n.json` | 默认语言与平台语言偏好 |
+| `backup.json` | 手动与自动备份设置 |
+| `hot_reload.json` | 配置与资源热重载设置 |
+
+以下示例按文件展示（实际以启动后生成的内容为准）：
 
 ```json
+// config/server.json
 {
-  "server": {
-    "host": "0.0.0.0",
-    "port": 18088,
-    "api_key": "auto-generated-uuid",
-    "db_path": "./data/dice.db",
-    "log_level": "info"
-  },
-  "adapters": [
-    {
-      "name": "MyQQBot",
-      "type": "onebot_v11",
-      "connection_mode": "forward_ws",
-      "endpoint": "ws://127.0.0.1:3001/",
-      "access_token": "",
-      "enabled": true
-    }
-  ],
-  "dice": {
-    "command_prefixes": [".", "。", "!", "！"],
-    "masters": [ { "platform": "onebot_v11", "id": "你的QQ号" } ],
-    "summon_word": "",
-    "whitelist_only": false,
-    "silent_global": false,
-    "rules": {
-      "default_dice_sides": 100,
-      "coc_enabled": true,
-      "dnd_enabled": true
-    }
-  },
-  "events": {
-    "friend_policy": "manual",
-    "group_invite_policy": "manual",
-    "poke_enabled": true
-  },
-  "i18n": {
-    "default_locale": "zh-Hans",
-    "platform_defaults": { "onebot_v11": "zh-Hans", "discord": "en" }
-  },
-  "log": { "raw_events": false },
-  "hot_reload": { "enabled": true, "watch_paths": ["./config", "./data"] }
+  "host": "0.0.0.0",
+  "port": 18088,
+  "api_key": "",
+  "db_path": "./data/dice.db",
+  "log_level": "info"
 }
 ```
 
@@ -66,7 +45,7 @@ Dice!Next 的配置文件是 **JSON 格式**：`config/default_config.json`，**
 | `log_level` | 日志级别 trace/debug/info/warn/error | `info` |
 
 ::: tip WebUI 登录密码与 api_key 的关系
-管理面板的**访问控制以「WebUI 登录密码」为准**：在面板的 WebUI 设置页设置后，所有 `/api/*` 请求都需要先登录（`webui.password` 键，Cookie 会话 7 天有效；留空 = 关闭鉴权）。`server.api_key` 是面板请求随附的 API 密钥，供对接场景使用，不能代替登录密码。
+管理面板的**访问控制以「WebUI 登录密码」为准**：在面板的 WebUI 设置页设置后，所有 `/api/*` 请求都需要先登录（`webui.password` 键，留空 = 关闭鉴权）。登录时可选择“信任此设备 30 天”，可信会话仅保存在本机 `config/webui_sessions.json`。`server.api_key` 是面板请求随附的 API 密钥，供对接场景使用，不能代替登录密码。
 :::
 
 ### dice
@@ -128,7 +107,7 @@ Dice!Next 的配置文件是 **JSON 格式**：`config/default_config.json`，**
 
 ### adapters
 
-适配器数组**仅在首次启动（数据库为空）时**用于播种：之后适配器保存在数据库中，以[适配器管理](/manage/adapter-manager)页为准。字段说明见[适配器配置](/config/adapter)。
+适配器配置保存在 `config/adapters.json`。以[适配器管理](/manage/adapter-manager)页保存后的内容为准；手工修改时也请保持该文件为有效 JSON。字段说明见[适配器配置](/config/adapter)。
 
 ## 热加载与重启
 
@@ -140,4 +119,4 @@ Dice!Next 的配置文件是 **JSON 格式**：`config/default_config.json`，**
 
 ## 升级提示
 
-升级时解压新包完整覆盖即可，配置文件 `config/default_config.json` 不在压缩包内、不会被覆盖，详见[安装部署](/guide/install#升级)。
+升级时解压新包完整覆盖即可；`config/` 目录不在发行包内，不会被覆盖，详见[安装部署](/guide/install#升级)。

@@ -144,7 +144,7 @@ HTTP 上报模式**未实现**（配置该模式会报错提示）。断线自�
 
 ## 适配器配置
 
-适配器配置（写入 `config/default_config.json` 的 `adapters`，或通过面板新建）：
+适配器配置（写入 `config/adapters.json`，或通过面板新建）：
 
 ```json
 {

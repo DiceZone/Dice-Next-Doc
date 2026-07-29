@@ -39,5 +39,4 @@ Dice!Next 主程序打包时会读取本仓库根目录的 `roadmap.md` 与 `com
 
 ## 反馈
 
-项目仍在内部开发和测试阶段。问题、建议和测试反馈请通过 QQ 群 `933145116` 提交。
-
+项目目前处于公测（Beta）阶段。问题和功能建议请优先通过 [GitHub Issues](https://github.com/DiceZone/Dice-Next/issues) 提交；也欢迎加入 QQ 群 `933145116` 交流与反馈。

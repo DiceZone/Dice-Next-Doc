@@ -4,9 +4,9 @@
 
 ## 1. 下载并启动 Dice!Next
 
-下载 Windows 盲测包，解压后双击 `dice-next-server.exe`。
+下载对应平台的公测包；Windows 解压后双击 `dice-next.exe`。
 
-首次启动会自动生成配置文件 `config/default_config.json` 与 SQLite 数据库（`data/dice.db` 等）。程序默认最小化到**系统托盘**运行，右下角有气泡提示。
+首次启动会自动生成 `config/` 配置目录与 SQLite 数据库（`data/dice.db` 等）。Windows 程序默认最小化到**系统托盘**运行，右下角有气泡提示。
 
 详细说明请参考[安装部署](/guide/install)。
 
