@@ -66,6 +66,23 @@
     ]
   },
   {
+    "cmd": ".ba/.bav",
+    "title": {
+      "zh-Hans": "BRP 检定与对抗",
+      "zh-Hant": "BRP 檢定與對抗",
+      "en": "BRP Checks"
+    },
+    "category": "BRP",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": ".ba 侦查 / .bav 力量 体型",
+    "descKey": "help.topic.ba",
+    "replyPrefixes": [
+      "dice.brp."
+    ]
+  },
+  {
     "cmd": ".rav",
     "title": {
       "zh-Hans": "对抗检定",
@@ -162,7 +179,7 @@
       "zh-Hant": "人物卡",
       "en": "Character Card"
     },
-    "category": "工具",
+    "category": "人物卡",
     "sources": [
       "原版",
       "青果",
@@ -181,7 +198,7 @@
       "zh-Hant": "多角色卡",
       "en": "Multi-Card"
     },
-    "category": "工具",
+    "category": "人物卡",
     "sources": [
       "原版",
       "青果",
@@ -202,7 +219,27 @@
       "pc.deleted": ".pc del 张三",
       "pc.list": ".pc list",
       "pc.usage": ".pc"
-    }
+    },
+    "replyPrefixes": [
+      "pc."
+    ]
+  },
+  {
+    "cmd": ".npc",
+    "title": {
+      "zh-Hans": "NPC 角色卡",
+      "zh-Hant": "NPC 角色卡",
+      "en": "NPC Cards"
+    },
+    "category": "人物卡",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": ".npc new 木乃伊 / .npc 木乃伊 st hp8 / .npc 木乃伊 ra 侦查",
+    "descKey": "help.topic.npc",
+    "replyPrefixes": [
+      "npc."
+    ]
   },
   {
     "cmd": ".en",
@@ -370,7 +407,7 @@
       "zh-Hant": "旁觀",
       "en": "Observe"
     },
-    "category": "管理",
+    "category": "跑团",
     "sources": [
       "原版",
       "青果",
@@ -394,7 +431,7 @@
       "zh-Hant": "給Master留言",
       "en": "Message Master"
     },
-    "category": "管理",
+    "category": "互动",
     "sources": [
       "原版",
       "青果",
@@ -404,6 +441,9 @@
     "descKey": "help.topic.send",
     "replyKeys": [
       "send.from_private"
+    ],
+    "replyPrefixes": [
+      "send."
     ]
   },
   {
@@ -413,7 +453,7 @@
       "zh-Hant": "跑團日誌",
       "en": "Game Log"
     },
-    "category": "工具",
+    "category": "跑团",
     "sources": [
       "原版",
       "青果",
@@ -436,7 +476,27 @@
       "log.ended": ".log end",
       "log.exists": ".log new",
       "log.resumed": ".log on 上次日志"
-    }
+    },
+    "replyPrefixes": [
+      "log."
+    ]
+  },
+  {
+    "cmd": ".game",
+    "title": {
+      "zh-Hans": "团务管理",
+      "zh-Hant": "團務管理",
+      "en": "Game Session"
+    },
+    "category": "跑团",
+    "sources": [
+      "原版"
+    ],
+    "example": ".game new 团名 / .game open 团号 / .game stat / .game over",
+    "descKey": "help.topic.game",
+    "replyPrefixes": [
+      "game."
+    ]
   },
   {
     "cmd": ".jrrp",
