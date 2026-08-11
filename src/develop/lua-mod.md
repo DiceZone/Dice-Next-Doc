@@ -96,7 +96,8 @@ end
 
 | 成员 | 说明 |
 | --- | --- |
-| `msg.uid` / `msg.gid` | 发送者 / 群（数字；私聊 gid 为 0） |
+| `msg.uid` / `msg.gid` | 发送者 / 群 ID；QQ 通常为数字，其他平台可能是字符串；私聊 gid 为 0 |
+| `msg.platform` | 当前消息平台（如 `onebot_v11`、`qq_official`、`discord`、`kook`） |
 | `msg.nick` | 发送者的 QQ 昵称（群名片不覆盖它） |
 | `msg.card` | **当前群名片**；未设置或私聊时为 `""` |
 | `msg.fromMsg` | 消息全文；`msg.suffix` 为前缀触发的剩余文本 |
@@ -140,6 +141,23 @@ local skill = getPlayerCardAttr(msg.uid, msg.gid, '侦查', -1, false)
 
 键以 `&` 开头会先经 speech 词条解析成实际字段名（原版惯用法）。
 
+**好感度**（与内置 `.favor` 是同一份数据）
+
+| 函数 | 说明 |
+| --- | --- |
+| `getFavor(uid, platform?)` | 读取好感度；尚无记录时返回 `0`。消息处理期间可省略 platform。 |
+| `setFavor(uid, value, platform?)` | 覆写好感度并返回写入后的值。 |
+| `addFavor(uid, delta, platform?)` | 增减好感度并返回变更后的值。 |
+| `growFavor(uid, platform?)` | 按内置概率规则成长，返回 `success, delta, value`；未成长时 delta 为 `0`。 |
+
+```lua
+local before = getFavor(msg.uid)
+local after = addFavor(msg.uid, 5)
+local success, delta, value = growFavor(msg.uid)
+```
+
+`msg_order`、`reply echo` 及其 `loadLua()` 调用链会自动继承 `msg.platform`。若在插件加载阶段或其他脱离消息的代码中调用，必须显式传入 platform；平台或 uid 缺失时返回 `nil`（`growFavor` 返回 `false, 0, 0`），且不会写入数据。
+
 **人物卡**（与 `.st` 是同一份卡）
 
 | 函数 | 说明 |
@@ -159,6 +177,13 @@ local skill = getPlayerCardAttr(msg.uid, msg.gid, '侦查', -1, false)
 | `drawDeck(gid, uid, 牌堆名)` | 抽公共牌堆 |
 | `loadLua(名字)` | 执行 `script/<名字>.lua`（支持 `a.b` 点分路径） |
 | `askExtra(table)` | 平台扩展查询（透传到适配器，如 OneBot 动作） |
+
+OneBot v11 下，`sendMsg` 发送的文本或事件钩子直接返回的文本可以包含 CQ 音乐码；Dice!Next 会将其转换为音乐卡片消息段，而不是显示 CQ 码原文。支持平台曲目和自定义音乐卡片，例如：
+
+```lua
+sendMsg('[CQ:music,type=qq,id=歌曲ID]', msg.gid, msg.uid)
+sendMsg('[CQ:music,type=custom,url=跳转链接,audio=音频链接,title=标题,content=简介,image=封面链接]', msg.gid, msg.uid)
+```
 
 **内置库**
 
@@ -182,6 +207,10 @@ local skill = getPlayerCardAttr(msg.uid, msg.gid, '侦查', -1, false)
 | `setUserConf(uid, key, value)` | — | value 为 `nil` 时删除。 |
 | `getGroupConf(gid, key, default?)` / `setGroupConf(gid, key, value)` | 值 / — | 群持久化配置；value 为 `nil` 时删除。 |
 | `getUserToday(uid, key, default?)` / `setUserToday(uid, key, value)` | 值 / — | 按当前日期隔离；未命中默认返回 0。 |
+| `getFavor(uid, platform?)` | number / `nil` | 读取内置好感度；消息调用栈中自动继承当前平台。 |
+| `setFavor(uid, value, platform?)` | number / `nil` | 覆写内置好感度并返回新值。 |
+| `addFavor(uid, delta, platform?)` | number / `nil` | 增减内置好感度并返回新值。 |
+| `growFavor(uid, platform?)` | `success, delta, value` | 按内置好感度成长规则判定并写回。 |
 | `sendMsg(text, gid?, uid?)` | — | gid 非空时向群发；gid 为空时向 uid 私聊。 |
 | `eventMsg(text, gid?, uid?)` | — | 将文本作为该用户发出的消息重新进入完整指令/回复管线。也可传 `{fromMsg=, gid=, uid=}`。 |
 | `drawDeck(gid, uid, deckName)` | 字符串 | 原版三参数签名；也兼容 `drawDeck(deckName)`。当前抽取公共牌堆。 |

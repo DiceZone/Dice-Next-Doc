@@ -145,6 +145,27 @@ Dice!Next 内嵌 quickjs-ng 引擎（支持现代 ES 语法与 `async/await`）�
 
 `seal.format(ctx, s)` / `seal.formatTmpl`：对字符串做模板求值——`{$变量}` 查变量、`{骰点表达式}` 走掷骰引擎（如 `{1d100}`）。
 
+## 好感度系统（seal.favor）
+
+这些接口与内置 `.favor` / `好感` 指令直接读写同一份 `player_profiles.favor`，不会生成插件私有副本。平台从 `ctx.endPoint.platform` 自动取得；省略 `userId` 时操作 `ctx.player.userId`。
+
+| API | 返回值 | 说明 |
+| --- | --- | --- |
+| `seal.favor.get(ctx, userId?)` | `number` 或 `null` | 读取当前好感度；尚无记录时为 `0`。 |
+| `seal.favor.set(ctx, value, userId?)` | `number` 或 `null` | 覆写好感度，并返回写入后的值。 |
+| `seal.favor.add(ctx, delta, userId?)` | `number` 或 `null` | 增减好感度，并返回变更后的值。 |
+| `seal.favor.grow(ctx, userId?)` | `{success, delta, value}` 或 `null` | 执行与 `.favor grow` 相同的概率成长；未成长时 `success=false`、`delta=0`。 |
+
+```javascript
+const before = seal.favor.get(ctx);
+const after = seal.favor.add(ctx, 5);
+const growth = seal.favor.grow(ctx);
+seal.replyToSender(ctx, msg,
+  `好感：${before} → ${after}\n成长：${growth.success ? `+${growth.delta}` : '未成长'}`);
+```
+
+传入第三方平台的用户 ID 时必须使用该平台原始字符串 ID，不能假定所有账号都是数字 QQ。目标 `userId` 或上下文平台缺失时返回 `null`，且不会写入数据。
+
 ## 插件存储（ext.storage）
 
 ```javascript
@@ -283,6 +304,10 @@ const mctx = seal.getCtxProxyFirst(ctx, cmdArgs) || ctx;  // 有 @ 目标则代�
 | `seal.vars.strGet(ctx, name)` | `[string, ok]` | 读字符串变量、人物卡表达式属性；`$t玩家` / `$t玩家_RAW` 返回显示名。 |
 | `seal.vars.computedGet / computedSet(ctx, name, value?)` | 同 `strGet/strSet` | **兼容近似**：目前等价于字符串读写，不执行完整 RollVM 计算。 |
 | `seal.format(ctx, text)` / `seal.formatTmpl(ctx, text)` | string | `{$变量}` 求值，`{1d100}` 等骰式由真实掷骰引擎处理。 |
+| `seal.favor.get(ctx, userId?)` | number / `null` | 读取内置好感度。 |
+| `seal.favor.set(ctx, value, userId?)` | number / `null` | 覆写内置好感度并返回新值。 |
+| `seal.favor.add(ctx, delta, userId?)` | number / `null` | 增减内置好感度并返回新值。 |
+| `seal.favor.grow(ctx, userId?)` | `{success, delta, value}` / `null` | 按内置好感度成长规则判定并写回。 |
 | `seal.deck.draw(ctx, name, shuffle?)` | `{exists, err, result}` | 抽公共牌堆；shuffle 参数当前保留兼容。 |
 | `seal.deck.reload()` | `0` | **兼容占位**，牌堆由管理面板或文件重载。 |
 | `seal.gameSystem.newTemplate(jsonText)` / `newTemplateByYaml(yamlText)` | `{}` | 标记规则类插件，并登记属性模板供 `.st/.ra` 使用。 |
