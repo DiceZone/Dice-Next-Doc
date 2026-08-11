@@ -1,12 +1,12 @@
 [
   {
-    "cmd": ".r",
+    "cmd": ".r/.rh/.rs",
     "title": {
       "zh-Hans": "掷骰",
       "zh-Hant": "擲骰",
       "en": "Roll"
     },
-    "category": "通用",
+    "category": "掷骰",
     "sources": [
       "原版",
       "青果",
@@ -34,7 +34,7 @@
       "zh-Hant": "WOD 骰池",
       "en": "WOD Pool"
     },
-    "category": "通用",
+    "category": "掷骰",
     "sources": [
       "原版",
       "青果",
@@ -47,13 +47,13 @@
     ]
   },
   {
-    "cmd": ".dx",
+    "cmd": ".dx/.rdx",
     "title": {
       "zh-Hans": "双十字",
       "zh-Hant": "雙十字",
       "en": "Double Cross"
     },
-    "category": "通用",
+    "category": "掷骰",
     "sources": [
       "原版",
       "青果",
@@ -83,7 +83,7 @@
     ]
   },
   {
-    "cmd": ".rav",
+    "cmd": ".rav/.rcv",
     "title": {
       "zh-Hans": "对抗检定",
       "zh-Hant": "對抗檢定",
@@ -102,7 +102,7 @@
     ]
   },
   {
-    "cmd": ".ra",
+    "cmd": ".ra/.rc/.rad",
     "title": {
       "zh-Hans": "技能检定",
       "zh-Hant": "技能檢定",
@@ -552,13 +552,13 @@
     ]
   },
   {
-    "cmd": ".name",
+    "cmd": ".name/.gn",
     "title": {
       "zh-Hans": "随机姓名",
       "zh-Hant": "隨機姓名",
       "en": "Random Name"
     },
-    "category": "工具",
+    "category": "娱乐",
     "sources": [
       "原版",
       "青果",
@@ -571,20 +571,24 @@
     ]
   },
   {
-    "cmd": ".nn",
+    "cmd": ".nn/.nnn",
     "title": {
-      "zh-Hans": "改名",
-      "zh-Hant": "改名",
-      "en": "Rename"
+      "zh-Hans": "昵称与随机改名",
+      "zh-Hant": "暱稱與隨機改名",
+      "en": "Nickname & Random Rename"
     },
-    "category": "工具",
+    "category": "人物卡",
     "sources": [
       "原版",
       "青果",
       "海豹"
     ],
-    "example": ".nn 阿强 / .nn",
-    "descKey": "help.topic.nn",
+    "example": ".nn 阿强 / .nnn jp / .nn",
+    "desc": {
+      "zh-Hans": "设置、清除当前昵称，或按地区随机生成昵称。",
+      "zh-Hant": "設定、清除目前暱稱，或依地區隨機產生暱稱。",
+      "en": "Set or clear your nickname, or generate a random nickname by region."
+    },
     "replyKeys": [
       "fun.nn.set",
       "fun.nn.clear"
@@ -601,7 +605,7 @@
       "zh-Hant": "預設骰面",
       "en": "Default Die"
     },
-    "category": "通用",
+    "category": "掷骰",
     "sources": [
       "原版",
       "青果",
@@ -614,13 +618,13 @@
     ]
   },
   {
-    "cmd": ".deck",
+    "cmd": ".deck/.draw/.gacha",
     "title": {
       "zh-Hans": "牌堆抽取",
       "zh-Hant": "牌堆抽取",
       "en": "Deck Draw"
     },
-    "category": "娱乐",
+    "category": "牌堆",
     "sources": [
       "原版",
       "青果",
@@ -628,8 +632,8 @@
     ],
     "example": ".deck / .draw 塔罗牌",
     "descKey": "help.topic.deck",
-    "replyKeys": [
-      "deck.result"
+    "replyPrefixes": [
+      "deck."
     ]
   },
   {
@@ -712,7 +716,7 @@
       "zh-Hant": "檢定統計",
       "en": "Roll Stats"
     },
-    "category": "工具",
+    "category": "人物卡",
     "sources": [
       "海豹",
       "青果"
@@ -737,7 +741,7 @@
       "zh-Hant": "設群名片屬性",
       "en": "Set Card Attrs"
     },
-    "category": "工具",
+    "category": "人物卡",
     "sources": [
       "原版"
     ],
@@ -763,7 +767,7 @@
       "zh-Hant": "設定群名片",
       "en": "Set Group Card"
     },
-    "category": "工具",
+    "category": "人物卡",
     "sources": [
       "海豹",
       "青果"
@@ -795,12 +799,12 @@
     "example": ".ri +2 / .init / .init clr",
     "descKey": "help.topic.ri",
     "replyKeys": [
-      "init.added",
+      "init.rolled",
       "init.list",
       "init.cleared"
     ],
     "replyExamples": {
-      "init.added": ".ri +2",
+      "init.rolled": ".ri +2",
       "init.list": ".init",
       "init.cleared": ".init clr"
     }
@@ -846,11 +850,11 @@
     "example": ".dismiss",
     "descKey": "help.topic.dismiss",
     "replyKeys": [
-      "dismiss.bye"
+      "dismiss.leaving"
     ]
   },
   {
-    "cmd": ".rules",
+    "cmd": ".rules/.ruleset",
     "title": {
       "zh-Hans": "规则速查",
       "zh-Hant": "規則速查",
@@ -872,5 +876,527 @@
       "rule.not_found": ".rules 不存在的词条",
       "rule.book_set": ".ruleset dnd"
     }
+  },
+  {
+    "cmd": ".rx",
+    "title": {
+      "zh-Hans": "心理学暗骰",
+      "zh-Hant": "心理學暗骰",
+      "en": "Hidden Psychology"
+    },
+    "category": "COC",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": ".rx @调查员 / .rx @调查员 70",
+    "descKey": "help.topic.rx",
+    "replyPrefixes": [
+      "dice.rx."
+    ]
+  },
+  {
+    "cmd": ".setdnd",
+    "title": {
+      "zh-Hans": "DND5e 模式",
+      "zh-Hant": "DND5e 模式",
+      "en": "DND5e Mode"
+    },
+    "category": "DND",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": ".setdnd on / .setdnd off",
+    "desc": {
+      "zh-Hans": "开启或关闭本群 DND5e 模式；开启后 .rc 按 d20 规则进行检定。",
+      "zh-Hant": "開啟或關閉本群 DND5e 模式；開啟後 .rc 按 d20 規則進行檢定。",
+      "en": "Enable or disable DND5e mode for this group; .rc uses d20 checks while enabled."
+    },
+    "replyPrefixes": [
+      "setdnd."
+    ]
+  },
+  {
+    "cmd": ".rdc",
+    "title": {
+      "zh-Hans": "DND 调整值检定",
+      "zh-Hant": "DND 調整值檢定",
+      "en": "DND Modifier Check"
+    },
+    "category": "DND",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": ".rdc 力量 / .rdc 3#隐匿",
+    "desc": {
+      "zh-Hans": "在 DND5e 模式下，用属性调整值或独立技能加值进行 d20 检定，支持多轮。",
+      "zh-Hant": "在 DND5e 模式下，用屬性調整值或獨立技能加值進行 d20 檢定，支援多輪。",
+      "en": "Run a d20 check with an ability modifier or saved skill bonus in DND5e mode; supports multiple rounds."
+    },
+    "replyPrefixes": [
+      "dnd.rdc."
+    ]
+  },
+  {
+    "cmd": ".buff",
+    "title": {
+      "zh-Hans": "DND 临时加值",
+      "zh-Hant": "DND 臨時加值",
+      "en": "DND Temporary Bonus"
+    },
+    "category": "DND",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": ".buff 力量 +2 / .buff show / .buff clr",
+    "desc": {
+      "zh-Hans": "设置、查看或清除临时属性加值，自动计入 DND 检定。",
+      "zh-Hant": "設定、查看或清除臨時屬性加值，自動計入 DND 檢定。",
+      "en": "Set, inspect, or clear temporary ability bonuses used by DND checks."
+    },
+    "replyPrefixes": [
+      "buff."
+    ]
+  },
+  {
+    "cmd": ".ss/.cast",
+    "title": {
+      "zh-Hans": "法术位与施法",
+      "zh-Hant": "法術位與施法",
+      "en": "Spell Slots & Casting"
+    },
+    "category": "DND",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": ".ss init 4 3 2 / .ss 3环 -1 / .cast 2环",
+    "desc": {
+      "zh-Hans": "管理 1–9 环法术位，查看、初始化、恢复法术位，或施法时扣除对应环位。",
+      "zh-Hant": "管理 1–9 環法術位，查看、初始化、恢復法術位，或施法時扣除對應環位。",
+      "en": "Manage spell slots for levels 1–9 and spend the corresponding slot when casting."
+    },
+    "replyPrefixes": [
+      "dnd.ss.",
+      "dnd.cast."
+    ]
+  },
+  {
+    "cmd": ".longrest/.ds",
+    "title": {
+      "zh-Hans": "长休与死亡豁免",
+      "zh-Hant": "長休與死亡豁免",
+      "en": "Long Rest & Death Saves"
+    },
+    "category": "DND",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": ".longrest / .ds / .ds stat",
+    "desc": {
+      "zh-Hans": "长休可恢复 HP 与法术位；死亡豁免自动累计成功和失败次数。",
+      "zh-Hant": "長休可恢復 HP 與法術位；死亡豁免自動累計成功和失敗次數。",
+      "en": "A long rest restores HP and spell slots; death saves track successes and failures automatically."
+    },
+    "replyPrefixes": [
+      "dnd.longrest.",
+      "dnd.ds."
+    ]
+  },
+  {
+    "cmd": ".rpmode",
+    "title": {
+      "zh-Hans": "骰娘人格",
+      "zh-Hant": "骰娘人格",
+      "en": "Dice Persona"
+    },
+    "category": "人物卡",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": ".rpmode list / .rpmode set 温柔 / .rpmode off",
+    "desc": {
+      "zh-Hans": "列出、切换或关闭当前窗口的骰娘人格，整套切换回复文案。",
+      "zh-Hant": "列出、切換或關閉當前視窗的骰娘人格，整套切換回覆文案。",
+      "en": "List, select, or disable the dice persona for the current conversation."
+    },
+    "replyPrefixes": [
+      "persona."
+    ]
+  },
+  {
+    "cmd": ".me",
+    "title": {
+      "zh-Hans": "动作代述",
+      "zh-Hant": "動作代述",
+      "en": "Action Narration"
+    },
+    "category": "互动",
+    "sources": [
+      "原版",
+      "Dice!Next"
+    ],
+    "example": ".me 推开了门 / .me on / .me off",
+    "desc": {
+      "zh-Hans": "以人物卡名或昵称代述动作，群管可分群开关，私聊可远程发送到指定群。",
+      "zh-Hant": "以人物卡名或暱稱代述動作，群管可分群開關，私聊可遠程發送到指定群。",
+      "en": "Narrate an action using the character name; admins can toggle it per group or send remotely from DM."
+    },
+    "replyPrefixes": [
+      "me."
+    ]
+  },
+  {
+    "cmd": ".ak",
+    "title": {
+      "zh-Hans": "抉择分歧",
+      "zh-Hant": "抉擇分歧",
+      "en": "Decision Picker"
+    },
+    "category": "娱乐",
+    "sources": [
+      "原版"
+    ],
+    "example": ".ak#去哪里+森林|城堡 / .ak=",
+    "desc": {
+      "zh-Hans": "创建选项列表，增删或查看选项，最后随机抽取一项并清空。",
+      "zh-Hant": "建立選項清單，增刪或查看選項，最後隨機抽取一項並清空。",
+      "en": "Create and edit an option list, then randomly draw one choice and clear the list."
+    },
+    "replyPrefixes": [
+      "ak."
+    ]
+  },
+  {
+    "cmd": ".text",
+    "title": {
+      "zh-Hans": "文本模板求值",
+      "zh-Hant": "文本模板求值",
+      "en": "Text Template"
+    },
+    "category": "工具",
+    "sources": [
+      "海豹",
+      "Dice!Next"
+    ],
+    "example": ".text 今天的手气是 {1d100}",
+    "desc": {
+      "zh-Hans": "对文本中的大括号表达式和变量求值，输出渲染后的文本。",
+      "zh-Hant": "對文本中的大括號表達式和變數求值，輸出渲染後的文本。",
+      "en": "Evaluate braced expressions and variables in a text template and return the rendered text."
+    },
+    "replyPrefixes": [
+      "fun.text."
+    ]
+  },
+  {
+    "cmd": ".link",
+    "title": {
+      "zh-Hans": "跨群消息链接",
+      "zh-Hant": "跨群消息連結",
+      "en": "Cross-group Link"
+    },
+    "category": "跑团",
+    "sources": [
+      "原版"
+    ],
+    "example": ".link with 123456 / .link state / .link close",
+    "desc": {
+      "zh-Hans": "在两个群之间建立单向或双向消息链接，并查看、暂停或恢复链接。",
+      "zh-Hant": "在兩個群之間建立單向或雙向消息連結，並查看、暫停或恢復連結。",
+      "en": "Create one-way or two-way message links between groups and inspect, pause, or resume them."
+    },
+    "replyPrefixes": [
+      "link."
+    ]
+  },
+  {
+    "cmd": ".help",
+    "title": {
+      "zh-Hans": "指令帮助",
+      "zh-Hant": "指令幫助",
+      "en": "Command Help"
+    },
+    "category": "工具",
+    "sources": [
+      "原版",
+      "Dice!Next"
+    ],
+    "example": ".help / .help ra / .help 死亡豁免",
+    "desc": {
+      "zh-Hans": "查看指令总览，或在内置、规则包、插件和自定义帮助中搜索具体词条。",
+      "zh-Hant": "查看指令總覽，或在內建、規則包、插件和自定義幫助中搜尋具體詞條。",
+      "en": "Show the command overview or search built-in, rule-pack, plugin, and custom help topics."
+    },
+    "replyPrefixes": [
+      "help."
+    ]
+  },
+  {
+    "cmd": ".helpdoc",
+    "title": {
+      "zh-Hans": "帮助文档设定",
+      "zh-Hant": "幫助文檔設定",
+      "en": "Help Document Settings"
+    },
+    "category": "工具",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": ".helpdoc / .helpdoc default 来源 / .helpdoc scope 来源",
+    "desc": {
+      "zh-Hans": "查询帮助词条，并设定同名词条的默认来源或本群搜索域。",
+      "zh-Hant": "查詢幫助詞條，並設定同名詞條的預設來源或本群搜尋域。",
+      "en": "Query help topics and configure the preferred source or group-specific help search scope."
+    },
+    "replyPrefixes": [
+      "helpdoc."
+    ]
+  },
+  {
+    "cmd": ".reply",
+    "title": {
+      "zh-Hans": "自定义回复开关",
+      "zh-Hant": "自定義回覆開關",
+      "en": "Custom Reply Toggle"
+    },
+    "category": "管理",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": ".reply on / .reply off",
+    "desc": {
+      "zh-Hans": "在当前群开启或关闭自定义回复功能。",
+      "zh-Hant": "在當前群開啟或關閉自定義回覆功能。",
+      "en": "Enable or disable custom replies in the current group."
+    },
+    "replyPrefixes": [
+      "reply."
+    ]
+  },
+  {
+    "cmd": ".ai",
+    "title": {
+      "zh-Hans": "群 AI 开关",
+      "zh-Hant": "群 AI 開關",
+      "en": "Group AI Toggle"
+    },
+    "category": "AI",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": ".ai / .ai on / .ai off",
+    "desc": {
+      "zh-Hans": "查看或切换当前群的 AI 对话、NPC 与群记忆功能。",
+      "zh-Hant": "查看或切換當前群的 AI 對話、NPC 與群記憶功能。",
+      "en": "Inspect or toggle AI chat, NPC, and group-memory features for the current group."
+    },
+    "replyPrefixes": [
+      "ai."
+    ]
+  },
+  {
+    "cmd": ".trust",
+    "title": {
+      "zh-Hans": "信任等级",
+      "zh-Hant": "信任等級",
+      "en": "Trust Level"
+    },
+    "category": "权限",
+    "sources": [
+      "原版",
+      "Dice!Next"
+    ],
+    "example": ".trust @某人 / .trust 123456 3",
+    "desc": {
+      "zh-Hans": "查询或设置用户信任等级；管理员只能授予低于自身的等级。",
+      "zh-Hant": "查詢或設定使用者信任等級；管理員只能授予低於自身的等級。",
+      "en": "Query or set a user's trust level; administrators may only grant levels below their own."
+    },
+    "replyPrefixes": [
+      "trust."
+    ]
+  },
+  {
+    "cmd": ".admin",
+    "title": {
+      "zh-Hans": "骰子管理员",
+      "zh-Hant": "骰子管理員",
+      "en": "Dice Administrators"
+    },
+    "category": "权限",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": ".admin add @某人 / .admin del 123456 / .admin list",
+    "desc": {
+      "zh-Hans": "由骰主授予、撤销或列出骰子管理员。",
+      "zh-Hant": "由骰主授予、撤銷或列出骰子管理員。",
+      "en": "Let the dice owner grant, revoke, or list dice administrators."
+    },
+    "replyPrefixes": [
+      "admin."
+    ]
+  },
+  {
+    "cmd": ".alias",
+    "title": {
+      "zh-Hans": "账号别名",
+      "zh-Hant": "帳號別名",
+      "en": "Account Alias"
+    },
+    "category": "权限",
+    "sources": [
+      "原版",
+      "Dice!Next"
+    ],
+    "example": ".alias add 别名ID 主ID / .alias del 别名ID / .alias list",
+    "desc": {
+      "zh-Hans": "将别名账号绑定到主账号，共用信任等级和骰主身份。",
+      "zh-Hant": "將別名帳號綁定到主帳號，共用信任等級和骰主身份。",
+      "en": "Bind an alias account to a primary account so they share trust and owner identity."
+    },
+    "replyPrefixes": [
+      "alias."
+    ]
+  },
+  {
+    "cmd": ".notice",
+    "title": {
+      "zh-Hans": "骰主通知窗口",
+      "zh-Hant": "骰主通知視窗",
+      "en": "Owner Notice Target"
+    },
+    "category": "权限",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": ".notice on / .notice off / .notice level 15",
+    "desc": {
+      "zh-Hans": "将当前群或私聊设为骰主通知窗口，并设置接收的通知级别。",
+      "zh-Hant": "將當前群或私聊設為骰主通知視窗，並設定接收的通知級別。",
+      "en": "Register the current group or DM as an owner notice target and select notification levels."
+    },
+    "replyPrefixes": [
+      "notice."
+    ]
+  },
+  {
+    "cmd": "boton/botoff/black*",
+    "title": {
+      "zh-Hans": "骰主远程管理",
+      "zh-Hant": "骰主遠程管理",
+      "en": "Owner Remote Management"
+    },
+    "category": "权限",
+    "sources": [
+      "原版"
+    ],
+    "example": "boton 123456 / blackqq 10001 / whitegroup 123456",
+    "desc": {
+      "zh-Hans": "骰主远程开关指定群，或管理用户、群黑名单与群白名单。",
+      "zh-Hant": "骰主遠程開關指定群，或管理使用者、群黑名單與群白名單。",
+      "en": "Let the dice owner toggle a remote group or manage user/group blacklists and the group whitelist."
+    },
+    "replyPrefixes": [
+      "master."
+    ]
+  },
+  {
+    "cmd": ".plugin",
+    "title": {
+      "zh-Hans": "分群插件开关",
+      "zh-Hant": "分群插件開關",
+      "en": "Group Plugin Toggle"
+    },
+    "category": "管理",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": ".plugin list / .plugin on 插件名 / .plugin all off",
+    "descKey": "help.topic.plugin",
+    "replyPrefixes": [
+      "plugin."
+    ]
+  },
+  {
+    "cmd": ".system",
+    "title": {
+      "zh-Hans": "系统信息",
+      "zh-Hant": "系統資訊",
+      "en": "System Information"
+    },
+    "category": "系统",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": ".system info / .system stats",
+    "desc": {
+      "zh-Hans": "仅骰主可用：查看运行环境、数据库和系统统计信息。",
+      "zh-Hant": "僅骰主可用：查看執行環境、資料庫和系統統計資訊。",
+      "en": "Owner only: inspect runtime, database, and system statistics."
+    },
+    "replyPrefixes": [
+      "system."
+    ]
+  },
+  {
+    "cmd": ".strSelfName/.strSelfCall",
+    "title": {
+      "zh-Hans": "骰娘名称与自称",
+      "zh-Hant": "骰娘名稱與自稱",
+      "en": "Dice Name & Self-reference"
+    },
+    "category": "系统",
+    "sources": [
+      "原版"
+    ],
+    "example": ".strSelfName 小骰 / .strSelfCall 本骰 / .strSelfName clr",
+    "desc": {
+      "zh-Hans": "查看、设置或重置骰娘对外显示的名称和回复中的自称。",
+      "zh-Hant": "查看、設定或重設骰娘對外顯示的名稱和回覆中的自稱。",
+      "en": "Inspect, set, or reset the dice display name and the self-reference used in replies."
+    },
+    "replyPrefixes": [
+      "self."
+    ]
+  },
+  {
+    "cmd": ".bind/.info",
+    "title": {
+      "zh-Hans": "跨平台身份绑定",
+      "zh-Hant": "跨平台身份綁定",
+      "en": "Cross-platform Identity"
+    },
+    "category": "系统",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": ".bind qq 123456 / .bind discord 用户ID / .info",
+    "desc": {
+      "zh-Hans": "关联 QQ 官方、OneBot、Discord 或 KOOK 窗口的身份，或查看当前窗口的绑定信息。",
+      "zh-Hant": "關聯 QQ 官方、OneBot、Discord 或 KOOK 視窗的身份，或查看當前視窗的綁定資訊。",
+      "en": "Link identities across QQ Official, OneBot, Discord, or KOOK, or inspect the current identity mapping."
+    },
+    "replyKeys": []
+  },
+  {
+    "cmd": ".mod",
+    "title": {
+      "zh-Hans": "Mod 状态",
+      "zh-Hant": "Mod 狀態",
+      "en": "Mod Status"
+    },
+    "category": "系统",
+    "sources": [
+      "原版"
+    ],
+    "example": ".mod",
+    "desc": {
+      "zh-Hans": "查看原版 Mod 兼容功能的当前状态与提示。",
+      "zh-Hant": "查看原版 Mod 相容功能的當前狀態與提示。",
+      "en": "Show the current status and guidance for legacy Mod compatibility."
+    },
+    "replyPrefixes": [
+      "mod."
+    ]
   }
 ]
