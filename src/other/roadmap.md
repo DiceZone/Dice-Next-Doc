@@ -18,6 +18,14 @@
 
 ## 更新日志
 
+- JS fetch 默认放行（T8）+ 可选严格模式；插件卸载清理配置残留。
+### 2026-08-13 · build 844（安全加固 + 插件兼容）
+
+- 管理面板强制口令（空口令必须先设置，不再直通 API）；X-API-Key 服务端校验；图片下载 SSRF 防护；口令 PBKDF2 哈希 + 登录限速；Docker 去特权；NapCat 随机 token；备份路径二次校验。
+- 插件可选 RSA 签名校验；Lua 上传权限声明 + 高危预检 + 人工确认 + 行为审计日志；cpath 收窄可选。
+- JS 补齐海豹兼容：require / WebSocket / base64ToImage / .ts 加载 / applyPlayerGroupCardByTemplate。
+- CI 接入 Gitleaks / Semgrep / Trivy。待实机回归。
+
 ### 2026-08-11 · build 828（开发中）
 
 - **QQ 官方机器人 2026-08-10 能力更新**：全部 OpenAPI 调用统一迁移到 `api.bot.qq.com`；Markdown 支持可选图片资源强校验；新增群禁言查询/设置、入群申请列表/审批、自动审批策略查询/创建/修改/删除/执行及白名单管理；`GROUP_JOIN_REQUEST` 已接入骰主通知与现有自动审批逻辑，群详情新增“官方群管”操作页。
