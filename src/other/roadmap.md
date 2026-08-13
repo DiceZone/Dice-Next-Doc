@@ -18,13 +18,14 @@
 
 ## 更新日志
 
-- JS fetch 默认放行（T8）+ 可选严格模式；插件卸载清理配置残留。
-### 2026-08-13 · build 844（安全加固 + 插件兼容）
+### 2026-08-13 · builds 844–846（安全加固 + 插件兼容）
 
+- JS fetch 默认放行（T8）+ 可选严格模式；插件卸载清理配置残留。
 - 管理面板强制口令（空口令必须先设置，不再直通 API）；X-API-Key 服务端校验；图片下载 SSRF 防护；口令 PBKDF2 哈希 + 登录限速；Docker 去特权；NapCat 随机 token；备份路径二次校验。
 - 插件可选 RSA 签名校验；Lua 上传权限声明 + 高危预检 + 人工确认 + 行为审计日志；cpath 收窄可选。
 - JS 补齐海豹兼容：require / WebSocket / base64ToImage / .ts 加载 / applyPlayerGroupCardByTemplate。
 - CI 接入 Gitleaks / Semgrep / Trivy。待实机回归。
+- **默认掷骰 Markdown 与跨平台降级**：简体中文、繁体中文、英文、日文的通用掷骰、骰池、COC/BRP 检定、对抗检定、理智检定、制卡与 DND 检定结果统一采用 Markdown 强调和行内骰式。Discord 原生渲染，KOOK 自动选用 KMarkdown，QQ 官方群聊/C2C 自动使用 Markdown；OneBot、QQ 频道及富文本失败回退会在适配器出口剥离格式符，同时保留 CQ 码、图片码和骰子表达式。
 
 ### 2026-08-11 · build 828（开发中）
 
