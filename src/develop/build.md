@@ -20,10 +20,11 @@ Dice!Next 拆分为多个仓库，构建/打包脚本按**同级目录**互相�
 ├── Dice-Next-WebUI/    ← Web 管理面板（Vite + React）
 ├── Dice-Next-Doc/      ← 本文档站（VitePress）
 ├── Dice-Next-Docker/   ← 容器化部署（可选）
-└── onedice-cpp-lib/    ← OneDice V1 表达式引擎（CMake 必需）
+├── onedice-cpp-lib/    ← OneDice V1 表达式引擎（CMake 必需）
+└── dicescript-c-lib/   ← DiceScript C99 兼容引擎（CMake 必需）
 ```
 
-`server/CMakeLists.txt` 通过 `add_subdirectory(../../onedice-cpp-lib)` 引入掷骰库，缺它 CMake 配置直接失败；打包脚本默认在同级找 `Dice-Next-WebUI/dist` 与 `Dice-Next-Doc`（也可用环境变量 `DICENEXT_WEB_ROOT` / `DICENEXT_DOC_ROOT` 指定别处）。
+`server/CMakeLists.txt` 通过 `add_subdirectory` 引入同级的 `onedice-cpp-lib` 与 `dicescript-c-lib`，缺少任一仓库都会使 CMake 配置直接失败；打包脚本默认在同级找 `Dice-Next-WebUI/dist` 与 `Dice-Next-Doc`（也可用环境变量 `DICENEXT_WEB_ROOT` / `DICENEXT_DOC_ROOT` 指定别处）。
 :::
 
 ## Windows（推荐 / 已验证）
@@ -71,7 +72,7 @@ Linux 构建在理论上可行（drogon / vcpkg 跨平台），但目前主要�
 
 ```bash
 git clone https://github.com/Microsoft/vcpkg.git ~/vcpkg && ~/vcpkg/bootstrap-vcpkg.sh
-# Dice-Next 与 onedice-cpp-lib 需在同一父目录下
+# Dice-Next、onedice-cpp-lib 与 dicescript-c-lib 需在同一父目录下
 cd Dice-Next
 cmake -B server/build -S server \
   -DCMAKE_TOOLCHAIN_FILE=$HOME/vcpkg/scripts/buildsystems/vcpkg.cmake \

@@ -38,11 +38,12 @@ git push origin feature/my-feature
 | `Dice-Next-Doc` | 本文档站（VitePress） |
 | `Dice-Next-Docker` | 容器化部署 |
 | `onedice-cpp-lib` | OneDice 表达式引擎（编译后端必需，与主仓放同级目录） |
+| `dicescript-c-lib` | DiceScript C99 兼容引擎（编译后端必需，与主仓放同级目录） |
 
 完整步骤与目录摆放见[从源码构建](/develop/build)，简要：
 
 ```bash
-# 后端（Dice-Next 仓；onedice-cpp-lib 需在同级目录）
+# 后端（Dice-Next 仓；两个表达式引擎库需在同级目录）
 cmake -B server/build -S server -DCMAKE_TOOLCHAIN_FILE=<vcpkg>/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release
 cmake --build server/build --config Release
 # 前端（Dice-Next-WebUI 仓）

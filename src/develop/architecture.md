@@ -6,7 +6,7 @@ Dice!Next 3.0 采用前后端分离的分层架构：C++ 后端负责协议接�
 
 | 层级 | 技术 | 说明 |
 |------|------|------|
-| 构建系统 | CMake ≥ 3.20（C++20） | 跨平台 C++ 构建 |
+| 构建系统 | CMake ≥ 3.20（C++20 + C99） | 跨平台后端与表达式兼容库构建 |
 | 包管理 | vcpkg | Microsoft 官方 C++ 包管理 |
 | HTTP/WS | drogon | 异步非阻塞 C++ Web 框架 |
 | JSON / YAML | nlohmann/json · yaml-cpp | 配置 / 旧格式解析 |
@@ -14,7 +14,7 @@ Dice!Next 3.0 采用前后端分离的分层架构：C++ 后端负责协议接�
 | 日志 | spdlog | 高性能异步日志 |
 | JS 引擎 | quickjs-ng | JS 插件子系统（海豹 SealDice 兼容） |
 | Lua 引擎 | Lua 5.4 | Lua 模组子系统（原版 Dice! mod 兼容） |
-| 掷骰 | 自研引擎 + onedice-cpp-lib | OneDice V1 标准表达式回退 |
+| 掷骰 | 自研引擎 + onedice-cpp-lib + dicescript-c-lib | 可配置的原生、OneDice、DiceScript C99 安全回退链 |
 | 压缩 | zlib · zstd | 日志站上传 / DiceNext 日志格式 |
 | 前端 | Vite + React + shadcn/ui + Tailwind CSS | SPA 管理面板 |
 
@@ -87,7 +87,7 @@ server/src/
 └── common/                  # 日志 / 热重载 / 工具 / 版本
 ```
 
-前端是独立仓库 `Dice-Next-WebUI`（Vite + React，`src/pages`、`src/components`、`src/i18n`），文档站是独立仓库 `Dice-Next-Doc`（VitePress）；后端主仓 `Dice-Next` 只含 `server/` 与打包脚本，编译另需同级的 `onedice-cpp-lib` 仓。
+前端是独立仓库 `Dice-Next-WebUI`（Vite + React，`src/pages`、`src/components`、`src/i18n`），文档站是独立仓库 `Dice-Next-Doc`（VitePress）；后端主仓 `Dice-Next` 只含 `server/` 与打包脚本，编译另需同级的 `onedice-cpp-lib` 和 `dicescript-c-lib` 仓。
 
 ## 数据库拆分
 
