@@ -175,7 +175,7 @@ local success, delta, value = growFavor(msg.uid)
 | `sendMsg(text, gid, uid)` | 主动发消息（gid 空 = 私聊） |
 | `eventMsg(text, gid, uid)` | 把文本当作某人发的消息跑完整指令管线（如 `eventMsg('.rd100', msg.gid, msg.uid)`） |
 | `drawDeck(gid, uid, 牌堆名)` | 抽公共牌堆 |
-| `loadLua(名字)` | 执行 `script/<名字>.lua`（支持 `a.b` 点分路径） |
+| `loadLua(名字)` | 目录型 mod 优先执行 `script/<名字>.lua`；旧式单文件插件也支持入口脚本同级子目录（支持 `a.b` 点分路径） |
 | `askExtra(table)` | 平台扩展查询（透传到适配器，如 OneBot 动作） |
 
 OneBot v11 下，`sendMsg` 发送的文本或事件钩子直接返回的文本可以包含 CQ 音乐码；Dice!Next 会将其转换为音乐卡片消息段，而不是显示 CQ 码原文。支持平台曲目和自定义音乐卡片，例如：
@@ -189,7 +189,7 @@ sendMsg('[CQ:music,type=custom,url=跳转链接,audio=音频链接,title=标题,
 
 | 库 | 说明 |
 | --- | --- |
-| `http.get(url)` → `ok, body`；`http.post(url, body, headers)` | 受「外置 API 开关 + 白名单」门控；`http.urlEncode/urlDecode` |
+| `http.get(url)` → `ok, body`；`http.post(url, body, headers)` | 默认允许公网 HTTP(S)，始终拦截内网 / 环回 / 危险 URL；严格模式再要求外置 API 开关与白名单；`http.urlEncode/urlDecode` |
 | `json.encode/decode`、`yaml.parse/dump` | 也可 `require("json")` / `require("yaml")` |
 | `Set`、`getSelfData(名)`、`Actor`、`GameTable` | 原版对象层：SelfData 落盘 `data/self_data/<名>.json`；GameTable 对接 `.game` 团务 |
 
@@ -217,7 +217,7 @@ sendMsg('[CQ:music,type=custom,url=跳转链接,audio=音频链接,title=标题,
 | `askExtra({action=..., params=...})` | 表 / 字符串 / `nil` | 透传原生平台动作。当前只有 OneBot 适配器可响应；QQ 官方、Discord、KOOK 返回 `nil`。 |
 | `getDiceQQ()` / `getDiceDir()` | 字符串 | 骰娘自身账号 / `data` 目录绝对路径。 |
 | `mkDirs(path)` | boolean | 创建目录。 |
-| `loadLua(name)` | 脚本返回值 | 执行当前 mod 的 `script/<name>.lua`；`a.b` 映射为 `script/a/b.lua`。 |
+| `loadLua(name)` | 脚本返回值 | 目录型 mod 优先执行 `script/<name>.lua`；旧式 `data/plugin/*.lua` 也会回退到入口同级路径，例如 `loadLua("求签/月老灵签")` 读取 `data/plugin/求签/月老灵签.lua`。`a.b` 仍映射为 `a/b.lua`。 |
 | `sleepTime(ms)` | — | 兼容空操作，不会阻塞消息线程。 |
 
 `key` 以 `&` 开头时，会先解析当前 mod 的 speech 词条；这是旧版 mod 常见的字段别名写法。
@@ -254,9 +254,11 @@ local named = getPlayerCardAttr(msg.uid, '备用卡', 'hp', 0, true)
 | `msg.user` / `msg.grp` | 用户/群配置代理 | `obj[key]` 读，`obj[key]=value` 写；`msg.user.nick/name/nn` 为昵称，`msg.user.trust` 为信任等级。 |
 | `json.encode(value)` / `json.decode(text)` | string / Lua 值或 `nil` | 同时支持 `require('json')`。 |
 | `yaml.parse(text)` / `yaml.dump(value)` | Lua 值或 `nil` / string | 同时支持 `require('yaml')`。 |
-| `http.get(url)` | `ok, body` | HTTP GET；受外置 API 开关与白名单限制。 |
+| `http.get(url)` | `ok, body` | HTTP GET；默认允许公网 HTTP(S)，始终拒绝非 HTTP(S)、内网 / 环回及危险 URL；严格模式下再要求外置 API 开关与白名单。 |
 | `http.post(url, body, headers?)` | `ok, body` | body 为 table 时自动 JSON 编码；headers 可为 table 或字符串。 |
 | `http.urlEncode(text)` / `http.urlDecode(text)` | string | URL 编解码。 |
+
+> 严格模式沿用历史配置键 `dice/js_fetch_strict`，同时作用于 SealDice JS `fetch` 与旧 Dice! Lua `http`。关闭严格模式不会关闭 SSRF、协议和危险字符检查。
 
 ::: warning 内部 `__dnx_*` 函数
 `__dnx_roll`、`__dnx_fmt`、`__dnx_conf`、`__dnx_sd_load`、`__dnx_sd_save` 是对象层的内部桥接函数。它们会随实现调整，插件应使用本页的 `Actor`、`msg:format`、`GameTable`、`getSelfData` 等公开 API。
