@@ -50,9 +50,20 @@
 .plugin all on|off      批量启停
 ```
 
+原版 Dice! 的 `.mod` 写法也接入同一套分群状态：
+
+```
+.mod / .mod list        列出插件与本群状态
+.mod on|off <名称>      启停某插件
+.mod <名称> on|off      原版参数顺序
+.mod info <名称>        查看类型、ID 与本群状态
+```
+
+`.mod update/reload/del/reinstall` 只会提示转到 Web 管理面板，避免聊天误操作替换或删除插件文件。`.mod` 不是第二套旧版加载器；它与 `.plugin` 共用当前插件清单和启停状态。
+
 ## 兼容性
 
-Lua 侧兼容原版 Dice! mod 生态，JS 侧兼容海豹 SealDice 插件（含 `seal.vars` 人物卡桥接、`commands.disable` 覆盖内置指令等）。海豹规则类插件还可以转换打包成规则包分发，实战示例见[海豹插件转规则包](/develop/rulepack-example-fu)与[规则包开发](/develop/rulepack)。
+Lua 侧兼容原版 Dice! mod 生态；JS 侧的兼容目标是 **SealDice（海豹）插件 API**，不是旧 Dice! 的 JS 体系（含 `seal.vars` 人物卡桥接、`commands.disable` 覆盖内置指令等）。海豹规则类插件还可以转换打包成规则包分发，实战示例见[海豹插件转规则包](/develop/rulepack-example-fu)与[规则包开发](/develop/rulepack)。
 
 ### 群名片与显示名
 

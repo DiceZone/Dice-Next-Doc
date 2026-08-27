@@ -11,6 +11,7 @@ Dice!Next 内嵌 quickjs-ng 引擎（支持现代 ES 语法与 `async/await`）�
 - **去重**：按元数据 `@name`（不是文件名）去重，多个同名文件保留 `@version` 最高的一个，其余标记为「已被取代」不加载。
 - **停用**：文件改名为 `*.js.disabled`（管理面板开关即此操作）。
 - **执行模型**：所有插件共享一个 JS 运行时，**单线程串行**执行。死循环或缓慢的同步操作会卡住整条消息处理管线——耗时逻辑请尽量放进定时器回调。
+- **加载生命周期**：扩展注册时 `ext.isLoaded=false`；全部脚本完成注册后，宿主统一设为 `true` 并调用各扩展的 `ext.onLoad()`，因此 `onLoad` 中可以安全使用 `seal.ext.find` 查找其他插件。
 
 ### 元数据（UserScript 头）
 
@@ -49,13 +50,31 @@ Dice!Next 内嵌 quickjs-ng 引擎（支持现代 ES 语法与 `async/await`）�
 
 ## 事件钩子
 
+正式消息的主要顺序与 `sealdice-core` 对齐：
+
+```text
+onMessageReceived → 内置指令或 cmd.solve → 清空异步任务 → onCommandReceived → 实际发送 → onMessageSend
+```
+
 | 钩子 | 触发时机 |
 | --- | --- |
-| `ext.onNotCommandReceived(ctx, msg)` | 收到**非指令**消息时 |
-| `ext.onMessageReceived(ctx, msg)` | 同上（两者依次调用，兼容两种海豹写法） |
+| `ext.onLoad()` | 全部脚本注册完毕、`ext.isLoaded` 设为 `true` 后调用一次 |
+| `ext.onMessageReceived(ctx, msg)` | 每条被接收的消息进入指令处理前调用；它是观察钩子，不会压掉后续内置 / 插件指令 |
+| `ext.onCommandReceived(ctx, msg, cmdArgs)` | 指令求解与其中的 Promise 任务完成后调用；内置指令、JS 指令和已解析但未知的指令都会触发 |
+| `ext.onNotCommandReceived(ctx, msg)` | 消息未产生指令、Lua / 因果 / 自定义回复时，作为非指令兜底调用 |
+| `ext.onMessageSend(ctx, msg, flag)` | Dice!Next 的最终回复实际投递后调用；`msg` 是已发送消息 |
+| `ext.onGroupJoined(ctx, msg)` | 骰子自身加入普通群 |
+| `ext.onGroupMemberJoined(ctx, msg)` | 普通成员加入群 |
+| `ext.onGuildJoined(ctx, msg)` | 骰子自身加入带 guild 标识的频道 / 服务器 |
+| `ext.onBecomeFriend(ctx, msg)` | 好友添加完成 |
+| `ext.onMessageDeleted(ctx, msg)` | 收到消息撤回事件；`msg.rawId` 为被撤回消息 ID（适配器提供时） |
+| `ext.onPoke(ctx, event)` | 戳一戳；`event={groupId,senderId,targetId,isPrivate}` |
+| `ext.onGroupLeave(ctx, event)` | 群成员退出 / 被移出；`event={groupId,userId,operatorId}` |
 
-::: warning 当前只有这两个钩子
-入群/退群、戳一戳、撤回、好友申请等事件目前**不会**通知 JS 插件（海豹的 `onGroupJoined`、`onPoke` 等不支持）。这类自动化可先用管理面板的「高级回复 / 定时任务 / 群自动化」实现。
+即使注册的指令对象没有 `solve`，或指令词未在任何 `cmdMap` 中命中，已解析的指令消息仍会进入 `onCommandReceived`。事件类钩子是否触发取决于适配器是否上报对应 `BotEvent`。
+
+::: warning 与 SealDice 边界
+`onMessageEdit` 暂不可用，因为 Dice!Next 当前的 `BotEvent` 传输层没有消息编辑事件。`onCommandOverride` 在 `sealdice-core` 本身没有 JS 绑定，因此不属于 JS 插件兼容目标。
 :::
 
 ## ctx / msg / cmdArgs
@@ -71,21 +90,21 @@ Dice!Next 内嵌 quickjs-ng 引擎（支持现代 ES 语法与 `async/await`）�
 | `ctx.group.logOn` / `ctx.group.logCurName` | 当前群跑团日志状态 / 日志名 |
 | `ctx.isPrivate` | 是否私聊 |
 | `ctx.privilegeLevel` | 权限等级（数值越高权限越大；骰主远大于群管） |
-| `ctx.endPoint` | 骰娘自身账号 `{platform, userId, nickname, ...}` |
+| `ctx.endPoint` | 骰娘自身端点 `{platform,id,userId,nickname,state,enable}` |
 | `ctx.isCurGroupBotOn` | 占位，恒 `true`（能进 solve 就说明群是开的） |
 
 ### msg
 
 | 字段 | 说明 |
 | --- | --- |
-| `msg.message` | 消息全文 |
-| `msg.platform` | 平台名（如 `QQ`） |
+| `msg.message` | 原始消息全文（优先 `rawContent`） |
+| `msg.platform` | 适配器平台标识 |
 | `msg.messageType` | `"group"` 或 `"private"` |
-| `msg.groupId` | 群号 |
-| `msg.time` | Unix 秒 |
+| `msg.groupId` | 群号；私聊严格为空字符串 |
+| `msg.time` | 适配器消息时间（Unix 秒；缺失时取当前时间） |
 | `msg.sender` | `{userId, nickname, card}` |
-| `msg.segment` | **占位，恒为空数组**——暂时拿不到图片/@/表情等富媒体分段，只有纯文本 |
-| `msg.rawId` / `msg.guildId` / `msg.channelId` | 占位空串 |
+| `msg.segment` | 适配器提供的富媒体分段；优先读取 `segments`、OneBot `raw.message` 或 `msg_elements`，没有时为空数组 |
+| `msg.rawId` / `msg.guildId` / `msg.channelId` | 原消息 ID、服务器 ID、频道 ID；适配器未提供的字段为空字符串 |
 
 ### cmdArgs
 
@@ -100,7 +119,7 @@ Dice!Next 内嵌 quickjs-ng 引擎（支持现代 ES 语法与 `async/await`）�
 | `at` | `[{userId}, ...]` 消息中真实 @ 的人 |
 | `kwargs` | `[{name, value, valueExists}, ...]`（解析 `--key` / `--key=value`） |
 | `specialExecuteTimes` | `N#指令` 的 N（1–99，默认 1，需 `cmd.enableExecuteTimesParse`） |
-| `amIBeMentioned` / `amIBeMentionedFirst` | 占位，恒 `false` |
+| `amIBeMentioned` / `amIBeMentionedFirst` | 是否 @ 到当前骰子 / 是否第一个 @ 的就是当前骰子，依据真实 `atList` 计算 |
 
 方法：
 
@@ -122,6 +141,8 @@ Dice!Next 内嵌 quickjs-ng 引擎（支持现代 ES 语法与 `async/await`）�
 | `seal.replyPerson(ctx, msg, text)` | 恒私聊直发给发送者（如暗骰结果） |
 
 文本中可以内嵌图片码 `[CQ:image,file=URL]`（QQ 平台）。目前没有独立的「发送图片/语音」API。
+
+`onMessageSend` 观察的是经过模板、润色 / 翻译并实际投递的最终回复。钩子、定时器或事件回调里调用回复 API 的直发消息不会再次递归触发 `onMessageSend`，以避免插件制造无限消息循环。
 
 ## 变量与人物卡（seal.vars）
 
@@ -352,9 +373,9 @@ seal.ext.register(ext);
 
 写插件前值得知道的边界（也是我们的改进路线）：
 
-1. 事件钩子只有非指令消息两个；平台事件（入群/戳一戳/撤回等）不通知插件。
-2. `msg.segment` 恒空——拿不到图片等富媒体，只有纯文本；也没有专用的发图 API（可发 `[CQ:image]` 码）。
+1. `onMessageEdit` 暂不可用；其他平台事件也只有在适配器上报对应 `BotEvent` 时才触发。
+2. `msg.segment` 是适配器原生分段、并非跨平台统一结构；未上报时为空，也没有专用的发图 API（可发 `[CQ:image]` 码）。
 3. 没有 `require`/`import` 与文件系统 API，插件必须单文件自包含。
 4. 单线程串行执行，无超时与资源配额——请避免死循环与慢同步操作。
-5. `registerTask` 只支持每日任务；`seal.coc` 自定义判定、`cmdArgs.amIBeMentioned`、`seal.getEndPoints` 等为占位。
+5. `registerTask` 只支持每日任务；`seal.coc` 自定义判定与 `seal.getEndPoints` 等仍为占位。
 6. `fetch` 受外置 API 开关与白名单门控（这是刻意的安全设计，不是 bug）。

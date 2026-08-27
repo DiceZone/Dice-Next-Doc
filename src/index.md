@@ -22,7 +22,7 @@ hero:
 features:
   - icon: 🎲
     title: 忠实复刻
-    details: 完整复刻 Dice! 的掷骰与 COC / DND / BRP 检定体验——检定、理智、成长、疯狂、房规、对抗、代骰、团务一应俱全，老用户无痛迁移。
+    details: 广泛复刻 Dice! 的掷骰与 COC / DND / BRP 跑团体验，常用旧指令与数据可迁移；高风险旧能力不照搬，差异与替代方案均有明确说明。
   - icon: 🃏
     title: 跑团好搭档
     details: 牌堆抽取与内联随机、规则速查、跑团记录与日志站上传（TXT / Excel / HTML），主持人跑团更顺手。

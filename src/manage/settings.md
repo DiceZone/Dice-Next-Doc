@@ -85,6 +85,16 @@ Dice!Next 通过独立维护的 [dicescript-c-lib](https://github.com/DiceZone/d
 
 ## 开关与发送行为
 
+### 回复展示形式
+
+“启用 Markdown / 富消息”是全局主开关，切换后立即保存：
+
+- **关闭**：QQ 官方、Discord、KOOK 与 OneBot 全部发送传统文本；模板里的粗体、行内代码等标记先转换成可读文字，不会原样泄漏星号等格式符。
+- **开启**：QQ 官方优先 Markdown、Discord 使用 Embed、KOOK 使用 CardMessage；平台拒绝富消息或回复超长时自动回退传统文本，OneBot 始终保持文本。
+- **作用域覆盖**：全局开启后，可以切换到分适配器或分账号作用域单独关闭；局部开启不能绕过关闭的全局主开关。
+
+回复模板及变量样式的编辑方法见[指令列表 → 自定义回复文案](/manage/commands#自定义回复文案)。
+
 | 设置项 | 说明 |
 |--------|------|
 | 开机自启动 | 随 Windows 登录自动启动（仅 Windows） |

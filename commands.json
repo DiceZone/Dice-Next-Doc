@@ -1,6 +1,6 @@
 [
   {
-    "cmd": ".r/.rh/.rs",
+    "cmd": ".r/.rh/.h/.H/.rs",
     "title": {
       "zh-Hans": "掷骰",
       "zh-Hant": "擲骰",
@@ -12,7 +12,7 @@
       "青果",
       "海豹"
     ],
-    "example": ".r 3d6+2 攻击 / .rh 暗骰 / .r 2#d20",
+    "example": ".r 3d6+2 攻击 / .h d100 / .rs 3d6+2",
     "descKey": "help.topic.r",
     "replyKeys": [
       "dice.roll.result",
@@ -204,7 +204,7 @@
       "青果",
       "海豹"
     ],
-    "example": ".pc new 张三 / .pc list",
+    "example": ".pc new 张三 / .pc cpy 备份=张三 / .pc tojson",
     "descKey": "help.topic.pc",
     "replyKeys": [
       "pc.new",
@@ -268,7 +268,7 @@
     }
   },
   {
-    "cmd": ".coc",
+    "cmd": ".coc/.coc7/.coc6/.cocd/.coc7d/.coc6d",
     "title": {
       "zh-Hans": "COC 制卡",
       "zh-Hant": "COC 制卡",
@@ -280,7 +280,7 @@
       "青果",
       "海豹"
     ],
-    "example": ".coc / .coc 5",
+    "example": ".coc7 / .coc6 / .coc7d 3",
     "descKey": "help.topic.coc",
     "replyKeys": [
       "dice.coc.build"
@@ -511,7 +511,7 @@
       "青果",
       "海豹"
     ],
-    "example": ".jrrp",
+    "example": ".jrrp / .jrrp on / .jrrp off",
     "descKey": "help.topic.jrrp",
     "replyKeys": [
       "fun.jrrp"
@@ -618,7 +618,7 @@
     ]
   },
   {
-    "cmd": ".deck/.draw/.gacha",
+    "cmd": ".deck/.draw/.drawh/.gacha",
     "title": {
       "zh-Hans": "牌堆抽取",
       "zh-Hant": "牌堆抽取",
@@ -630,7 +630,7 @@
       "青果",
       "海豹"
     ],
-    "example": ".deck / .draw 塔罗牌",
+    "example": ".deck / .draw 塔罗牌 / .drawh 塔罗牌",
     "descKey": "help.topic.deck",
     "replyPrefixes": [
       "deck."
@@ -854,7 +854,7 @@
     ]
   },
   {
-    "cmd": ".rules/.ruleset",
+    "cmd": ".rules/.rule/.ruleset",
     "title": {
       "zh-Hans": "规则速查",
       "zh-Hant": "規則速查",
@@ -864,7 +864,7 @@
     "sources": [
       "原版"
     ],
-    "example": ".rules 大失败 / .rules coc:困难成功 / .ruleset dnd",
+    "example": ".rules 大失败 / .rule set coc7 / .ruleset clear",
     "descKey": "help.topic.rules",
     "replyKeys": [
       "rule.result",
@@ -1120,7 +1120,7 @@
       "原版",
       "Dice!Next"
     ],
-    "example": ".help / .help ra / .help 死亡豁免",
+    "example": ".help / .help ra / .help on / .help off",
     "desc": {
       "zh-Hans": "查看指令总览，或在内置、规则包、插件和自定义帮助中搜索具体词条。",
       "zh-Hant": "查看指令總覽，或在內建、規則包、插件和自定義幫助中搜尋具體詞條。",
@@ -1160,13 +1160,14 @@
     },
     "category": "管理",
     "sources": [
+      "原版",
       "Dice!Next"
     ],
     "example": ".reply on / .reply off",
     "desc": {
-      "zh-Hans": "在当前群开启或关闭自定义回复功能。",
-      "zh-Hant": "在當前群開啟或關閉自定義回覆功能。",
-      "en": "Enable or disable custom replies in the current group."
+      "zh-Hans": "群管理或受信任用户持久开启或关闭本群自定义回复。",
+      "zh-Hant": "群管理或受信任使用者持久開啟或關閉本群自定義回覆。",
+      "en": "Let group managers or trusted users persistently enable or disable custom replies in the group."
     },
     "replyPrefixes": [
       "reply."
@@ -1328,11 +1329,11 @@
     "sources": [
       "Dice!Next"
     ],
-    "example": ".system info / .system stats",
+    "example": ".system info / .system stats（不提供 .system cmd）",
     "desc": {
-      "zh-Hans": "仅骰主可用：查看运行环境、数据库和系统统计信息。",
-      "zh-Hant": "僅骰主可用：查看執行環境、資料庫和系統統計資訊。",
-      "en": "Owner only: inspect runtime, database, and system statistics."
+      "zh-Hans": "仅骰主可用：查看系统统计；出于安全原因不提供旧版远程 Shell。",
+      "zh-Hant": "僅骰主可用：查看系統統計；基於安全原因不提供舊版遠端 Shell。",
+      "en": "Owner only: inspect system statistics; the legacy remote shell is intentionally unavailable."
     },
     "replyPrefixes": [
       "system."
@@ -1349,7 +1350,7 @@
     "sources": [
       "原版"
     ],
-    "example": ".strSelfName 小骰 / .strSelfCall 本骰 / .strSelfName clr",
+    "example": ".strSelfName 小骰 / .strSelfCall 本骰 / .strSelfName reset",
     "desc": {
       "zh-Hans": "查看、设置或重置骰娘对外显示的名称和回复中的自称。",
       "zh-Hant": "查看、設定或重設骰娘對外顯示的名稱和回覆中的自稱。",
@@ -1381,22 +1382,85 @@
   {
     "cmd": ".mod",
     "title": {
-      "zh-Hans": "Mod 状态",
-      "zh-Hant": "Mod 狀態",
-      "en": "Mod Status"
+      "zh-Hans": "Mod 兼容管理",
+      "zh-Hant": "Mod 相容管理",
+      "en": "Legacy Mod Management"
     },
     "category": "系统",
     "sources": [
       "原版"
     ],
-    "example": ".mod",
+    "example": ".mod list / .mod on 名称 / .mod info 名称",
     "desc": {
-      "zh-Hans": "查看原版 Mod 兼容功能的当前状态与提示。",
-      "zh-Hant": "查看原版 Mod 相容功能的當前狀態與提示。",
-      "en": "Show the current status and guidance for legacy Mod compatibility."
+      "zh-Hans": "复用统一插件清单按群查看和启停；更新、重载与删除仅在 WebUI 操作。",
+      "zh-Hant": "複用統一插件清單按群查看和啟停；更新、重載與刪除僅在 WebUI 操作。",
+      "en": "Inspect and toggle the unified plugin list per group; update, reload, and deletion remain WebUI-only."
     },
     "replyPrefixes": [
       "mod."
+    ]
+  },
+  {
+    "cmd": ".user",
+    "title": {
+      "zh-Hans": "旧版用户管理入口",
+      "zh-Hant": "舊版使用者管理入口",
+      "en": "Legacy User Management"
+    },
+    "category": "权限",
+    "sources": [
+      "原版"
+    ],
+    "example": ".user state / .user tojson / .user diss @某人 原因",
+    "desc": {
+      "zh-Hans": "复用统一玩家档案、信任与名单；diss 不删除档案或人物卡，kill/clr 仅限 WebUI。",
+      "zh-Hant": "複用統一玩家檔案、信任與名單；diss 不刪除檔案或人物卡，kill/clr 僅限 WebUI。",
+      "en": "Reuse unified profiles, trust, and lists; diss preserves profiles/cards, while kill/clr remain WebUI-only."
+    },
+    "replyPrefixes": [
+      "legacy_user."
+    ]
+  },
+  {
+    "cmd": ".cloud",
+    "title": {
+      "zh-Hans": "旧版云服务入口",
+      "zh-Hant": "舊版雲端服務入口",
+      "en": "Legacy Cloud Entry"
+    },
+    "category": "系统",
+    "sources": [
+      "原版"
+    ],
+    "example": ".cloud update / .cloud black",
+    "desc": {
+      "zh-Hans": "仅骰主可用：报告版本或引导既有云黑设置，不由聊天指令触发外部同步。",
+      "zh-Hant": "僅骰主可用：回報版本或引導既有雲端黑名單設定，不由聊天指令觸發外部同步。",
+      "en": "Owner only: report versions or point to existing cloud-ban settings without starting external sync from chat."
+    },
+    "replyPrefixes": [
+      "legacy_cloud."
+    ]
+  },
+  {
+    "cmd": ".strXXX",
+    "title": {
+      "zh-Hans": "旧版文案兼容",
+      "zh-Hant": "舊版文案相容",
+      "en": "Legacy Message Text"
+    },
+    "category": "系统",
+    "sources": [
+      "原版"
+    ],
+    "example": ".strRollDice show / .strRollDice 新文案 / .strRollDice reset / .strRollDice NULL",
+    "desc": {
+      "zh-Hans": "仅骰主可用：已审计的一对一旧键写入统一文案覆盖表；未知 str 键不被吞掉。",
+      "zh-Hant": "僅骰主可用：已審核的一對一舊鍵寫入統一文案覆蓋表；未知 str 鍵不被吞掉。",
+      "en": "Owner only: map audited one-to-one legacy keys into unified text overrides without swallowing unknown str commands."
+    },
+    "replyPrefixes": [
+      "legacy_str."
     ]
   }
 ]

@@ -60,6 +60,31 @@
 - 没有等价槽位或无法安全转换占位符的文案会保存在管理面板的「无效文本」中，不会丢失也不会冒充已经生效。
 - 每次扩充新版文案槽位时，会重新核对这批无效文本；能找到明确语义对应的键会加入映射，无法保证语义等价的仍保留给骰主手工处理。
 
+## 旧版指令兼容边界
+
+Dice!Next 直接复用新版存储、权限与插件管理实现旧写法，不运行一套平行的旧内核。当前已核对的迁移重点如下：
+
+| 原版写法 | Dice!Next 行为 |
+|---|---|
+| `.h` / `.H`、`.rh`、`.rs` | 短暗骰别名与仅最终值输出均保留；`.help` 不会被 `.h` 抢占 |
+| `.coc/.coc7`、`.coc6`、`.cocd/.coc7d/.coc6d` | 分别生成 7 版、6 版及详细制卡结果；接受旧排版标记 `s` |
+| `.help on/off`、`.jrrp on/off`、`.reply on/off` | 按群持久保存，沿用群管理 / 信任权限 |
+| `.drawh` | 私聊发送抽牌结果，群里只留暗抽回执 |
+| `.pc nn/stat/cpy/copy/grp/tojson/type/temp` | 接到统一人物卡与规则系统；复制顺序为 `目标卡=来源卡` |
+| `.rule set <书>`、`.ruleset clear` | 接到统一规则书设置；设置和清除都校验群管理权限 |
+| `.mod list/on/off/info` | 接到统一插件清单与分群启停；更新、重载、删除、重装仅在 WebUI 确认 |
+| `.user state/trust/tojson/diss` | 接到统一玩家档案、权限和名单；`diss` 不删除档案或卡片 |
+| `.strXXX <文本/show/reset/NULL>` | 仅已审计的一对一文案键写入统一覆盖表；未知 `str…` 不会被吞掉 |
+| `.cloud update/black` | 仅报告版本 / 引导既有云黑设置，不由聊天指令触发外部数据同步 |
+
+::: danger 刻意不复刻
+- `.system cmd`：旧版远程 Shell，风险等同远程代码执行。
+- `.user kill/clr`：聊天中不可逆删除玩家或卡片；请在 Web 管理面板二次确认。
+- `.mod update/reload/del/reinstall`：聊天中不替换或删除插件文件。
+:::
+
+JS 插件的兼容来源是 **SealDice（海豹）`sealdice-core`**，不是旧 Dice! JS；具体钩子、字段和限制见 [JS 插件 API 参考](/develop/js-plugin-api)。
+
 ## 迁移步骤（管理面板）
 
 1. 把旧版 Dice! 的数据目录（**内含 `conf/` 与 `user/` 的那一层**）放到运行 Dice!Next 的这台机器上。

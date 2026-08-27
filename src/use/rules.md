@@ -6,9 +6,10 @@
 
 | 指令 | 说明 |
 |------|------|
-| `.rules 词条` | 查询规则词条 |
+| `.rules 词条` / `.rule 词条` | 查询规则词条（`.rule` 为原版别名） |
 | `.rules 规则书:词条` | 在指定规则书中查询 |
 | `.ruleset 规则书` | 设置本群默认规则书（群管理） |
+| `.rule set 规则书` | 原版设置写法，等同 `.ruleset 规则书` |
 
 ## 用法
 
@@ -17,7 +18,8 @@
 .rules coc:困难成功     → 在 COC7 规则书中查询
 .rules dnd:借机攻击     → 在 DND 规则书中查询
 .ruleset dnd            → 把本群默认规则书设为 dnd
-.ruleset show / clr     → 查看 / 清除默认规则书
+.rule set dnd           → 同上（原版 Dice! 写法）
+.ruleset show / clr     → 查看 / 清除默认规则书（清除也需要群管理）
 ```
 
 支持词条的精确匹配与模糊（子串）匹配。
