@@ -40,3 +40,7 @@ Dice!Next 主程序打包时会读取本仓库根目录的 `roadmap.md` 与 `com
 ## 反馈
 
 项目目前处于公测（Beta）阶段。问题和功能建议请优先通过 [GitHub Issues](https://github.com/DiceZone/Dice-Next/issues) 提交；也欢迎加入 QQ 群 `933145116` 交流与反馈。
+
+## 开源许可证
+
+本项目以 **GNU Affero General Public License v3.0 or later（AGPL-3.0-or-later）** 发布，与 [Dice-Next](https://github.com/DiceZone/Dice-Next) 主仓库保持一致。完整条款见 [LICENSE](LICENSE)。
