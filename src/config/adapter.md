@@ -62,9 +62,11 @@ Dice!Next 采用插件式适配器架构。请在 [管理面板 → 适配器管
 | OneBot v11 | 传统文本 | OneBot 标准没有统一的跨实现卡片协议。 |
 | Discord | Embed | 超过 Embed 长度限制的消息自动保持传统文本。 |
 | KOOK | CardMessage | 使用官方卡片消息格式；过长内容自动保持传统文本。 |
-| QQ 官方机器人 2.0 | Markdown | 平台需要为机器人开通 Markdown 能力；若接口拒绝，Dice!Next 会自动重试传统文本。 |
+| QQ 官方机器人 2.0 | Markdown | 平台需要为机器人开通 Markdown 能力；若接口连续拒绝，Dice!Next 会暂时熔断并直接发送传统文本。 |
 
 全局开关是最高优先级：账号或适配器的局部“开启”不能绕过已关闭的全局开关。这样即使 QQ 官方机器人具备 Markdown 权限，骰主也能一键让全部回复保持普通文字。
+
+Markdown 模板只保留一份可编辑原稿。Dice!Next 会在内置文案加载、自定义文案保存或人格载入时自动生成纯文字版本；发送时先根据来源适配器和全局 / 账号设置选好版本，再代入昵称、骰式等动态变量。因此传统模式与 OneBot 不需要在每个消息分段临时解析 Markdown，也不会要求骰主维护两份容易不一致的文案。
 
 卡片上的可点击按钮需要对应平台的交互事件与具体业务授权。Dice!Next 只会在某个功能确实需要用户选择、且该平台能力可用时提供按钮，不会把管理或敏感操作做成通用按钮。
 
@@ -74,7 +76,7 @@ Dice!Next 采用插件式适配器架构。请在 [管理面板 → 适配器管
 
 自 [2026-08-10 的 QQ 机器人 2.0 能力更新](https://bot.q.qq.com/wiki/develop/api-v2/changelog.html#_20260810)起，OpenAPI 请求统一使用 `https://api.bot.qq.com`。Dice!Next 已统一鉴权、Gateway、资料、分享链接、消息和富媒体等请求域名；旧域名不再用于接口调用。
 
-在“卡片消息”模式下，适配器会发送 Markdown。适配器编辑页可开启 **Markdown 图片资源强校验**：开启后，如果 QQ 平台无法转存 Markdown 中的图片，整条消息会失败并回退传统文本；默认关闭，以保持平台原有兼容行为。对应 `config/adapters.json` 字段为 `force_verify_image_resource`。
+在“卡片消息”模式下，适配器会发送 Markdown。适配器编辑页可开启 **Markdown 图片资源强校验**：开启后，如果 QQ 平台无法转存 Markdown 中的图片，整条消息会失败并回退传统文本；默认关闭，以保持平台原有兼容行为。对应 `config/adapters.json` 字段为 `force_verify_image_resource`。若同一适配器连续两次收到 Markdown / 卡片 HTTP 拒绝，Dice!Next 会在接下来的 10 分钟直接使用预渲染传统文本；冷却结束后自动再次探测，不需要手动重连。
 
 QQ 官方平台以 OpenID 标识用户和群聊，而不是直接提供真实 QQ 号。Dice!Next 可将已验证的 OneBot QQ 身份与官方 OpenID 关联，使人物卡、群设置和日志沿用同一记录；使用 `.info` 可查看当前窗口的身份和绑定指引。
 

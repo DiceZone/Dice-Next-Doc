@@ -34,6 +34,10 @@ Dice!Next 后端提供 REST API，管理面板即基于此构建。本页按功�
 | GET / PUT | `/api/system/server-config` | 运行 IP / 端口（改后需重启生效） |
 | POST | `/api/system/restart` | 重启后端 |
 | GET / PUT | `/api/system/autostart` | 开机自启（Windows） |
+| GET / PUT | `/api/system/update` | 读取 / 保存自动检查间隔、发现后动作与下载来源 |
+| POST | `/api/system/update/check` | 立即在后台检查最新 GitHub Release |
+| POST | `/api/system/update/download` | 下载并校验当前平台安装包 |
+| POST | `/api/system/update/install` | 安装已暂存更新并重启（仅 Windows 管理器模式） |
 
 ## 系统状态与设置
 
@@ -59,6 +63,18 @@ Dice!Next 后端提供 REST API，管理面板即基于此构建。本页按功�
 | GET / PUT | `/api/system/friend-clean` | 好友自动清理 |
 | GET / PUT | `/api/system/chat-config` | 聊天持久化（保留期等） |
 | GET | `/api/roadmap` | 开发计划数据（读 `docs/roadmap.md`） |
+
+### 更新接口
+
+更新操作异步执行；POST 接口只负责排队并立即返回一次状态，前端应继续轮询 `GET /api/system/update`。主要字段：
+
+- `current` / `latest`：当前版本与 Release 清单；`latest.asset` 是当前 OS / 架构精确匹配的安装包。
+- `phase`：`idle`、`checking`、`available`、`downloading`、`staged`、`downloaded`、`installing`、`error` 或 `up_to_date`。
+- `source`、`downloadedBytes`、`totalBytes`、`checkedAt`、`error`：本次来源、进度、时间与错误。
+- `installSupported` / `pending`：能否一键安装，以及是否已有通过校验的暂存包。
+- `settings`：`autoCheck`、`intervalHours`（1–168）、`autoAction`（`notify` / `download` / `install`）、`source`（`auto` / `direct` / `mirror` / `custom`）与 `customMirror`。
+
+自定义镜像必须是 HTTPS 地址前缀。服务端只接受 `DiceZone/Dice-Next`、安全版本字段、已知平台架构、受限文件名、准确大小和 64 位十六进制 SHA-256 的 schema 1 清单。SHA-256 只校验下载内容与清单一致；它不构成独立代码签名。
 
 ## 通知与审计
 
