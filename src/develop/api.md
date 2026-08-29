@@ -49,6 +49,7 @@ Dice!Next 后端提供 REST API，管理面板即基于此构建。本页按功�
 | GET / PUT | `/api/system/global` | 原版全局设置（响应开关 / 外部请求等） |
 | GET / PUT | `/api/system/events` | 事件策略（审批 / 退群 / 自动清理等） |
 | GET / PUT | `/api/system/prefixes` | 指令前缀 |
+| GET / PUT / POST | `/api/system/censor` | 读取/整体保存敏感词规则；POST 用同一服务端匹配器测试文本 |
 | GET / PUT | `/api/system/log-mode` | 原始事件日志开关 |
 | GET / PUT | `/api/system/respond-self` | 自控开关（响应骰娘账号自身消息） |
 | GET / PUT | `/api/system/logsite` | 日志站上传地址（logsite_url） |
@@ -80,7 +81,7 @@ Dice!Next 后端提供 REST API，管理面板即基于此构建。本页按功�
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET / PUT | `/api/system/notice` | 通知设置（14 类事件逐项勾选、通知窗口、SMTP / Webhook） |
+| GET / PUT | `/api/system/notice` | 通知设置（事件逐项勾选、通知窗口、SMTP / Webhook） |
 | POST | `/api/system/notice/test` | 发送测试通知 |
 | GET | `/api/system/audit` | 审计日志（`data/audit/*.jsonl`） |
 

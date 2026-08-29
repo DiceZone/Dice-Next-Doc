@@ -110,6 +110,21 @@ Dice!Next 移植了原版的 nTrust 权限阶梯，每个用户有 0–255 的**
 | `.alias add <别名ID> <主ID>` | 绑定账号别名——别名账号的信任 / Master 身份按主号计算（仅骰主） |
 | `.alias del / list` | 解绑 / 列出别名 |
 
+## 敏感词管理
+
+仅骰主可用；WebUI 的**系统设置 → 安全与权限 → 敏感词拦截**与这些指令读写同一份配置。
+
+```text
+.admin censor status
+.admin censor on
+.admin censor off
+.admin censor +=默认按 Warning 添加
+.admin censor +Danger=词0|词1
+.admin censor -词0|词1
+```
+
+可用等级为 `Ignore`、`Notice`、`Caution`、`Warning`（省略时默认）、`Danger`、`Critical`；`Critical` 用于兼容旧数据并按最高风险处置。聊天回执和通知不会复述规则原文，避免把同一敏感内容再次发送到平台。
+
 ## 骰主通知 `.notice`
 
 把当前窗口（群或私聊）设为骰主通知窗口，接收留言、审批、运行报错等事件推送（仅骰主）：
