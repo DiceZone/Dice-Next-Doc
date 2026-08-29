@@ -90,6 +90,33 @@ end
 
 `msg_order[触发词] = "全局函数名"`；触发词按长度降序匹配（长词优先）。函数收到 `msg` 表，返回值第一项作为回复。
 
+插件里调用 `sleepTime(ms)` 时，Dice!Next 会暂停当前 Lua 处理并交还消息线程，时间到后从原位置继续执行；因此旧插件的分段延时回复不会再阻塞收消息。插件重载会取消尚未恢复的旧协程，避免执行已卸载代码。
+
+### task_call 定时入口
+
+旧式单文件插件可登记由骰主定时触发的全局函数：
+
+```lua
+task_call = task_call or {}
+task_call['dailynews'] = 'sendDailyNews'
+
+function sendDailyNews()
+  -- 获取新闻、整理内容并主动 sendMsg(...)
+end
+```
+
+登记后由骰主在聊天中管理每日执行时间：
+
+```text
+.admin clock + dailynews 07:30
+.admin clock list
+.admin clock - dailynews
+```
+
+任务会复用系统定时器持久化并显示在管理面板的「定时任务」列表中；可以停用、立即运行或删除。时间兼容旧插件文档常见的 `7:30` 和标准 `07:30`，保存时统一为两位小时。`task_call` 任务没有固定群 / 用户目标，应由插件函数自行通过 `sendMsg` 决定发送位置。
+
+DailyNews 一类插件使用的 `eventMsg(".admin notice group/QQ … +8")` 与 `eventMsg(".send notice 8 …")` 会映射到 Dice!Next 的统一通知窗口；这条内部桥只识别上述两类旧通知命令，不会授予 Lua `eventMsg` 其他骰主管理权限。
+
 ## msg 对象
 
 `echo` 函数与 `msg_order` 函数收到的 `msg`：
@@ -129,7 +156,7 @@ local skill = getPlayerCardAttr(msg.uid, msg.gid, '侦查', -1, false)
 | `getDiceDir()` | 数据目录绝对路径（`data`） |
 | `getDiceQQ()` | 骰娘账号 |
 | `mkDirs(path)` | 建目录 |
-| `sleepTime(ms)` | **空操作**（原版会阻塞；这里为防卡消息线程刻意不等待） |
+| `sleepTime(ms)` | 在 `msg_order` 消息处理中非阻塞等待；协程到时恢复，不占住消息线程 |
 
 **配置存取**（持久化在 `data/lua_mod.db`）
 
@@ -195,6 +222,8 @@ sendMsg('[CQ:music,type=custom,url=跳转链接,audio=音频链接,title=标题,
 
 `package.path` 已包含 mod 目录与 `data/plugin`，跨插件 `require` 可用（如社区常见的 `lua_useful_extensions`）。
 
+Windows 下会在加载旧单文件插件时自动识别并转换 GBK / CP936 源码；插件传给 `sendMsg`、`eventMsg`、JSON 编码器或适配器的文本也会统一整理为有效 UTF-8。无法恢复的非法字节以替代字符显示，不再让 JSON 序列化异常穿透并导致进程退出。
+
 ## 完整 Lua API 签名与对象方法
 
 本节列出当前运行时直接注册的全部 Lua 插件 API。参数名中的 `?` 表示可选；除特别说明外，写入函数没有返回值。
@@ -218,7 +247,7 @@ sendMsg('[CQ:music,type=custom,url=跳转链接,audio=音频链接,title=标题,
 | `getDiceQQ()` / `getDiceDir()` | 字符串 | 骰娘自身账号 / `data` 目录绝对路径。 |
 | `mkDirs(path)` | boolean | 创建目录。 |
 | `loadLua(name)` | 脚本返回值 | 目录型 mod 优先执行 `script/<name>.lua`；旧式 `data/plugin/*.lua` 也会回退到入口同级路径，例如 `loadLua("求签/月老灵签")` 读取 `data/plugin/求签/月老灵签.lua`。`a.b` 仍映射为 `a/b.lua`。 |
-| `sleepTime(ms)` | — | 兼容空操作，不会阻塞消息线程。 |
+| `sleepTime(ms)` | — | 在可挂起的消息处理调用链中非阻塞等待并从原位置恢复；其他调用环境保持立即返回。 |
 
 `key` 以 `&` 开头时，会先解析当前 mod 的 speech 词条；这是旧版 mod 常见的字段别名写法。
 
@@ -270,13 +299,12 @@ local named = getPlayerCardAttr(msg.uid, '备用卡', 'hp', 0, true)
 
 ## 与原版的兼容性说明
 
-原版 `DiceLua.cpp` 注册的 21 个全局函数已全部覆盖且签名对齐（含 `getUserConf(nil, field)` 枚举、`&key` 兜底、`drawDeck` 三参等细节），`Set/Context/SelfData/Actor/GameTable/http` 六个库语义可用。以下原版能力**目前尚未支持**，含这些写法的 mod 对应部分会不生效：
+原版 `DiceLua.cpp` 注册的全局函数已覆盖且签名对齐（含 `getUserConf(nil, field)` 枚举、`&key` 兜底、`drawDeck` 三参等细节），`Set/Context/SelfData/Actor/GameTable/http` 六个库语义可用；单文件插件的 `task_call` 与消息内 `sleepTime` 也已接入。以下原版能力**目前尚未支持**，含这些写法的 mod 对应部分会不生效：
 
 | 未支持项 | 说明 |
 | --- | --- |
 | `reply/*.toml` | TOML 形态的回复规则不加载（只认 `.lua`） |
 | `event` 事件表 / `event/` 目录内容 | 定时/事件触发体系未接 |
-| `task_call` 定时任务表 | 单文件插件的定时注册未接 |
 | `echo = "文本"` / `echo = {数组}` | 纯文本与牌堆抽取形态的 echo 会被跳过，**只认函数与 `{lua=}`** |
 | `keyword.regex` | 正则匹配模式未接（match/prefix/search 可用） |
 | `limit.prob` / `limit.today` / `limit.user_id` | 概率、每日限次、用户名单门槛未接 |
