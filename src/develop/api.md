@@ -39,6 +39,8 @@ Dice!Next 后端提供 REST API，管理面板即基于此构建。本页按功�
 | POST | `/api/system/update/download` | 下载并校验当前平台安装包 |
 | POST | `/api/system/update/install` | 安装已暂存更新并重启（仅 Windows 管理器模式） |
 
+WebUI 会话 Cookie 按安装实例稳定命名，而不是按主机或端口共用：同一主机不同安装目录可同时登录，同一实例改端口或重启仍可恢复 30 天受信会话。`GET /api/auth/status` 会兼容并迁移旧版 `dice_session`；`POST /api/auth/logout` 只撤销当前实例的会话。
+
 ## 系统状态与设置
 
 | 方法 | 路径 | 说明 |
@@ -72,10 +74,13 @@ Dice!Next 后端提供 REST API，管理面板即基于此构建。本页按功�
 - `current` / `latest`：当前版本与 Release 清单；`latest.asset` 是当前 OS / 架构精确匹配的安装包。
 - `phase`：`idle`、`checking`、`available`、`downloading`、`staged`、`downloaded`、`installing`、`error` 或 `up_to_date`。
 - `source`、`downloadedBytes`、`totalBytes`、`checkedAt`、`error`：本次来源、进度、时间与错误。
-- `installSupported` / `pending`：能否一键安装，以及是否已有通过校验的暂存包。
+- `downloadSupported` / `installSupported` / `pending`：能否由程序下载、能否一键安装，以及是否已有通过校验的暂存包。
+- `runtime.container`、`runtime.containerType`、`runtime.containerDetection`：容器识别结果、运行时类型与命中信号；`selfUpdateBlockedReason=container` 表示容器内只允许检查，不允许下载或安装。
 - `settings`：`autoCheck`、`intervalHours`（1–168）、`autoAction`（`notify` / `download` / `install`）、`source`（`auto` / `direct` / `mirror` / `custom`）与 `customMirror`。
 
 自定义镜像必须是 HTTPS 地址前缀。服务端只接受 `DiceZone/Dice-Next`、安全版本字段、已知平台架构、受限文件名、准确大小和 64 位十六进制 SHA-256 的 schema 1 清单。SHA-256 只校验下载内容与清单一致；它不构成独立代码签名。
+
+容器限制由服务端执行，不依赖前端按钮。`POST /download`、`POST /install` 以及 `PUT` 中的自动下载 / 自动安装策略都会被拒绝；已有旧配置在容器运行期间按 `notify` 生效。版本清单仍写入容器临时目录并正常检查。
 
 ## 通知与审计
 
