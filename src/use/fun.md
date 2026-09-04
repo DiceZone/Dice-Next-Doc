@@ -111,9 +111,11 @@
 ```
 .rpmode                    → 查看当前人格与可用人格列表
 .rpmode set 傲娇           → 切换到「傲娇」人格
-.rpmode off                → 切回默认人格
+.rpmode off                → 本群明确关闭人格，使用基础/全局自定义文案
+.rpmode default            → 清除本群选择，重新继承后台设置的全局默认人格
+.rpmode inherit            → 同上，继承全局默认人格
 .rpmode copy 傲娇 温柔      → 从「傲娇」复制出「温柔」人格（Master）
 .rpmode del 温柔           → 删除人格（Master，内置人格不可删）
 ```
 
-切换人格需要群管理员权限；`copy` / `del` 等管理操作仅 Master 可用。新建人格后请到后台[指令列表页](/manage/commands)编辑具体条目。
+群或频道可以分别选择人格；切换需要群管理员、频道管理员或骰主权限。`off` 是本窗口明确不用任何人格，`default` / `inherit` 则是删除本窗口的覆盖并跟随全局设置，两者不会再混为同一个状态。`copy` / `del` 等管理操作仅 Master 可用。新建人格后请到后台[指令列表页](/manage/commands)编辑具体条目。
