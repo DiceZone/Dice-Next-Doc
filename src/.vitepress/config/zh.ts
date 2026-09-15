@@ -145,7 +145,8 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
         { text: '插件管理', link: '/plugins' },
         { text: '帮助文档', link: '/help-docs' },
         { text: '指令测试', link: '/playground' },
-        { text: '系统设置', link: '/settings' }
+        { text: '基础设置', link: '/settings' },
+        { text: '云服务', link: '/cloud-services' }
       ]
     },
     {
@@ -170,7 +171,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
       base: '/other',
       collapsed: true,
       items: [
-        { text: '开发计划', link: '/other/roadmap' },
+        { text: '开发计划', link: '/roadmap' },
         { text: '关于项目', link: '/about' },
         { text: '更新日志', link: '/changelog' },
         { text: '开源协议', link: '/license' }
