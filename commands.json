@@ -204,7 +204,7 @@
       "青果",
       "海豹"
     ],
-    "example": ".pc new 张三 / .pc cpy 备份=张三 / .pc tojson",
+    "example": ".pc new 张三 / .pc build / .pc cloud auth / .pc tojson",
     "descKey": "help.topic.pc",
     "replyKeys": [
       "pc.new",
@@ -1371,7 +1371,7 @@
     "sources": [
       "Dice!Next"
     ],
-    "example": ".bind qq 123456 / .bind discord 用户ID / .info",
+    "example": ".cloud auth / .bind qq 123456 / .bind discord 用户ID / .info",
     "desc": {
       "zh-Hans": "关联 QQ 官方、OneBot、Discord 或 KOOK 窗口的身份，或查看当前窗口的绑定信息。",
       "zh-Hant": "關聯 QQ 官方、OneBot、Discord 或 KOOK 視窗的身份，或查看當前視窗的綁定資訊。",
@@ -1424,22 +1424,22 @@
   {
     "cmd": ".cloud",
     "title": {
-      "zh-Hans": "旧版云服务入口",
-      "zh-Hant": "舊版雲端服務入口",
-      "en": "Legacy Cloud Entry"
+      "zh-Hans": "云服务与账号授权",
+      "zh-Hant": "雲端服務與帳號授權",
+      "en": "Cloud Services"
     },
     "category": "系统",
     "sources": [
-      "原版"
+      "Dice!Next"
     ],
-    "example": ".cloud update / .cloud black",
+    "example": ".cloud auth / .cloud confirm / .cloud list",
     "desc": {
-      "zh-Hans": "仅骰主可用：报告版本或引导既有云黑设置，不由聊天指令触发外部同步。",
-      "zh-Hant": "僅骰主可用：回報版本或引導既有雲端黑名單設定，不由聊天指令觸發外部同步。",
-      "en": "Owner only: report versions or point to existing cloud-ban settings without starting external sync from chat."
+      "zh-Hans": "在私聊中授权账号中心，据此核验真实 QQ 并读写云端人物卡；一次授权同时覆盖两者。",
+      "zh-Hant": "在私聊中授權帳號中心，據此核驗真實 QQ 並讀寫雲端人物卡；一次授權同時涵蓋兩者。",
+      "en": "Authorize the account centre in private chat to verify your real QQ and read or write cloud character cards; one grant covers both."
     },
     "replyPrefixes": [
-      "legacy_cloud."
+      "cloud_card."
     ]
   },
   {

@@ -76,7 +76,7 @@ Dice!Next 直接复用新版存储、权限与插件管理实现旧写法，不�
 | `.mod list/on/off/info` | 接到统一插件清单与分群启停；更新、重载、删除、重装仅在 WebUI 确认 |
 | `.user state/trust/tojson/diss` | 接到统一玩家档案、权限和名单；`diss` 不删除档案或卡片 |
 | `.strXXX <文本/show/reset/NULL>` | 仅已审计的一对一文案键写入统一覆盖表；未知 `str…` 不会被吞掉 |
-| `.cloud update/black` | 仅报告版本 / 引导既有云黑设置，不由聊天指令触发外部数据同步 |
+| `.cloud update/black` | 不复刻。旧版这两条只报告状态并把人指向网页；版本号看不带参数的 `.bot`，云黑开关在网页「系统设置」。`.cloud` 现为账号中心授权与[云人物卡](/use/cloud)入口 |
 
 ::: danger 刻意不复刻
 - `.system cmd`：旧版远程 Shell，风险等同远程代码执行。

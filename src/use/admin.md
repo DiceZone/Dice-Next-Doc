@@ -190,12 +190,10 @@ Dice!Next 移植了原版的 nTrust 权限阶梯，每个用户有 0–255 的**
 | `.user trust <@/ID> [等级]` | 转到统一的 `.trust` 查询 / 设置逻辑 |
 | `.user tojson [@/ID]` | 导出玩家档案与卡片索引；导出他人需要管理员权限 |
 | `.user diss <@/ID> [原因]` | 管理员把目标加入本地黑名单 |
-| `.cloud update` | 骰主查看当前版本与安全升级入口 |
-| `.cloud black` | 骰主查看现有云黑设置入口，不发起外部同步 |
 
 `.user diss` 会保留玩家档案和人物卡，解除名单后可继续使用；旧版 `.user kill` / `.user clr` 这类不可逆删除只能在 Web 管理面板中确认执行。
 
-`.cloud` 兼容入口不会绕过 Dice!Next 的外部请求控制，也不会因一条聊天消息下载或应用外部黑名单。
+旧版 `.cloud update` 与 `.cloud black` 不再提供：这两条在原版中也只报告状态并把人指向网页。版本号请用不带参数的 `.bot` 查看，云黑名单开关在网页「系统设置」。`.cloud` 现为账号中心授权与云人物卡的入口，见[云服务与身份绑定](/use/cloud)。
 
 ## 骰娘名字 `.strSelfName` / `.strSelfCall`
 

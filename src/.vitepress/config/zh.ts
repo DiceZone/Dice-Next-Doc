@@ -116,6 +116,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
       items: [
         { text: '掷骰与检定', link: '/dice' },
         { text: '角色卡管理', link: '/card' },
+        { text: '云服务与身份绑定', link: '/cloud' },
         { text: '牌堆与随机', link: '/deck' },
         { text: '规则速查', link: '/rules' },
         { text: '娱乐与互动', link: '/fun' },
