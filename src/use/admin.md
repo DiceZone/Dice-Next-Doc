@@ -220,16 +220,24 @@ Dice!Next 移植了原版的 nTrust 权限阶梯，每个用户有 0–255 的**
 
 ## 跨平台身份绑定 `.bind` / `.info`
 
-同一个人在 QQ 官方机器人与 OneBot（个人 QQ）两个窗口里业务号不同。`.bind` 把两者关联到同一真实身份，`.info` 查看当前窗口的身份信息。仅 QQ 官方 / OneBot 适配器支持。
+同一个人在 QQ 官方、Discord、KOOK 与 OneBot / Milky 窗口里标识不同。`.bind` 关联真实 QQ，`.info` 查看身份信息。只需统一输入 `.bind qq <QQ号>`：当前客户端有正式骰娘 key 时优先 OAuth，否则自动使用骰主配置的 SMTP 邮件验证。头像核验已弃用。
 
 ```
 .info                → 查看当前窗口类型、规范标识、业务号、已绑定端点
-.bind qq <真实QQ号>   → 把当前官方身份关联到真实 QQ（在官方机器人窗口操作）
-.bind qqgroup <真实群号>
-.bind qq <机器人ID:OpenID>  → 反向：在 OneBot 窗口关联官方标识
+.bind qq <真实QQ号>    → QQ 官方 / Discord / KOOK 私聊发起，自动选择核验方式
+.bind confirm        → OAuth：网页同意后，回到原私聊确认
+.bind confirm <8位验证码> → 邮件：在原私聊提交验证码，无需重填 QQ
+.bind qq <真实QQ号> email → 主动选择或切换为邮件，须启用 SMTP
+.bind qq QQ-Official-<机器人ID>:<OpenID> → 在 OneBot / Milky 窗口反向绑定
+.bind qqgroup QQ-Official-<机器人ID>:<群OpenID> → 在目标真实 QQ 群内由群主或管理执行
+.bind discord <用户ID> / .bind kook <用户ID> → 在 OneBot / Milky 窗口反向绑定平台用户
+.cloud auth [write] / .cloud confirm → 单独授权云人物卡，不是绑定的前置步骤
 ```
 
 绑定后，即使未连接 OneBot 也会保留真实 QQ 身份，跨窗口的人物卡、权限等可归一。
+详细配置与限制见[云服务与身份绑定](/use/cloud#qq-邮箱验证码)。邮件验证不能证明群归属。
+
+OAuth 的已验证 QQ 必须与申请号码一致，失败不自动发送邮件。旧 `.bind email <QQ>` 与 `.bind qq <QQ> <验证码>` 仅为兼容保留。
 
 ## 全局设置（骰主）
 
