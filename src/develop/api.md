@@ -66,19 +66,23 @@ WebUI 会话 Cookie 按安装实例稳定命名，而不是按主机或端口共
 | GET / PUT | `/api/system/friend-clean` | 好友自动清理 |
 | GET / PUT | `/api/system/chat-config` | 聊天持久化（保留期等） |
 | GET | `/api/roadmap` | 开发计划数据（读 `docs/roadmap.md`） |
+| POST | `/api/system/update/cancel` | 请求取消正在连接、下载、校验或准备的更新；异步停止，不取消正式安装 |
 
 ### 更新接口
 
 更新操作异步执行；POST 接口只负责排队并立即返回一次状态，前端应继续轮询 `GET /api/system/update`。主要字段：
 
-- `current` / `latest`：当前版本与 Release 清单；`latest.asset` 是当前 OS / 架构精确匹配的安装包。
-- `phase`：`idle`、`checking`、`available`、`downloading`、`staged`、`downloaded`、`installing`、`error` 或 `up_to_date`。
+- `current` / `latest`：当前版本与 Release 清单；`latest.asset` 是当前 OS / 架构精确匹配的安装包。`current.prerelease` 表示本次构建是否为 Beta；`GET /api/system/status` 同样返回 `prerelease`，不能仅凭语义版本判断渠道。
+- `phase`：`idle`、`checking`、`available`、`connecting`、`downloading`、`verifying`、`preparing`、`cancelling`、`cancelled`、`staged`、`downloaded`、`installing`、`error` 或 `up_to_date`。
 - `source`、`downloadedBytes`、`totalBytes`、`checkedAt`、`error`：本次来源、进度、时间与错误。
 - `downloadSupported` / `installSupported` / `pending`：能否由程序下载、能否一键安装，以及是否已有通过校验的暂存包。
+- `cancelSupported` / `canCancel`：服务端是否支持取消、当前是否可接受取消请求。请求成功后通常先进入 `cancelling`，轮询到 `cancelled` 才表示后台传输已停止；不提供强制中断安装。
 - `runtime.container`、`runtime.containerType`、`runtime.containerDetection`：容器识别结果、运行时类型与命中信号；`selfUpdateBlockedReason=container` 表示容器内只允许检查，不允许下载或安装。
 - `settings`：`autoCheck`、`intervalHours`（1–168）、`autoAction`（`notify` / `download` / `install`）、`source`（`auto` / `direct` / `mirror` / `custom`）与 `customMirror`。
 
 自定义镜像必须是 HTTPS 地址前缀。服务端只接受 `DiceZone/Dice-Next`、安全版本字段、已知平台架构、受限文件名、准确大小和 64 位十六进制 SHA-256 的 schema 1 清单。SHA-256 只校验下载内容与清单一致；它不构成独立代码签名。
+
+下载源连续 60 秒无新增文件数据，或单源尝试达到 20 分钟，会协作取消实际传输并等待退出，然后才按配置换源。HTTP 请求超时不等于后台更新任务取消，客户端须重新查询状态，防止重复排队及旧状态覆盖新任务。
 
 容器限制由服务端执行，不依赖前端按钮。`POST /download`、`POST /install` 以及 `PUT` 中的自动下载 / 自动安装策略都会被拒绝；已有旧配置在容器运行期间按 `notify` 生效。版本清单仍写入容器临时目录并正常检查。
 
@@ -128,8 +132,13 @@ POST /api/adapters
 | GET | `/api/i18n/locales` | 可用语言列表（含自定义语言包） |
 | GET | `/api/i18n/all` | 全部文案键（含覆盖值与原版键） |
 | PUT | `/api/templates` | 设置某文案覆盖 |
+| POST | `/api/templates/preview` | 只读文本/卡片序列化预览，不发送消息 |
 | DELETE | `/api/templates/{locale}/{key}` | 重置某文案 |
 | GET | `/api/templates/export` · POST `/api/templates/import` | 导出 / 导入文案覆盖 |
+
+预览请求：`{ text, format: "plain"|"markdown", platform: "qq_group"|"qq_private"|"qq_channel"|"kook"|"discord"|"plain", style: "traditional"|"standard"|"visual", forcePlain: false }`。文本最大 64 KiB。返回 `data.preview` 的 `text`、`plain`、`markdown`、`actions` 和 `payload`；纯文本适配器的 payload 为 null，不伪造 CQ/媒体最终分段。旧版 `markdown` / `onebot` 字段仍保留。
+
+QQ/KOOK/Discord 的文本与卡片结构共用实际发送序列化器，但这不是客户端截图，不执行网络消息发送、媒体上传、身份映射或平台权限判断。真实账号发送与平台拒绝回退须另行验收。
 
 ## 自定义回复与因果规则
 
@@ -142,6 +151,10 @@ POST /api/adapters
 | POST | `/api/causal/rules/test` | 因果规则试跑 |
 | GET | `/api/counters` · PUT / DELETE `/api/counters/{key}` | 计数器查改删 |
 | POST | `/api/causal/cooldowns/clear` | 清空因果冷却 |
+
+`GET /api/replies` 不带筛选时保留返回全部规则的旧接口契约。WebUI 的编辑集合使用 `?scope=global`、`?scope=adapter&target=onebot_v11` 或 `?scope=account&target=<适配器ID>`；全局不能带 target，局部范围必须有 target。筛选返回该范围自己的规则，而非合并继承视图。
+
+新增 / 修改规则使用 `channelScope`（`global` / `adapter` / `account`）及 `channelTarget`；旧规则缺省为全局。运行时按消息平台及适配器 ID 过滤，非法范围不能放宽为全局。相同优先级下账号规则优先于平台与全局。戳一戳配置和关键词规则的继承 / 候选语义不同，见[高级回复](/manage/replies#全局、平台与账号范围)。
 
 ## 骰娘人格
 
@@ -164,6 +177,9 @@ POST /api/adapters
 | DELETE | `/api/decks/file/{name}` | 删除牌堆文件 |
 | POST | `/api/decks/upload` | 上传牌堆（.json） |
 | POST | `/api/decks/reload` | 重载牌堆目录 |
+| POST | `/api/decks/copy` | 把内置公开非空单牌堆复制为新的用户文件 |
+
+读取 `/api/decks/file?name=<文件名>&source=builtin` 或 `source=user` 明确来源；同名用户文件不应使内置条目读取错位。内置文件只读，服务端同样拒绝覆盖和删除。复制请求为 `{"filename":"内置合集.json","entry":"条目名","targetFilename":"我的牌堆.json"}`；目标不能已存在，也不能与源合集同名。只复制该条目的原始数组，不自动复制全部引用依赖或合集元数据。
 
 ## 规则与规则包
 

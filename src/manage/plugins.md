@@ -1,5 +1,7 @@
 # 插件管理
 
+Lua 模组详情新增兼容性提示：列出跳过的条件、旧 Dice! JS 动作、clock/hook 事件与文件加载错误，不把“发现了目录”当成“所有功能都能执行”。JS 使用海豹体系，旧 Dice! JS 不提供兼容执行，Python 暂不纳入计划。
+
 **管理面板 → 扩展管理 → 插件**，统一管理两类扩展，分两个选项卡：
 
 - **JS 插件**：兼容海豹 SealDice 的 JavaScript 插件（`seal.*` API）。
@@ -50,20 +52,25 @@
 .plugin all on|off      批量启停
 ```
 
-原版 Dice! 的 `.mod` 写法也接入同一套分群状态：
+原版 Dice! 的 `.mod` 已恢复为**全局模组管理**，与 `.plugin` 分群启停不同。要求骰主或信任等级至少 4；普通群管理员 / 邀请人不能修改全局模组：
 
 ```
-.mod / .mod list        列出插件与本群状态
-.mod on|off <名称>      启停某插件
+.mod / .mod list        列出全局模组与状态
+.mod on|off <名称>      全局启停模组
 .mod <名称> on|off      原版参数顺序
-.mod info <名称>        查看类型、ID 与本群状态
+.mod info <名称>        查看模组信息
+.mod detail <名称>      查看资源统计
+.mod reload <名称>      重新加载指定模组
+.mod del <名称>         删除指定模组文件
 ```
 
-`.mod update/reload/del/reinstall` 只会提示转到 Web 管理面板，避免聊天误操作替换或删除插件文件。`.mod` 不是第二套旧版加载器；它与 `.plugin` 共用当前插件清单和启停状态。
+`.mod get/update/reinstall` 仅提示转到 WebUI，不恢复旧远程下载器。启停、重载、删除及导入会同步刷新 XML 模板；停用的 Mod 不再继续贡献模板。删除会移除文件，应先备份。
 
 ## 兼容性
 
 Lua 侧兼容原版 Dice! mod 生态；JS 侧的兼容目标是 **SealDice（海豹）插件 API**，不是旧 Dice! 的 JS 体系（含 `seal.vars` 人物卡桥接、`commands.disable` 覆盖内置指令等）。海豹规则类插件还可以转换打包成规则包分发，实战示例见[海豹插件转规则包](/develop/rulepack-example-fu)与[规则包开发](/develop/rulepack)。
+
+旧 Dice! 的常见 `reply/*.toml`、Lua 回复、`trigger.cycle` 周期事件、变量条件、团务集合与导入顺序已有兼容子集。旧 JS / Python 动作、clock/hook、复杂 TOML 和嵌套模组仍有缺口，不能保证任意旧包直接可用；详见 [Lua 兼容边界](/develop/lua-mod#与原版的兼容性说明)。
 
 ### 群名片与显示名
 

@@ -1,6 +1,6 @@
 # Lua mod 参考
 
-Dice!Next 完整兼容原版 Dice! 的 Lua mod 体系：原版的 mod 包与单文件 Lua 插件可以直接上传使用，也可以按本页参考继续开发新 mod。DiceFavor（好感度）、PC_Inventory（背包）等社区 mod 已实测可用。
+Dice!Next 持续兼容原版 Dice! 的 Lua mod 与单文件插件，并提供常见 TOML 回复、Lua 周期事件等兼容子集。已有 DiceFavor（好感度）、PC_Inventory（背包）等社区语料验证，但不能由此推断任意旧 mod 完整可用；移植前请核对文末边界。
 
 ::: tip 新插件建议用 JS
 Lua 体系的定位是**承接原版生态**。从零写新插件建议用 [JS 插件](/develop/plugin-quickstart)——API 更现代，配置项、存储管理等与面板的集成也更完整。
@@ -42,12 +42,12 @@ Lua 体系的定位是**承接原版生态**。从零写新插件建议用 [JS �
 
 | 子目录 | 内容 | 说明 |
 | --- | --- | --- |
-| `reply/*.lua` | `msg_reply` 因果规则 | 关键词触发的回复逻辑（见下） |
+| `reply/*.lua` / `reply/*.toml` | `msg_reply` / TOML 回复规则 | 关键词触发的回复逻辑（见下）；TOML 是受限子集 |
 | `script/*.lua` | 函数脚本 | 供 `loadLua()` 与 `echo={lua=...}` 调用 |
 | `speech/*.yaml` | 模板词条 | 平铺 `key: 文本`，合并进全局模板 |
 | `model/*.xml` | 属性模板 | COC7.xml 等；含此目录的 mod 视为「规则类」，在规则管理页展示 |
 | `rulebook/*.yaml` | 规则手册 | `{rule, manual: {术语: 解释}}`，manual 并入 `.help` 词条 |
-| `event/` | 事件 | 仅作为 mod 识别信号，**内容目前不加载**（见文末兼容性说明） |
+| `event/*.lua` | 周期事件 | 支持正数 `trigger.cycle` 与 `action.lua`；clock/hook 仍未接入 |
 
 ## msg_reply 因果规则（reply/*.lua）
 
@@ -69,12 +69,19 @@ msg_reply['好感'] = {
 | `keyword.match` | 精确等于才触发（字符串或数组；先做 `{模板}` 展开，所以 `{自称}好感` 可用） |
 | `keyword.prefix` | 前缀命中，剩余文本放进 `msg.suffix` |
 | `keyword.search` | 包含即命中 |
+| `keyword.regex` | 整条消息正则匹配，忽略大小写；保留旧版 400 字节输入上限，中文宽字符行为仍有差异 |
 | `limit.cd` | 冷却秒数；`{user=10, grp=30}` 可分设 |
 | `limit.user_var.trust.at_least` | 信任等级门槛 |
 | `limit.grp_id` | 写成表即「仅群聊」 |
-| `echo` | **函数**（返回值作为回复模板）或 `{lua = "脚本名"}`（执行 `script/<脚本名>.lua`） |
+| `echo` | 函数、静态文本或 `{lua = "脚本名"}`；数组式牌堆动作及旧 JS / Python 不是完整兼容 |
 
 规则必须有 `echo` 且至少一种 `keyword` 才会被收录。回复文本会再做一次模板展开——`echo` 里写进 `msg` 表的字段（如 `msg.favor = 5`）可在回复里用 `{favor}` 引用。
+
+### TOML 回复与周期事件
+
+`reply/*.toml` 支持常见 Match / Prefix / Search / Regex、`rule` / `type="Game"`、静态文本或 `echo.lua`、冷却及 `limit.user_var` / `limit.grp_var` 比较。条件支持真值、equal、neq、at_least、at_most、more、less；不支持的 TOML 限制会记录诊断并跳过该回复，不能把未解析的权限条件当成允许。
+
+`event/*.lua` 支持正数 `trigger.cycle` 配合 `action.lua`，单位可为 second / minute / hour / day；注册后立即执行一次并周期重排，重载后旧回调失效。导入时保留 `ModList.json` 顺序与启停状态，同名回复由后加载项覆盖；模组启停同步刷新 XML 模板。
 
 ## msg_order 单文件插件（data/plugin/*.lua）
 
@@ -307,12 +314,14 @@ local named = getPlayerCardAttr(msg.uid, '备用卡', 'hp', 0, true)
 
 | 未支持项 | 说明 |
 | --- | --- |
-| `reply/*.toml` | TOML 形态的回复规则不加载（只认 `.lua`） |
-| `event` 事件表 / `event/` 目录内容 | 定时/事件触发体系未接 |
-| `echo = "文本"` / `echo = {数组}` | 纯文本与牌堆抽取形态的 echo 会被跳过，**只认函数与 `{lua=}`** |
-| `keyword.regex` | 正则匹配模式未接（match/prefix/search 可用） |
+| 复杂 TOML | 多行字符串、复杂表和完整旧版条件系统仍有缺口 |
+| clock/hook 与完整 rulebook/tape | 仅支持上述 cycle 子集，不是完整事件 / 规则运行时 |
+| 旧 JS / Python 动作与数组式 echo | 未接入；SealDice JS 引擎不等于旧 Dice! JS API |
+| 嵌套 Mod / XML 复杂派生 | 尚未完整发现、管理和复刻；简单 XML 模板支持不等于任意脚本派生可用 |
 | `limit.prob` / `limit.today` / `limit.user_id` | 概率、每日限次、用户名单门槛未接 |
 | `require` 二进制 C 扩展（`.dll`） | 未设置 `package.cpath` |
 | `require("Set")` 写法 | 对象层是全局变量，未注册进 `package.loaded`（直接用全局 `Set` 即可） |
 
 迁移遇到问题欢迎带上 mod 文件反馈。
+
+配置库目前按字符串保存，不能无损区分字符串 `"false"` 与布尔 false 等类型；正则使用字节字符串，400 字节限制也不是执行时间限制。完整修复记录及历史测试范围见[主仓兼容记录](https://github.com/DiceZone/Dice-Next/blob/main/docs/legacy-mod-compatibility.md)。

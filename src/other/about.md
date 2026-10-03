@@ -48,5 +48,6 @@ Dice!Next 基于 **AGPLv3** 协议开源发布，详见[开源协议](/other/lic
 
 ## 联系方式
 
+- **Dice!Next 测试群**：933145116，如有故障或建议欢迎加群反馈。
 - **GitHub**：[https://github.com/DiceZone/dice-next](https://github.com/DiceZone/dice-next)
 - **Issues**：[https://github.com/DiceZone/dice-next/issues](https://github.com/DiceZone/dice-next/issues)

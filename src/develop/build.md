@@ -66,8 +66,8 @@ cd server
 
 ## Linux
 
-::: warning 未正式验证
-Linux 构建在理论上可行（drogon / vcpkg 跨平台），但目前主要在 Windows 验证，未做正式测试。仓库根另有 `cross-compile*` 交叉编译脚本可参考。
+::: info 构建验证不等于平台实机验收
+Release CI 已构建 Linux x64 / ARM64、macOS ARM64 和 Windows x64 / ARM64，独立 Linux / Windows 后端测试为发布门禁。这里的构建成功不表示全部适配器已用真实账号验收；仓库根另有 `cross-compile*` 脚本可参考。
 :::
 
 ```bash
@@ -93,6 +93,19 @@ cd Dice-Next-Doc && npm install
 npm run docs:dev      # 本地预览
 npm run docs:build    # 构建（含死链检查）
 ```
+
+前端改动还应执行 `npm test` 与 `npm run lint`，不要只根据开发服务器能打开判断成功。安装为应用仅增加前端清单与图标，不引入 Service Worker 或 API 离线缓存。
+
+## Release 缓存与测试门禁
+
+- 发布目标显式设置 `BUILD_TESTING=OFF`，不把测试程序编进各平台包；Windows x64 / Linux x64 另设 `BUILD_TESTING=ON` 任务执行 CTest，全部通过才发布。
+- 依赖按固定 vcpkg baseline 安装，使用完整 Git 历史获取锁定版本端口。缓存只保存 ABI 二进制包，按平台、triplet、runner 环境和依赖族区分，新增包后刷新快照；不禁用兼容性校验。
+- Windows 测试构建使用受控 `/MP2` 文件并行，避免项目并行叠加导致内存暴涨；本地可用 `DICENEXT_MSVC_COMPILE_PROCESSES` 调整。
+- 冷缓存仍需预热，不承诺每轮固定分钟数。最近 beta.925 的 Release 工作流成功；详细实现与验证见[主仓构建记录](https://github.com/DiceZone/Dice-Next/blob/main/docs/ci-release-build.md)。
+
+### Beta 与正式版标识
+
+默认构建使用 Beta 标识，界面显示 `beta-3.0.0(123)`。正式版维护者在 CMake 配置时加 `-DDICENEXT_PRERELEASE=OFF`，界面显示 `v3.0.0(123)`；该选项不改变语义版本与构建号计数规则，也不会自动创建 GitHub Release。当前发布工作流仍为 Beta。
 
 ## 生成 Windows 本地测试包
 
