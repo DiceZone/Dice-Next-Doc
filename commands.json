@@ -18,14 +18,21 @@
       "dice.roll.result",
       "dice.roll.result_reason",
       "dice.roll.multi",
-      "dice.roll.multi_reason"
+      "dice.roll.multi_reason",
+      "dice.reason_prefix",
+      "dice.proxy_note",
+      "dice.crit",
+      "dice.fumble"
     ],
     "replyExamples": {
       "dice.roll.result": ".r 3d6+2",
       "dice.roll.result_reason": ".r 3d6+2 攻击",
       "dice.roll.multi": ".r 2#d20",
       "dice.roll.multi_reason": ".r 2#d20 连击"
-    }
+    },
+    "replyPrefixes": [
+      "dice.roll."
+    ]
   },
   {
     "cmd": ".ww",
@@ -44,6 +51,9 @@
     "descKey": "help.topic.ww",
     "replyKeys": [
       "dice.pool.result"
+    ],
+    "replyPrefixes": [
+      "dice.pool."
     ]
   },
   {
@@ -72,7 +82,7 @@
       "zh-Hant": "BRP 檢定與對抗",
       "en": "BRP Checks"
     },
-    "category": "BRP",
+    "category": "COC",
     "sources": [
       "Dice!Next"
     ],
@@ -99,6 +109,9 @@
     "descKey": "help.topic.rav",
     "replyKeys": [
       "dice.rav.result"
+    ],
+    "replyPrefixes": [
+      "dice.rav."
     ]
   },
   {
@@ -123,7 +136,10 @@
     "replyExamples": {
       "dice.check.result": ".ra 侦查",
       "dice.check.result_reason": ".ra 侦查 找线索"
-    }
+    },
+    "replyPrefixes": [
+      "dice.check."
+    ]
   },
   {
     "cmd": ".rb/.rp",
@@ -146,7 +162,10 @@
     "replyExamples": {
       "dice.bp.bonus": ".rb 侦查",
       "dice.bp.penalty": ".rp2 60"
-    }
+    },
+    "replyPrefixes": [
+      "dice.bp."
+    ]
   },
   {
     "cmd": ".sc",
@@ -170,7 +189,11 @@
     "replyExamples": {
       "card.sc.result": ".sc 1/1d6",
       "card.sc.result_noloss": ".sc 0/0"
-    }
+    },
+    "replyPrefixes": [
+      "card.sc.",
+      "dice.sc."
+    ]
   },
   {
     "cmd": ".st",
@@ -179,7 +202,7 @@
       "zh-Hant": "人物卡",
       "en": "Character Card"
     },
-    "category": "人物卡",
+    "category": "工具",
     "sources": [
       "原版",
       "青果",
@@ -188,7 +211,23 @@
     "example": ".st 力量50 / .st show / .st show 40",
     "descKey": "help.topic.st",
     "replyKeys": [
-      "card.st.done"
+      "card.st.done",
+      "card.show",
+      "card.show_one",
+      "card.empty",
+      "card.attr_missing",
+      "card.cleared",
+      "card.attr_deleted",
+      "card.export",
+      "card.fmt_done",
+      "card.locked_w",
+      "card.locked_r"
+    ],
+    "replyPrefixes": [
+      "card.st.",
+      "card.weapon.",
+      "card.db.",
+      "dice.st."
     ]
   },
   {
@@ -198,7 +237,7 @@
       "zh-Hant": "多角色卡",
       "en": "Multi-Card"
     },
-    "category": "人物卡",
+    "category": "工具",
     "sources": [
       "原版",
       "青果",
@@ -231,7 +270,7 @@
       "zh-Hant": "NPC 角色卡",
       "en": "NPC Cards"
     },
-    "category": "人物卡",
+    "category": "工具",
     "sources": [
       "Dice!Next"
     ],
@@ -265,7 +304,10 @@
       "card.en.success": ".en 侦查",
       "card.en.fail": ".en 侦查",
       "card.en.fail_grow": ".en 幸运 +1D3/1D10"
-    }
+    },
+    "replyPrefixes": [
+      "card.en."
+    ]
   },
   {
     "cmd": ".coc/.coc7/.coc6/.cocd/.coc7d/.coc6d",
@@ -284,6 +326,9 @@
     "descKey": "help.topic.coc",
     "replyKeys": [
       "dice.coc.build"
+    ],
+    "replyPrefixes": [
+      "dice.coc."
     ]
   },
   {
@@ -334,7 +379,10 @@
       "setcoc.set": ".setcoc 2",
       "setcoc.show": ".setcoc show",
       "setcoc.cleared": ".setcoc clr"
-    }
+    },
+    "replyPrefixes": [
+      "setcoc."
+    ]
   },
   {
     "cmd": ".dnd",
@@ -353,6 +401,9 @@
     "descKey": "help.topic.dnd",
     "replyKeys": [
       "dice.dnd.build"
+    ],
+    "replyPrefixes": [
+      "dice.dnd."
     ]
   },
   {
@@ -374,14 +425,18 @@
       "bot.on",
       "bot.off",
       "bot.already_on",
-      "bot.already_off"
+      "bot.already_off",
+      "fun.summon_empty"
     ],
     "replyExamples": {
       "bot.on": ".bot on",
       "bot.off": ".bot off",
       "bot.already_on": ".bot on",
       "bot.already_off": ".bot off"
-    }
+    },
+    "replyPrefixes": [
+      "bot."
+    ]
   },
   {
     "cmd": ".group",
@@ -398,6 +453,9 @@
     "descKey": "help.topic.group",
     "replyKeys": [
       "group.info"
+    ],
+    "replyPrefixes": [
+      "group."
     ]
   },
   {
@@ -407,7 +465,7 @@
       "zh-Hant": "旁觀",
       "en": "Observe"
     },
-    "category": "跑团",
+    "category": "团务",
     "sources": [
       "原版",
       "青果",
@@ -422,7 +480,10 @@
     "replyExamples": {
       "ob.on": ".ob",
       "ob.list": ".ob list"
-    }
+    },
+    "replyPrefixes": [
+      "ob."
+    ]
   },
   {
     "cmd": ".send",
@@ -453,7 +514,7 @@
       "zh-Hant": "跑團日誌",
       "en": "Game Log"
     },
-    "category": "跑团",
+    "category": "团务",
     "sources": [
       "原版",
       "青果",
@@ -488,7 +549,7 @@
       "zh-Hant": "團務管理",
       "en": "Game Session"
     },
-    "category": "跑团",
+    "category": "团务",
     "sources": [
       "原版"
     ],
@@ -505,7 +566,7 @@
       "zh-Hant": "今日人品",
       "en": "Daily Luck"
     },
-    "category": "娱乐",
+    "category": "互动",
     "sources": [
       "原版",
       "青果",
@@ -524,7 +585,7 @@
       "zh-Hant": "明日人品",
       "en": "Tomorrow's Luck"
     },
-    "category": "娱乐",
+    "category": "互动",
     "sources": [
       "青果"
     ],
@@ -541,7 +602,7 @@
       "zh-Hant": "昨日人品",
       "en": "Yesterday's Luck"
     },
-    "category": "娱乐",
+    "category": "互动",
     "sources": [
       "青果"
     ],
@@ -558,7 +619,7 @@
       "zh-Hant": "隨機姓名",
       "en": "Random Name"
     },
-    "category": "娱乐",
+    "category": "互动",
     "sources": [
       "原版",
       "青果",
@@ -568,6 +629,9 @@
     "descKey": "help.topic.name",
     "replyKeys": [
       "fun.name.result"
+    ],
+    "replyPrefixes": [
+      "fun.name."
     ]
   },
   {
@@ -577,7 +641,7 @@
       "zh-Hant": "暱稱與隨機改名",
       "en": "Nickname & Random Rename"
     },
-    "category": "人物卡",
+    "category": "工具",
     "sources": [
       "原版",
       "青果",
@@ -596,7 +660,10 @@
     "replyExamples": {
       "fun.nn.set": ".nn 阿强",
       "fun.nn.clear": ".nn"
-    }
+    },
+    "replyPrefixes": [
+      "fun.nn."
+    ]
   },
   {
     "cmd": ".set",
@@ -615,6 +682,9 @@
     "descKey": "help.topic.set",
     "replyKeys": [
       "fun.set.done"
+    ],
+    "replyPrefixes": [
+      "fun.set."
     ]
   },
   {
@@ -624,7 +694,7 @@
       "zh-Hant": "牌堆抽取",
       "en": "Deck Draw"
     },
-    "category": "牌堆",
+    "category": "互动",
     "sources": [
       "原版",
       "青果",
@@ -662,7 +732,10 @@
       "lang.cleared": ".lang clr",
       "lang.set": ".lang 简体",
       "lang.set_user": ".lang en"
-    }
+    },
+    "replyPrefixes": [
+      "lang."
+    ]
   },
   {
     "cmd": ".sleep",
@@ -671,7 +744,7 @@
       "zh-Hant": "休息",
       "en": "Rest"
     },
-    "category": "娱乐",
+    "category": "互动",
     "sources": [
       "原版"
     ],
@@ -688,7 +761,7 @@
       "zh-Hant": "好感度",
       "en": "Favor"
     },
-    "category": "娱乐",
+    "category": "互动",
     "sources": [
       "原版"
     ],
@@ -707,7 +780,10 @@
       "favor.grew": ".好感成长",
       "favor.added": ".好感增加 50",
       "favor.no_perm": ".好感增加 50"
-    }
+    },
+    "replyPrefixes": [
+      "favor."
+    ]
   },
   {
     "cmd": ".hiy",
@@ -716,7 +792,7 @@
       "zh-Hant": "檢定統計",
       "en": "Roll Stats"
     },
-    "category": "人物卡",
+    "category": "工具",
     "sources": [
       "海豹",
       "青果"
@@ -732,7 +808,10 @@
       "hiy.result": ".hiy",
       "hiy.skill_result": ".hiy 侦查",
       "hiy.empty": ".hiy"
-    }
+    },
+    "replyPrefixes": [
+      "hiy."
+    ]
   },
   {
     "cmd": ".setsn",
@@ -741,7 +820,7 @@
       "zh-Hant": "設群名片屬性",
       "en": "Set Card Attrs"
     },
-    "category": "人物卡",
+    "category": "工具",
     "sources": [
       "原版"
     ],
@@ -758,7 +837,10 @@
       "setsn.set": ".setsn hp san dex",
       "setsn.cleared": ".setsn clr",
       "setsn.no_perm": ".setsn hp"
-    }
+    },
+    "replyPrefixes": [
+      "setsn."
+    ]
   },
   {
     "cmd": ".sn",
@@ -767,7 +849,7 @@
       "zh-Hant": "設定群名片",
       "en": "Set Group Card"
     },
-    "category": "人物卡",
+    "category": "工具",
     "sources": [
       "海豹",
       "青果"
@@ -781,7 +863,11 @@
     "replyExamples": {
       "sn.done": ".sn",
       "sn.cleared": ".sn off"
-    }
+    },
+    "replyPrefixes": [
+      "sn.",
+      "card.autocard."
+    ]
   },
   {
     "cmd": ".ri/.init",
@@ -807,7 +893,10 @@
       "init.rolled": ".ri +2",
       "init.list": ".init",
       "init.cleared": ".init clr"
-    }
+    },
+    "replyPrefixes": [
+      "init."
+    ]
   },
   {
     "cmd": ".welcome",
@@ -833,7 +922,10 @@
       "welcome.set": ".welcome 欢迎新人",
       "welcome.off": ".welcome off",
       "welcome.none": ".welcome off"
-    }
+    },
+    "replyPrefixes": [
+      "welcome."
+    ]
   },
   {
     "cmd": ".dismiss",
@@ -851,6 +943,9 @@
     "descKey": "help.topic.dismiss",
     "replyKeys": [
       "dismiss.leaving"
+    ],
+    "replyPrefixes": [
+      "dismiss."
     ]
   },
   {
@@ -875,7 +970,10 @@
       "rule.result": ".rules coc:大失败",
       "rule.not_found": ".rules 不存在的词条",
       "rule.book_set": ".ruleset dnd"
-    }
+    },
+    "replyPrefixes": [
+      "rule."
+    ]
   },
   {
     "cmd": ".rx",
@@ -1008,7 +1106,7 @@
       "zh-Hant": "骰娘人格",
       "en": "Dice Persona"
     },
-    "category": "人物卡",
+    "category": "工具",
     "sources": [
       "Dice!Next"
     ],
@@ -1051,7 +1149,7 @@
       "zh-Hant": "抉擇分歧",
       "en": "Decision Picker"
     },
-    "category": "娱乐",
+    "category": "互动",
     "sources": [
       "原版"
     ],
@@ -1094,7 +1192,7 @@
       "zh-Hant": "跨群消息連結",
       "en": "Cross-group Link"
     },
-    "category": "跑团",
+    "category": "团务",
     "sources": [
       "原版"
     ],
@@ -1180,7 +1278,7 @@
       "zh-Hant": "群 AI 開關",
       "en": "Group AI Toggle"
     },
-    "category": "AI",
+    "category": "互动",
     "sources": [
       "Dice!Next"
     ],
@@ -1291,7 +1389,7 @@
     "sources": [
       "原版"
     ],
-    "example": "boton 123456 / blackqq 10001 / whitegroup 123456",
+    "example": "boton 123456 / botoff 123456 / blackqq 10001 / whitegroup 123456",
     "desc": {
       "zh-Hans": "骰主远程开关指定群，或管理用户、群黑名单与群白名单。",
       "zh-Hant": "骰主遠程開關指定群，或管理使用者、群黑名單與群白名單。",
@@ -1299,7 +1397,15 @@
     },
     "replyPrefixes": [
       "master."
-    ]
+    ],
+    "replyKeys": [
+      "master.boton",
+      "master.botoff"
+    ],
+    "replyExamples": {
+      "master.boton": "boton 123456",
+      "master.botoff": "botoff 123456"
+    }
   },
   {
     "cmd": ".plugin",
@@ -1340,27 +1446,6 @@
     ]
   },
   {
-    "cmd": ".strSelfName/.strSelfCall",
-    "title": {
-      "zh-Hans": "骰娘名称与自称",
-      "zh-Hant": "骰娘名稱與自稱",
-      "en": "Dice Name & Self-reference"
-    },
-    "category": "系统",
-    "sources": [
-      "原版"
-    ],
-    "example": ".strSelfName 小骰 / .strSelfCall 本骰 / .strSelfName reset",
-    "desc": {
-      "zh-Hans": "查看、设置或重置骰娘对外显示的名称和回复中的自称。",
-      "zh-Hant": "查看、設定或重設骰娘對外顯示的名稱和回覆中的自稱。",
-      "en": "Inspect, set, or reset the dice display name and the self-reference used in replies."
-    },
-    "replyPrefixes": [
-      "self."
-    ]
-  },
-  {
     "cmd": ".bind/.info",
     "title": {
       "zh-Hans": "跨平台身份绑定",
@@ -1377,7 +1462,10 @@
       "zh-Hant": "關聯 QQ 官方、OneBot、Discord 或 KOOK 視窗的身份，或查看當前視窗的綁定資訊。",
       "en": "Link identities across QQ Official, OneBot, Discord, or KOOK, or inspect the current identity mapping."
     },
-    "replyKeys": []
+    "replyKeys": [],
+    "replyPrefixes": [
+      "identity_email."
+    ]
   },
   {
     "cmd": ".mod",
@@ -1443,7 +1531,7 @@
     ]
   },
   {
-    "cmd": ".strXXX",
+    "cmd": ".strXXX/.strSelfName/.strSelfCall",
     "title": {
       "zh-Hans": "旧版文案兼容",
       "zh-Hant": "舊版文案相容",
@@ -1453,14 +1541,250 @@
     "sources": [
       "原版"
     ],
-    "example": ".strRollDice show / .strRollDice 新文案 / .strRollDice reset / .strRollDice NULL",
+    "example": ".strRollDice show / .strRollDice 新文案 / .strRollDice reset / .strRollDice NULL / .strSelfName 小骰 / .strSelfCall 本骰",
     "desc": {
-      "zh-Hans": "仅骰主可用：已审计的一对一旧键写入统一文案覆盖表；未知 str 键不被吞掉。",
-      "zh-Hant": "僅骰主可用：已審核的一對一舊鍵寫入統一文案覆蓋表；未知 str 鍵不被吞掉。",
-      "en": "Owner only: map audited one-to-one legacy keys into unified text overrides without swallowing unknown str commands."
+      "zh-Hans": "仅骰主可用：已审计的一对一旧键写入统一文案覆盖表；未知 str 键不被吞掉。 名称与自称使用专用配置，回执与其他 str 指令统一在这里查看。",
+      "zh-Hant": "僅骰主可用：已審核的一對一舊鍵寫入統一文案覆蓋表；未知 str 鍵不被吞掉。 名稱與自稱使用專用設定，回執與其他 str 指令統一在這裡查看。",
+      "en": "Owner only: map audited one-to-one legacy keys into unified text overrides without swallowing unknown str commands. Bot name and self-reference use dedicated settings; their receipts are grouped here with the other str commands."
     },
     "replyPrefixes": [
-      "legacy_str."
+      "legacy_str.",
+      "self."
+    ],
+    "replyKeys": [
+      "self.show",
+      "self.set",
+      "self.reset",
+      "self.unset"
+    ],
+    "replyExamples": {
+      "self.set": ".strSelfName 小骰",
+      "self.reset": ".strSelfName reset",
+      "self.show": ".strSelfName show",
+      "self.unset": ".strSelfName show"
+    }
+  },
+  {
+    "cmd": ".ra/.rc/.rav/.sc",
+    "title": {
+      "zh-Hans": "检定结果等级",
+      "zh-Hant": "檢定結果等級",
+      "en": "Check outcome labels",
+      "ja": "判定結果の名称"
+    },
+    "category": "COC",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": ".ra(30)60",
+    "desc": {
+      "zh-Hans": "检定中的大成功、极难、困难、成功、失败与大失败短语。",
+      "zh-Hant": "檢定中的大成功、極難、困難、成功、失敗與大失敗短語。",
+      "en": "Outcome labels shared by checks and opposed checks.",
+      "ja": "判定や対抗判定で使う成功段階の短文。"
+    },
+    "replyPrefixes": [
+      "dice.level."
+    ],
+    "replyKeys": [
+      "dice.level.critical",
+      "dice.level.extreme",
+      "dice.level.hard",
+      "dice.level.regular",
+      "dice.level.failure",
+      "dice.level.fumble"
+    ],
+    "replyExamples": {
+      "dice.level.critical": ".ra(1)60",
+      "dice.level.extreme": ".ra(10)60",
+      "dice.level.hard": ".ra(25)60",
+      "dice.level.regular": ".ra(50)60",
+      "dice.level.failure": ".ra(80)60",
+      "dice.level.fumble": ".ra(100)60"
+    }
+  },
+  {
+    "cmd": "",
+    "title": {
+      "zh-Hans": "掷骰与检定错误提示",
+      "zh-Hant": "擲骰與檢定錯誤提示",
+      "en": "Roll and check errors",
+      "ja": "ダイスと判定のエラー"
+    },
+    "category": "掷骰",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": ".r 1d100",
+    "desc": {
+      "zh-Hans": "表达式或检定无法执行时返回的提示。",
+      "zh-Hant": "表達式或檢定無法執行時傳回的提示。",
+      "en": "Error messages when an expression or check cannot be executed.",
+      "ja": "式や判定を実行できないときの案内。"
+    },
+    "replyPrefixes": [
+      "dice.error."
+    ]
+  },
+  {
+    "cmd": ".rc（DND 模式）",
+    "title": {
+      "zh-Hans": "DND 属性检定",
+      "zh-Hant": "DND 屬性檢定",
+      "en": "DND ability checks",
+      "ja": "DND 能力値判定"
+    },
+    "category": "DND",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": ".rc 力量",
+    "desc": {
+      "zh-Hans": "启用 DND 模式后，使用属性调整值进行 D20 检定。",
+      "zh-Hant": "啟用 DND 模式後，使用屬性調整值進行 D20 檢定。",
+      "en": "D20 checks using ability modifiers while DND mode is enabled.",
+      "ja": "DND モードで能力修正値を使う D20 判定。"
+    },
+    "replyPrefixes": [
+      "dnd.rc."
+    ]
+  },
+  {
+    "cmd": "",
+    "title": {
+      "zh-Hans": "权限与停用提示",
+      "zh-Hant": "權限與停用提示",
+      "en": "Permission and disabled-command notices",
+      "ja": "権限と無効化の案内"
+    },
+    "category": "权限",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": "",
+    "desc": {
+      "zh-Hans": "权限不足、指令停用或全局休眠时的共用提示；由指令或设置触发。",
+      "zh-Hant": "權限不足、指令停用或全域休眠時的共用提示；由指令或設定觸發。",
+      "en": "Shared notices triggered by permission checks or disabled settings.",
+      "ja": "権限不足やコマンド無効化時の共通案内。"
+    },
+    "replyPrefixes": [
+      "gate."
+    ]
+  },
+  {
+    "cmd": "",
+    "title": {
+      "zh-Hans": "敏感词管理与提示",
+      "zh-Hant": "敏感詞管理與提示",
+      "en": "Sensitive-word management and notices",
+      "ja": "禁止語の管理と案内"
+    },
+    "category": "权限",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": "",
+    "desc": {
+      "zh-Hans": "敏感词拦截、骰主告警和配置操作的提示。",
+      "zh-Hant": "敏感詞攔截、骰主警告和設定操作的提示。",
+      "en": "Sensitive-word filtering, owner alerts and configuration receipts.",
+      "ja": "禁止語の検出、管理者への警告、設定操作の案内。"
+    },
+    "replyPrefixes": [
+      "censor."
+    ]
+  },
+  {
+    "cmd": "",
+    "title": {
+      "zh-Hans": "自动事件回复",
+      "zh-Hant": "自動事件回覆",
+      "en": "Automatic event replies",
+      "ja": "自動イベントの返信"
+    },
+    "category": "管理",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": "",
+    "desc": {
+      "zh-Hans": "加好友、进群、离群、戳一戳等事件自动触发的回复。",
+      "zh-Hant": "加好友、進群、離群、戳一戳等事件自動觸發的回覆。",
+      "en": "Replies triggered by friend, group and poke events, not a single command.",
+      "ja": "友達追加、グループ参加・退出、つつくイベントの自動返信。"
+    },
+    "replyPrefixes": [
+      "event."
+    ]
+  },
+  {
+    "cmd": ".pc status",
+    "title": {
+      "zh-Hans": "QQ 官方状态卡片",
+      "zh-Hant": "QQ 官方狀態卡片",
+      "en": "QQ official status cards",
+      "ja": "QQ 公式のステータスカード"
+    },
+    "category": "工具",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": ".pc status",
+    "desc": {
+      "zh-Hans": "QQ 官方状态卡片中的标题、按钮与状态标签。",
+      "zh-Hant": "QQ 官方狀態卡片中的標題、按鈕與狀態標籤。",
+      "en": "Titles, buttons and status labels in QQ official character panels.",
+      "ja": "QQ 公式のキャラクターパネルの見出し、ボタン、状態表示。"
+    },
+    "replyPrefixes": [
+      "qq_rich."
+    ]
+  },
+  {
+    "cmd": "",
+    "title": {
+      "zh-Hans": "自定义规则指令提示",
+      "zh-Hant": "自訂規則指令提示",
+      "en": "Custom rule command notices",
+      "ja": "カスタムルールコマンドの案内"
+    },
+    "category": "工具",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": "",
+    "desc": {
+      "zh-Hans": "执行规则包注册的指令时返回的属性缺失提示。",
+      "zh-Hant": "執行規則包註冊的指令時傳回的屬性缺少提示。",
+      "en": "Missing-attribute notices for rulebook-defined commands.",
+      "ja": "ルールブックが登録したコマンドの属性不足の案内。"
+    },
+    "replyPrefixes": [
+      "fun.rulecmd."
+    ]
+  },
+  {
+    "cmd": "",
+    "title": {
+      "zh-Hans": "授权通知",
+      "zh-Hant": "授權通知",
+      "en": "Authorization notices",
+      "ja": "認証の通知"
+    },
+    "category": "系统",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": "",
+    "desc": {
+      "zh-Hans": "授权操作的共用通知。",
+      "zh-Hant": "授權操作的共用通知。",
+      "en": "Shared authorization notices.",
+      "ja": "認証操作の共通通知。"
+    },
+    "replyPrefixes": [
+      "authorize."
     ]
   }
 ]
