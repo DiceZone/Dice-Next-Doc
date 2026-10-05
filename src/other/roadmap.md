@@ -1,17 +1,23 @@
 # 开发计划
 
-## 2026-10-05 · 概率文案与多人格（已实现，待发布）
+## 2026-10-05 · 概率文案与多人格（已发布，build 926）
 
 - 指令及人格文案支持增删改多条候选、权重与实际概率；兼容旧版 sample，允许在候选内继续嵌套 sample。
 - 预览共用后端渲染器，可重新抽取；保留保存时的 Markdown / 纯文本缓存，不引入逐次全量转换。
 - 全局可激活多个概率人格，一次指令选定一个；保留群聊、私聊与账号固定选择优先级，配置、复制和导入导出可持久保留。
-- 使用方式见[指令与文案管理](/manage/commands)。待随新版发布，旧安装包尚未包含。
+- 使用方式见[指令与文案管理](/manage/commands)。build 925 及之前不包含此功能。
+
+## 2026-10-05 · 启动目录保护与托盘提示（已发布，build 926）
+
+- Windows 启动器和核心会拒绝在临时目录中运行，并提示完整解压到固定目录；检查早于配置、日志和数据库写入。见[安装部署](/guide/install)。
+- 基础设置可自定义全局托盘名称，最多 10 个 Unicode 字符，自动追加实际端口，保存即生效。见[系统设置](/manage/settings)。
+- 修复云人物卡对照的可选 JSON 转换歧义，解决 10 月 4 日发布构建在 Windows、Linux、macOS 上的同一编译错误。
 
 > 当前阶段：**Beta 公测与稳定性打磨**。以下为测试用户需要了解的当前状态；历史开发细节已从本页移出。
 
 > 尚未确认的方案不会列入开发计划；当前讨论中的跨平台身份与群数据关联方案已单独[归档](./discussion-archive)，仅供后续评估，不代表已排期或承诺实现。
 
-记录截至 **2026-10-03**。最近核对的已发布版本：**v3.0.0-beta.925 / build 925**（2026-10-03），见 [GitHub Release](https://github.com/DiceZone/Dice-Next/releases/tag/v3.0.0-beta.925)。无参数 `.help` 的测试群提示已合入 main（`75ec20d`），尚未包含在 beta.925 中。后续发布以 Release 页面为准。
+记录截至 **2026-10-05**。本次更新按 **v3.0.0-beta.926 / build 926** 归档；安装包及实际发布时间以 [GitHub Releases](https://github.com/DiceZone/Dice-Next/releases) 为准。
 
 已记录的本地 Windows 全量基线（2026-09-28–30）：**470 个核心用例 / 2996 条断言、Lua 151 条断言通过**，见[构建记录](https://github.com/DiceZone/Dice-Next/blob/main/docs/ci-release-build.md)。10 月 3 日另有 WebUI 102 项、更新模块 22 项 / 169 断言、i18n / 帮助 29 项 / 138 断言的专项验证，见[测试记录](https://github.com/DiceZone/Dice-Next/blob/main/server/tests/TEST_REPORT.md)。不同范围不混算；“已发布”只表示安装包已经产出，不等于真实平台投递与渲染验收全部完成。
 

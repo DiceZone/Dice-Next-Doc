@@ -139,7 +139,7 @@ Dice!Next 通过独立维护的 [dicescript-c-lib](https://github.com/DiceZone/d
 | 分段发送长度 | 回复超长自动分段（默认 600，约 300 汉字；尽量在换行处切分） |
 | 用户名包裹 | 回复里用户名的前后缀（默认 `<` `>`，如「\<希亚\>掷骰」；留空＝不包裹） |
 
-托盘名称保存为 `config/dice.json` 的 `tray_text`，不属于平台或适配器账号覆盖项。也可通过已认证的 `GET /api/system/tray` 查看 `{ text, port, tooltip, supported }`，使用 `PUT /api/system/tray` 提交 `{ "text": "希亚骰" }`；端口不可通过此接口修改。名称按 Unicode 字符计数，不允许内部换行或控制字符。
+自定义托盘名称从 build 926 起支持，保存为 `config/dice.json` 的 `tray_text`，不属于平台或适配器账号覆盖项。也可通过已认证的 `GET /api/system/tray` 查看 `{ text, port, tooltip, supported }`，使用 `PUT /api/system/tray` 提交 `{ "text": "希亚骰" }`；端口不可通过此接口修改。名称按 Unicode 字符计数，不允许内部换行或控制字符。
 
 ## 图片相关
 
