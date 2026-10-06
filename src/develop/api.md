@@ -73,12 +73,18 @@ WebUI 会话 Cookie 按安装实例稳定命名，而不是按主机或端口共
 更新操作异步执行；POST 接口只负责排队并立即返回一次状态，前端应继续轮询 `GET /api/system/update`。主要字段：
 
 - `current` / `latest`：当前版本与 Release 清单；`latest.asset` 是当前 OS / 架构精确匹配的安装包。`current.prerelease` 表示本次构建是否为 Beta；`GET /api/system/status` 同样返回 `prerelease`，不能仅凭语义版本判断渠道。
-- `phase`：`idle`、`checking`、`available`、`connecting`、`downloading`、`verifying`、`preparing`、`cancelling`、`cancelled`、`staged`、`downloaded`、`installing`、`error` 或 `up_to_date`。
+- `phase`：`idle`、`checking`、`available`、`connecting`、`downloading`、`verifying`、`preparing`、`cancelling`、`cancelled`、`staged`、`scheduled`（等待定时安装）、`downloaded`、`installing`、`error` 或 `up_to_date`。
 - `source`、`downloadedBytes`、`totalBytes`、`checkedAt`、`error`：本次来源、进度、时间与错误。
 - `downloadSupported` / `installSupported` / `pending`：能否由程序下载、能否一键安装，以及是否已有通过校验的暂存包。
 - `cancelSupported` / `canCancel`：服务端是否支持取消、当前是否可接受取消请求。请求成功后通常先进入 `cancelling`，轮询到 `cancelled` 才表示后台传输已停止；不提供强制中断安装。
 - `runtime.container`、`runtime.containerType`、`runtime.containerDetection`：容器识别结果、运行时类型与命中信号；`selfUpdateBlockedReason=container` 表示容器内只允许检查，不允许下载或安装。
 - `settings`：`autoCheck`、`intervalHours`（1–168）、`autoAction`（`notify` / `download` / `install`）、`source`（`auto` / `direct` / `mirror` / `custom`）与 `customMirror`。
+- `settings.scheduledInstall`：可选布尔值，默认 `false`，只在 `autoAction=install` 时安排安装；`settings.installTime` 默认 `04:00`，严格使用 `HH:MM`（`00:00`–`23:59`）。开启定时安装需要 Windows 管理器支持，容器及其他启动模式不能开启。
+- `scheduledInstallSupported`、`scheduledInstallAt`、`pendingTag`、`timezoneMinutes`：功能能力、有效计划的 UTC epoch 秒（无计划为 `0`）、暂存包版本与服务器实际时区偏移。前端应按能力字段开放设置，并用偏移显示时间，不使用客户端时区。
+
+定时安装安排在下载完成后的下一次指定时间，计划随暂存包持久化；定时只限制程序主动发起的重启。`autoAction=install` 且包已就绪时，Windows 启动器会在**任何下一次启动**时应用更新（包括手动重启、退出后启动、系统重启和守护进程拉起）。`POST /api/system/restart` 也会协调安装并重启；仅下载 / 通知模式保留暂存包，不安装。
+
+修改时间或时区会重新安排；关闭定时只取消主动重启计划，切换为 `download` / `notify` 才同时撤销启动时自动安装授权。手动 `POST /api/system/update/install` 可立即安装。`autoCheck=false` 不取消已有计划。后台每分钟检查主动重启计划；重复检查同一已暂存 Release 不会重新下载或重置计划。取消或中断准备的包既不自动排期，也不获得启动时安装授权。授权由核心在完成下载 / 校验 / 准备后生成，不采信安装包中携带的授权文件。
 
 自定义镜像必须是 HTTPS 地址前缀。服务端只接受 `DiceZone/Dice-Next`、安全版本字段、已知平台架构、受限文件名、准确大小和 64 位十六进制 SHA-256 的 schema 1 清单。SHA-256 只校验下载内容与清单一致；它不构成独立代码签名。
 
