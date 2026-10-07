@@ -89,7 +89,9 @@
     "example": ".ba 侦查 / .bav 力量 体型",
     "descKey": "help.topic.ba",
     "replyPrefixes": [
-      "dice.brp."
+      "dice.brp.",
+      "dice.outcome.brp.",
+      "dice.outcome.resist."
     ]
   },
   {
@@ -111,8 +113,82 @@
       "dice.rav.result"
     ],
     "replyPrefixes": [
-      "dice.rav."
+      "dice.rav.",
+      "dice.outcome.opposed."
     ]
+  },
+  {
+    "cmd": "",
+    "title": {
+      "zh-Hans": "按结果分级的标准回复",
+      "zh-Hant": "按結果分級的標準回覆",
+      "en": "Standard outcome replies",
+      "ja": "結果別の標準返信"
+    },
+    "category": "COC",
+    "sources": [
+      "Dice!Next"
+    ],
+    "example": "",
+    "desc": {
+      "zh-Hans": "按成功等级设置完整检定回复；其他检定未单独设置时继承同等级。留空则保持各指令原有文案。特殊成功供 BRP 使用，平局供对抗使用。",
+      "zh-Hant": "按成功等級設定完整檢定回覆；其他檢定未單獨設定時繼承同等級。留空則保持各指令原有文案。特殊成功供 BRP 使用，平局供對抗使用。",
+      "en": "Full replies per outcome, inherited by checks without a specific reply. Empty slots keep original command text. Special is for BRP; tie is for opposed checks.",
+      "ja": "結果別の完全な返信を設定します。個別設定のない判定は同段階の標準返信を継承し、空欄なら元の文面を使います。特殊成功は BRP、引き分けは対抗用です。"
+    },
+    "replyPrefixes": [
+      "dice.outcome.standard."
+    ],
+    "replyKeys": [
+      "dice.outcome.standard.critical",
+      "dice.outcome.standard.extreme",
+      "dice.outcome.standard.hard",
+      "dice.outcome.standard.regular",
+      "dice.outcome.standard.failure",
+      "dice.outcome.standard.fumble"
+    ],
+    "replyExamples": {
+      "dice.outcome.standard.critical": ".ra(1)60",
+      "dice.outcome.standard.extreme": ".ra(10)60",
+      "dice.outcome.standard.hard": ".ra(25)60",
+      "dice.outcome.standard.regular": ".ra(50)60",
+      "dice.outcome.standard.failure": ".ra(80)60",
+      "dice.outcome.standard.fumble": ".ra(100)60"
+    }
+  },
+  {
+    "cmd": ".strRollSkill/.strRollCriticalSuccess",
+    "title": {
+      "zh-Hans": "旧版检定文本兼容",
+      "zh-Hant": "舊版檢定文本相容",
+      "en": "Legacy check text compatibility",
+      "ja": "旧判定テキスト互換"
+    },
+    "category": "COC",
+    "sources": ["原版"],
+    "example": ".ra(50)侦查60 / .ra 3#(50)侦查60",
+    "desc": {
+      "zh-Hans": "分别保留单轮等级短句和多轮检定前缀；兼容槽保存后启用，不覆盖已设置的分级回复或原生指令模板。",
+      "zh-Hant": "分別保留單輪等級短句和多輪檢定前綴；相容槽儲存後啟用，不覆蓋已設定的分級回覆或原生指令模板。",
+      "en": "Separate single-check labels and multi-check prefixes. Saved compatibility slots never override configured outcome replies or native command templates.",
+      "ja": "単発ラベルと複数判定の前置文を個別に保持します。保存した互換枠は設定済みの結果別返信や標準テンプレートを上書きしません。"
+    },
+    "replyPrefixes": ["dice.compat.check."],
+    "replyKeys": [
+      "dice.compat.check.prefix", "dice.compat.check.prefix_reason",
+      "dice.compat.check.single.critical", "dice.compat.check.single.extreme", "dice.compat.check.single.hard",
+      "dice.compat.check.single.regular", "dice.compat.check.single.failure", "dice.compat.check.single.fumble"
+    ],
+    "replyExamples": {
+      "dice.compat.check.prefix": ".ra 3#(50)侦查60",
+      "dice.compat.check.prefix_reason": ".ra 3#(50)侦查60 找线索",
+      "dice.compat.check.single.critical": ".ra(1)60",
+      "dice.compat.check.single.extreme": ".ra(10)60",
+      "dice.compat.check.single.hard": ".ra(25)60",
+      "dice.compat.check.single.regular": ".ra(50)60",
+      "dice.compat.check.single.failure": ".ra(80)60",
+      "dice.compat.check.single.fumble": ".ra(100)60"
+    }
   },
   {
     "cmd": ".ra/.rc/.rad",
@@ -164,7 +240,9 @@
       "dice.bp.penalty": ".rp2 60"
     },
     "replyPrefixes": [
-      "dice.bp."
+      "dice.bp.",
+      "dice.outcome.bonus.",
+      "dice.outcome.penalty."
     ]
   },
   {
@@ -192,6 +270,8 @@
     },
     "replyPrefixes": [
       "card.sc.",
+      "dice.outcome.sanity.",
+      "dice.compat.sanity.",
       "dice.sc."
     ]
   },
@@ -306,7 +386,9 @@
       "card.en.fail_grow": ".en 幸运 +1D3/1D10"
     },
     "replyPrefixes": [
-      "card.en."
+      "card.en.",
+      "dice.outcome.growth.",
+      "dice.compat.growth."
     ]
   },
   {
@@ -989,7 +1071,8 @@
     "example": ".rx @调查员 / .rx @调查员 70",
     "descKey": "help.topic.rx",
     "replyPrefixes": [
-      "dice.rx."
+      "dice.rx.",
+      "dice.outcome.psychology."
     ]
   },
   {
@@ -1024,14 +1107,15 @@
     "sources": [
       "Dice!Next"
     ],
-    "example": ".rdc 力量 / .rdc 3#隐匿",
+    "example": ".rdc 力量 15 / .rdc 3#隐匿 15",
     "desc": {
       "zh-Hans": "在 DND5e 模式下，用属性调整值或独立技能加值进行 d20 检定，支持多轮。",
       "zh-Hant": "在 DND5e 模式下，用屬性調整值或獨立技能加值進行 d20 檢定，支援多輪。",
       "en": "Run a d20 check with an ability modifier or saved skill bonus in DND5e mode; supports multiple rounds."
     },
     "replyPrefixes": [
-      "dnd.rdc."
+      "dnd.rdc.",
+      "dice.outcome.dnd_check."
     ]
   },
   {
@@ -1096,7 +1180,8 @@
     },
     "replyPrefixes": [
       "dnd.longrest.",
-      "dnd.ds."
+      "dnd.ds.",
+      "dice.outcome.death_save."
     ]
   },
   {

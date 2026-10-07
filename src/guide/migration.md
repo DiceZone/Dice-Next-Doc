@@ -56,10 +56,30 @@
 
 旧版 Dice! 的自定义文案和帮助以简体中文为主，因此导入器**只写入 `zh-Hans`** 是预期行为；繁体中文和英文继续使用 Dice!Next 内建文本。
 
-- 有新版一对一槽位的 `strXXX` 文案会直接生效。
+- 有新版一对一槽位的 `strXXX` 文案会接入对应模板；已设置的新等级回复、原生指令模板仍按现有优先级使用。
 - 迁入时会把已核对的旧占位符（如 `{pc}`、`{deck_name}`、`{game.log_name}`）转换为新版占位符。新版已不再提供必要参数的旧模板（例如旧 `.log off/end` 的日志名、文件名模板）不会强行迁入。
 - 没有等价槽位或无法安全转换占位符的文案会保存在管理面板的「无效文本」中，不会丢失也不会冒充已经生效。
 - 每次扩充新版文案槽位时，会重新核对这批无效文本；能找到明确语义对应的键会加入映射，无法保证语义等价的仍保留给骰主手工处理。
+
+新增的[按检定结果分级回复](/manage/commands#按检定结果设置完整回复)默认继承原有文案，不会自动写入覆盖、清除已迁入文本或要求重新导入。已兼容的完整模板和成功等级短语继续生效；只有主动配置新等级回复时，才按新的继承链选择完整回复。
+
+以下检定文案缺口已补齐，无需把旧短句改写成新等级的完整回复：
+
+| 旧文案 | 新版兼容处理 |
+| --- | --- |
+| `strRollCriticalSuccess/strRollExtremeSuccess/strRollHardSuccess/strRollRegularSuccess/strRollFailure/strRollFumble` | 单轮检定的六个独立等级短句，不混同多轮短句 |
+| `strCriticalSuccess/strExtremeSuccess/strHardSuccess/strSuccess/strFailure/strFumble` | 继续作为多轮检定和 SAN 的等级短句 |
+| `strRollSkill/strRollSkillReason` | 检定前缀；连续多轮只加一次前缀 |
+| `strRollSkillHidden` | 暗检定群回执，不泄露私聊详细结果 |
+| `strSanityRoll` | 保留 SAN 完整模板及 `rank/loss/change/final` 的旧变量含义 |
+| `strEnRoll/strEnRollNotChange/strEnRollFailure/strEnRollSuccess` | 成长基础文本、未变化、失败变化、成功变化分别保留，引用随基础文本修改而更新 |
+| `strEnDefaultName` | 默认成长技能名称 |
+
+支持嵌套 `sample`、`case`、`grade`，以及已映射旧文本的引用（如 `{strEnRoll}`）；不会执行 JavaScript、Python、等待等可执行宏。条件字段或变量无法对应时，报告标为「部分兼容」；不支持的宏、语法不完整和循环自引用保留原文，等待人工迁移。**这不是旧版全部模板宏的全覆盖声明。**
+
+新导入的上述兼容文本会保留 `legacy.strXXX` 原稿，不覆盖已有且内容不同的目标。管理面板「备份与导入」可查看、下载逐项报告，区分已接入、部分兼容、仅保留、冲突跳过。「已接入」表示成功映射到文本槽，不表示替换了优先级更高的新回复。
+
+已有数据库会在升级后的首次启动自动补回能安全对应的历史孤立槽位，并修正早期 `dice.crit/dice.fumble` 的单轮短句映射。全局与人格均保留原记录，不覆盖已有目标（包括主动设为空的目标）。修复记录持久保存；恢复默认后，下一次启动不会把已清除的旧文案重新补回。没有可靠旧原稿的缺口仍需重新导入，修复记录不是当前配置的实时审计。
 
 ## 旧版指令兼容边界
 
