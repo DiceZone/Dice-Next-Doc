@@ -37,7 +37,7 @@ Dice!Next 后端提供 REST API，管理面板即基于此构建。本页按功�
 | GET / PUT | `/api/system/update` | 读取 / 保存自动检查间隔、发现后动作与下载来源 |
 | POST | `/api/system/update/check` | 立即在后台检查最新 GitHub Release |
 | POST | `/api/system/update/download` | 下载并校验当前平台安装包 |
-| POST | `/api/system/update/install` | 安装已暂存更新并重启（仅 Windows 管理器模式） |
+| POST | `/api/system/update/install` | 安装已暂存更新并重启（Windows 或新版 Linux/macOS 管理器模式） |
 
 WebUI 会话 Cookie 按安装实例稳定命名，而不是按主机或端口共用：同一主机不同安装目录可同时登录，同一实例改端口或重启仍可恢复 30 天受信会话。`GET /api/auth/status` 会兼容并迁移旧版 `dice_session`；`POST /api/auth/logout` 只撤销当前实例的会话。
 
@@ -79,10 +79,12 @@ WebUI 会话 Cookie 按安装实例稳定命名，而不是按主机或端口共
 - `cancelSupported` / `canCancel`：服务端是否支持取消、当前是否可接受取消请求。请求成功后通常先进入 `cancelling`，轮询到 `cancelled` 才表示后台传输已停止；不提供强制中断安装。
 - `runtime.container`、`runtime.containerType`、`runtime.containerDetection`：容器识别结果、运行时类型与命中信号；`selfUpdateBlockedReason=container` 表示容器内只允许检查，不允许下载或安装。
 - `settings`：`autoCheck`、`intervalHours`（1–168）、`autoAction`（`notify` / `download` / `install`）、`source`（`auto` / `direct` / `mirror` / `custom`）与 `customMirror`。
-- `settings.scheduledInstall`：可选布尔值，默认 `false`，只在 `autoAction=install` 时安排安装；`settings.installTime` 默认 `04:00`，严格使用 `HH:MM`（`00:00`–`23:59`）。开启定时安装需要 Windows 管理器支持，容器及其他启动模式不能开启。
+- `settings.scheduledInstall`：可选布尔值，默认 `false`，只在 `autoAction=install` 时安排安装；`settings.installTime` 默认 `04:00`，严格使用 `HH:MM`（`00:00`–`23:59`）。开启定时安装需要完整包管理器支持：Windows 为 `dice-next.exe`，新版 Linux/macOS 为 `start.sh` / `dice-next`；容器及直接核心模式不能开启。
 - `scheduledInstallSupported`、`scheduledInstallAt`、`pendingTag`、`timezoneMinutes`：功能能力、有效计划的 UTC epoch 秒（无计划为 `0`）、暂存包版本与服务器实际时区偏移。前端应按能力字段开放设置，并用偏移显示时间，不使用客户端时区。
 
-定时安装安排在下载完成后的下一次指定时间，计划随暂存包持久化；定时只限制程序主动发起的重启。`autoAction=install` 且包已就绪时，Windows 启动器会在**任何下一次启动**时应用更新（包括手动重启、退出后启动、系统重启和守护进程拉起）。`POST /api/system/restart` 也会协调安装并重启；仅下载 / 通知模式保留暂存包，不安装。
+定时安装安排在下载完成后的下一次指定时间，计划随暂存包持久化；定时只限制程序主动发起的重启。`autoAction=install` 且包已就绪时，管理器会在**任何下一次启动**时应用更新（包括手动重启、退出后启动、系统重启和守护进程拉起）。`POST /api/system/restart` 也会协调安装并重启；仅下载 / 通知模式保留暂存包，不安装。
+
+Linux/macOS 安装能力要求包含 POSIX 管理器的新包，beta.928 不具备此功能。后端还会核对管理器父进程、可执行文件及目录写权限；前端必须按实际 `installSupported` / `scheduledInstallSupported` 判断，不仅凭操作系统名开放。直接核心模式的普通重启使用原 PID、工作目录和参数重新执行，不等于安装支持。
 
 修改时间或时区会重新安排；关闭定时只取消主动重启计划，切换为 `download` / `notify` 才同时撤销启动时自动安装授权。手动 `POST /api/system/update/install` 可立即安装。`autoCheck=false` 不取消已有计划。后台每分钟检查主动重启计划；重复检查同一已暂存 Release 不会重新下载或重置计划。取消或中断准备的包既不自动排期，也不获得启动时安装授权。授权由核心在完成下载 / 校验 / 准备后生成，不采信安装包中携带的授权文件。
 
