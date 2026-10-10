@@ -51,5 +51,11 @@ for (const lang of ['zh-Hans', 'zh-Hant', 'en', 'ja']) {
   assert.equal(catalog.find(command => command.cmd === '.ba/.bav')?.category, 'COC');
   const legacy = catalog.find(command => command.replyPrefixes?.includes('legacy_str.'));
   assert.ok(legacy?.replyPrefixes?.includes('self.'));
+  const shortcut = catalog.find(command => command.cmd === '.alias');
+  assert.equal(shortcut?.category, '工具');
+  assert.deepEqual(shortcut?.replyPrefixes, ['shortcut.']);
+  const accountAlias = catalog.find(command => command.cmd === '.admin account-alias');
+  assert.equal(accountAlias?.category, '权限');
+  assert.deepEqual(accountAlias?.replyPrefixes, ['alias.']);
   console.log(`${lang}: all ${keys.length} editable texts linked; catalog keys, categories and examples valid`);
 }

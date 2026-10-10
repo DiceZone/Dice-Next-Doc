@@ -137,8 +137,11 @@ Dice!Next 移植了原版的 nTrust 权限阶梯，每个用户有 0–255 的**
 | `.trust @某人 / QQ号 [等级]` | 查询 / 设置信任等级（需管理员 ≥4，只能授予低于自己的等级） |
 | `.admin add/del <@/QQ>` | 授予 / 撤销管理员（仅骰主） |
 | `.admin list` | 列出管理员 |
-| `.alias add <别名ID> <主ID>` | 绑定账号别名——别名账号的信任 / Master 身份按主号计算（仅骰主） |
-| `.alias del / list` | 解绑 / 列出别名 |
+| `.admin account-alias add <别名ID> <主ID>` | 建立旧版账号权限关联——别名账号的信任 / Master 身份按主号计算（仅骰主） |
+| `.admin account-alias del <别名ID>` | 解除权限关联（仅骰主） |
+| `.admin account-alias list` | 列出权限关联（仅骰主） |
+
+`.alias` 现在用于[海豹式快捷指令](/use/fun#快捷指令-alias)，旧账号权限关联迁到 `.admin account-alias`，已有 `dice/aliases` 配置仍然生效，不需重新填写。这只共享权限，不合并人物卡、昵称等数据，也不会自动转换为 `.bind`；跨平台身份核验与数据归并仍使用[身份绑定](/use/cloud)。
 
 ## 敏感词管理
 

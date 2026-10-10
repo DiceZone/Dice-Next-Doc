@@ -67,7 +67,7 @@ Dice!Next 使用 `config/` 目录保存 **JSON 格式**配置；首次启动会�
 | `message_format` | 出站展示方案：`traditional`（传统）、`standard`（标准）或 `visual`（高级视觉）；旧值 `card` 自动按 `standard` 兼容。详见[适配器配置](/config/adapter#回复文案与视觉方案) |
 | `save_log_images` | 跑团日志是否落地消息内图片 |
 | `logsite_url` / `logsite_format` | 日志站上传地址（留空 = 官方站）与协议格式 |
-| `aliases` | 账号别名（`{platform, alias, main}`，`.alias` 指令维护） |
+| `aliases` | 旧版账号权限关联（`{platform, alias, main}`，由骰主通过 `.admin account-alias` 维护；不是 `.alias` 快捷指令） |
 | `notice` | 骰主通知窗口与事件订阅（建议用通知设置页管理） |
 | `ai` | AI 子系统全部配置（模型 / 润色 / 翻译 / 对话 / 记忆 / 工具…，建议用 AI 页管理） |
 | `rules.default_dice_sides` | `.r` 无参数时的默认骰面 |

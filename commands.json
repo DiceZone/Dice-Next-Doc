@@ -1423,6 +1423,30 @@
   {
     "cmd": ".alias",
     "title": {
+      "zh-Hans": "快捷指令",
+      "zh-Hant": "快捷指令",
+      "en": "Command Shortcuts",
+      "ja": "コマンドのショートカット"
+    },
+    "category": "工具",
+    "sources": [
+      "海豹",
+      "Dice!Next"
+    ],
+    "example": ".alias 侦查 .ra 侦查 / .alias --my 攻击 .r d20 / .&侦查 60 / .a 攻击 / .alias show / .alias del 侦查",
+    "desc": {
+      "zh-Hans": "定义群或个人快捷指令，以调用者权限执行，可追加参数；同名时群优先。",
+      "zh-Hant": "定義群或個人快捷指令，以呼叫者權限執行，可附加參數；同名時群優先。",
+      "en": "Define group or personal command shortcuts, executed as the caller with appended arguments. Group names take precedence.",
+      "ja": "グループ・個人用のコマンドを登録し、実行者の権限で呼び出します。引数を追加でき、同名はグループ用を優先します。"
+    },
+    "replyPrefixes": [
+      "shortcut."
+    ]
+  },
+  {
+    "cmd": ".admin account-alias",
+    "title": {
       "zh-Hans": "账号别名",
       "zh-Hant": "帳號別名",
       "en": "Account Alias"
@@ -1432,11 +1456,11 @@
       "原版",
       "Dice!Next"
     ],
-    "example": ".alias add 别名ID 主ID / .alias del 别名ID / .alias list",
+    "example": ".admin account-alias add 别名ID 主ID / .admin account-alias del 别名ID / .admin account-alias list",
     "desc": {
-      "zh-Hans": "将别名账号绑定到主账号，共用信任等级和骰主身份。",
-      "zh-Hant": "將別名帳號綁定到主帳號，共用信任等級和骰主身份。",
-      "en": "Bind an alias account to a primary account so they share trust and owner identity."
+      "zh-Hans": "骰主管理旧版主副号权限关联，共用信任等级和骰主身份；不合并人物卡或身份数据。",
+      "zh-Hant": "骰主管理舊版主副號權限關聯，共用信任等級和骰主身份；不合併人物卡或身分資料。",
+      "en": "Owner-only management of legacy account permission links. Shares trust and owner identity without merging cards or identity data."
     },
     "replyPrefixes": [
       "alias."
