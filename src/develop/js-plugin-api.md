@@ -270,7 +270,7 @@ const mctx = seal.getCtxProxyFirst(ctx, cmdArgs) || ctx;  // 有 @ 目标则代�
 
 | API | 说明 |
 | --- | --- |
-| `console.log/info/warn/error(...)` | 写入骰娘运行日志（前缀 `[js]`） |
+| `console.log/info/warn/error/debug/trace(...)` | 写入 `[插件]` 日志并标明实际脚本来源；log/info=INFO、warn=WARN、error=ERROR、debug=DEBUG、trace=TRACE |
 | `seal.getVersion()` | `{version, versionSimple, versionCode, ...}` |
 | `seal.getEndPoints()` | 占位，恒空数组 |
 
@@ -350,7 +350,7 @@ const mctx = seal.getCtxProxyFirst(ctx, cmdArgs) || ctx;  // 有 @ 目标则代�
 | `clearTimeout(id)` / `clearInterval(id)` | — | 取消计时器。 |
 | `fetch(url, options?)` | `Promise<Response>` | Response 含 `ok`、`status`、`statusText`、异步 `text()` / `json()`；底层请求仍会同步阻塞。 |
 | `btoa(text)` / `atob(text)` | string | Base64 编解码；`atob` 接受 `data:*;base64,` 前缀。 |
-| `console.log/info/warn/error(...values)` | — | 写入运行日志。 |
+| `console.log/info/warn/error/debug/trace(...values)` | — | 按对应级别写入运行日志，默认 INFO 不展示 DEBUG/TRACE；定时和异步续跑保留来源。 |
 
 ## 最小可运行示例：读取群名片与人物卡
 

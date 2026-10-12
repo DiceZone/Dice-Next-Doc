@@ -162,7 +162,8 @@ local skill = getPlayerCardAttr(msg.uid, msg.gid, '侦查', -1, false)
 
 | 函数 | 说明 |
 | --- | --- |
-| `log(...)` | 写运行日志 |
+| `log(...)` / `print(...)` | 按 INFO 写入 `[插件]` 日志，标明当前插件来源；旧用法保持兼容 |
+| `logTrace/logDebug/logInfo/logSuccess/logWarn/logError(...)` | 按指定级别写运行日志；默认 INFO 隐藏 TRACE/DEBUG，延时和定时入口保留来源 |
 | `ranint(a?, b?)` | 闭区间随机整数；默认 `ranint()` 为 1–100，a>b 时自动交换 |
 | `getDiceDir()` | 数据目录绝对路径（`data`） |
 | `getDiceQQ()` | 骰娘账号 |

@@ -42,7 +42,7 @@ Dice!Next 使用 `config/` 目录保存 **JSON 格式**配置；首次启动会�
 | `port` | 管理面板 / API 端口。被占用时启动会自动顺延并写回此键 | `18088` |
 | `api_key` | 后端 API 访问密钥（首次自动生成，面板请求以 `X-API-Key` 头携带） | 自动 |
 | `db_path` | 主数据库路径（人物卡 / 日志 / 聊天等另有独立 db 文件） | `./data/dice.db` |
-| `log_level` | 日志级别 trace/debug/info/warn/error | `info` |
+| `log_level` | 最低记录级别 trace/debug/info/success/warn/error；立即影响新日志，旧 warning/critical 配置仍兼容 | `info` |
 
 ::: tip WebUI 登录密码与 api_key 的关系
 管理面板的**访问控制以「WebUI 登录密码」为准**：在面板的 WebUI 设置页设置后，所有 `/api/*` 请求都需要先登录（`webui.password` 键，留空 = 关闭鉴权）。登录时可选择“信任此设备 30 天”，可信会话仅保存在本机 `config/webui_sessions.json`。`server.api_key` 是面板请求随附的 API 密钥，供对接场景使用，不能代替登录密码。
