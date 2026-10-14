@@ -71,7 +71,7 @@ Dice!Next 采用插件式适配器架构。请在 [管理面板 → 适配器管
 ## QQ 官方机器人能力边界
 
 - 群聊、C2C 与频道的能力并不相同。群聊 / C2C 的 Markdown 需要相应平台权限；频道按自身支持的消息格式发送，不应默认视为同样支持 Markdown。
-- 已补齐群信息、成员、管理、撤回、菜单及频道等官方接口，插件可通过适配器的 `qq_*` 动作调用；接口可能要求内邀或白名单，未获权限时仍会返回平台错误。
+- 已提供群信息、成员、管理、撤回、菜单及频道等官方接口，可通过 [后台 API 动作入口](/develop/qq-official-api#后台调用入口) 调用 `qq_*` 动作；接口可能要求内邀或白名单，未获权限时仍会返回平台错误。
 - `.log export` 已接入富媒体文件通道（`file_type=4`）。文件上传有 200MB 预检限制，最终是否可发送仍取决于平台与账号权限；收不到文件时可改用日志站链接或 WebUI 下载。
 - 当前接口接入和离线测试不等于所有真实账号场景已验收。排查时保留错误码与时间，不要公开 AppSecret、Token 或玩家敏感数据。
 
@@ -88,6 +88,17 @@ Dice!Next 采用插件式适配器架构。请在 [管理面板 → 适配器管
 群名称通过 `GET /v2/groups/{group_openid}/info` 的 `group_name` 获取，并持久保存到群资料。群信息、成员列表和成员详情接口需要平台白名单权限；未获权限时会返回 `11253`。查询在后台进行，失败保留旧名称并退避重试，不阻塞消息等待昵称，也不把部分名单当作完整名单。
 
 接口依据：[群消息事件](https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/group_message_create.html)、[好友添加事件](https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/friend_add.html)、[群信息](https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_info.get.html)、[成员列表](https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_members.get.html)、[成员详情](https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_members_member_openid.get.html)。
+
+### 群成员与互动事件
+
+官方适配器设置提供两个开关：
+
+- **订阅群成员进出事件**：接入官方 `GROUP_MEMBER_EVENT (1<<24)`，将成员加入、退出事件送入欢迎词、群管理及插件事件，并更新成员缓存。默认关闭，避免改变已有账号的订阅集合；需具备平台对应能力，保存后重新连接。
+- **自动回应互动事件**：默认开启，对消息按钮和快捷菜单事件（类型 11、12）回应一次，结束 QQ 客户端的加载状态。收到回调不等于指令已执行，回调数据不会自动作为聊天指令运行。如果插件或外部处理器需要自行选择回应码，请关闭自动回应。
+
+消息反馈、清空会话、故事集、切换模型、用户／群授权及订阅模板授权状态可交给原生插件事件钩子处理。授权通知不会自动解除黑名单、开启骰子或授予管理权限。新的时间戳、引用索引、卡片及消息场景数据也会保留；重复推送按消息 ID 和消息索引去重，避免同一指令重复执行。
+
+官方接口调用、原生插件钩子及参数示例见 [QQ 官方 API v2 能力](/develop/qq-official-api)。
 
 ## 回复文案与视觉方案
 

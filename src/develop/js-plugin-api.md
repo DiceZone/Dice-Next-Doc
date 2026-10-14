@@ -73,6 +73,8 @@ onMessageReceived → 内置指令或 cmd.solve → 清空异步任务 → onCom
 
 即使注册的指令对象没有 `solve`，或指令词未在任何 `cmdMap` 中命中，已解析的指令消息仍会进入 `onCommandReceived`。事件类钩子是否触发取决于适配器是否上报对应 `BotEvent`。
 
+QQ 官方适配器另外提供互动、订阅授权与其他官方事件的原生钩子；其签名、配置和边界见 [QQ 官方 API v2 能力](./qq-official-api.md)。它们是 Dice!Next 扩展，不改变上述海豹风格钩子的签名。
+
 ::: warning 与 SealDice 边界
 `onMessageEdit` 暂不可用，因为 Dice!Next 当前的 `BotEvent` 传输层没有消息编辑事件。`onCommandOverride` 在 `sealdice-core` 本身没有 JS 绑定，因此不属于 JS 插件兼容目标。
 :::

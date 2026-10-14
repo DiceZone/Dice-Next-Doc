@@ -110,6 +110,7 @@ Linux/macOS 安装能力要求包含 POSIX 管理器的新包，beta.928 不具�
 | PUT / DELETE / PATCH | `/api/adapters/{id}` | 更新 / 删除 / 局部修改 |
 | POST | `/api/adapters/{id}/test` | 测试连接 |
 | POST | `/api/adapters/{id}/reconnect` | 手动重连（重置退避） |
+| GET / POST | `/api/adapters/{id}/qq-official-actions` | QQ 官方能力列表 / 调用受限动作；见 [QQ 官方 API v2 能力](./qq-official-api.md) |
 
 新建示例：
 

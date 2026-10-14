@@ -135,7 +135,10 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
         { text: '面板总览', link: '/dashboard' },
         { text: '适配器管理', link: '/adapter-manager' },
         { text: '规则管理', link: '/rules' },
-        { text: '回复管理', link: '/replies' },
+        { text: '高级回复', collapsed: true, items: [
+          { text: '自定义回复', link: '/replies' },
+          { text: '卡片与按钮', link: '/cards-buttons' }
+        ] },
         { text: '指令列表', link: '/commands' },
         { text: '群组管理', link: '/groups' },
         { text: '玩家管理', link: '/players' },
@@ -158,6 +161,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
         { text: '系统架构', link: '/architecture' },
         { text: '插件开发快速上手', link: '/plugin-quickstart' },
         { text: 'JS 插件 API 参考', link: '/js-plugin-api' },
+        { text: 'QQ 官方 API v2 能力', link: '/qq-official-api' },
         { text: 'Lua mod 参考', link: '/lua-mod' },
         { text: '规则包编写', link: '/rulepack' },
         { text: '实战：转化海豹规则插件', link: '/rulepack-example-fu' },
