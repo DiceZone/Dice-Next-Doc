@@ -40,6 +40,24 @@ Dice!Next 兼容原版 Dice! 牌堆格式，并提供给主持人（KP）的运�
 .deck del 出招                → 删除临时牌堆
 ```
 
+## 团务私有牌堆 `.deck session`
+
+2026-10-16 本地实现，尚未随本轮安装包发布。先通过 `.game new` 建立团务，再由本团 GM、群管或骰主管理不放回牌堆：
+
+```text
+.deck session new 出场 甲/乙/丙       // 创建私有牌堆
+.deck session from 敌人 公共敌人堆   // 复制公共牌堆，不修改来源
+.deck session rest 出场              // 查看剩余数量
+.draw 出场                          // 抽走一张，不放回
+.deck session reset 出场             // 恢复全部牌
+.deck session del 出场               // 删除指定私有牌堆
+.deck session clr                    // 清空本团私有牌堆
+```
+
+`::2::甲` 表示两份甲；一个 Session 最多 10 个私有牌堆。接入同一团务的多个群共用牌池，不同团务互不影响；剩余牌数持久保存，旧版存档的已抽状态也会保留。抽空后必须显式重置，不会自动补牌或改抽同名公共牌堆。保存失败时本次不扣牌。
+
+抽取优先级为：**团务私有牌堆 → 本群临时牌堆 → 公共文件牌堆**。本群临时牌堆仍有放回，`.deck new/set/del/clr` 原有含义不变；团务管理使用上面的显式 `session` 入口。Lua 三参 `drawDeck(gid, uid, name)` 共用团务牌池，一参 `drawDeck(name)` 仍只抽公共牌堆。
+
 ## 默认牌堆 `.deck set`
 
 ```

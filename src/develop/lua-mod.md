@@ -1,6 +1,6 @@
 # Lua mod 参考
 
-Dice!Next 持续兼容原版 Dice! 的 Lua mod 与单文件插件，并提供常见 TOML 回复、Lua 周期事件等兼容子集。已有 DiceFavor（好感度）、PC_Inventory（背包）等社区语料验证，但不能由此推断任意旧 mod 完整可用；移植前请核对文末边界。
+Dice!Next 持续兼容原版 Dice! 的 Lua mod 与单文件插件。2026-10-15 的本地实现扩展了 TOML、条件、事件、嵌套模组和安全数值模板；尚未随本轮安装包发布。已有部分社区语料验证，但不能由此推断任意旧 mod 完整可用；移植前请核对文末边界与所用版本。
 
 ::: tip 新插件建议用 JS
 Lua 体系的定位是**承接原版生态**。从零写新插件建议用 [JS 插件](/develop/plugin-quickstart)——API 更现代，配置项、存储管理等与面板的集成也更完整。
@@ -33,8 +33,8 @@ Lua 体系的定位是**承接原版生态**。从零写新插件建议用 [JS �
 | --- | --- |
 | `mod` 或 `title` | 显示名 |
 | `author` / `ver`（或 `version`）/ `brief` | 元数据 |
-| `helpdoc` | 词条表，接入 `.help` 查询；值以 `&` 开头表示「指向另一词条的别名」 |
-| `speech` | 模板词条（`{key}` 展开用）；值为数组时取第一项 |
+| `helpdoc` | 词条表，主题忽略 ASCII 大小写；接入 `.help` 查询，`&主题` 可跨 Mod 多级转向 |
+| `speech` | 模板词条（`{key}` 展开用）；文本或均匀随机文本数组，键忽略 ASCII 大小写 |
 
 解析容忍尾逗号与注释（真实社区 mod 常见）。
 
@@ -42,12 +42,16 @@ Lua 体系的定位是**承接原版生态**。从零写新插件建议用 [JS �
 
 | 子目录 | 内容 | 说明 |
 | --- | --- | --- |
-| `reply/*.lua` / `reply/*.toml` | `msg_reply` / TOML 回复规则 | 关键词触发的回复逻辑（见下）；TOML 是受限子集 |
+| `reply/*.lua` / `reply/*.toml` | `msg_reply` / TOML 回复规则 | 关键词触发的回复逻辑（见下）；TOML 支持多行、引号键、内联表等语法，但动作仍受安全边界限制 |
 | `script/*.lua` | 函数脚本 | 供 `loadLua()` 与 `echo={lua=...}` 调用 |
-| `speech/*.yaml` | 模板词条 | 平铺 `key: 文本`，合并进全局模板 |
+| `speech/*.yaml` | 模板词条 | 平铺文本或文本数组，合并进全局模板，键忽略 ASCII 大小写 |
 | `model/*.xml` | 属性模板 | COC7.xml 等；含此目录的 mod 视为「规则类」，在规则管理页展示 |
-| `rulebook/*.yaml` | 规则手册 | `{rule, manual: {术语: 解释}}`，manual 并入 `.help` 词条 |
-| `event/*.lua` | 周期事件 | 支持正数 `trigger.cycle` 与 `action.lua`；clock/hook 仍未接入 |
+| `rulebook/*.yaml` | 规则手册 | 当前规则优先、父规则继承、主题查询与受控 tape |
+| `event/*.lua` | 定时 / 事件声明 | cycle、服务器时区 clock 及安全生命周期 / 消息钩子 |
+
+资源可以分层放置。嵌套模组使用 `父.子` 管理 ID，父级停用时子级也不会执行；同名目录与单文件插件使用独立 ID，防止管理操作指向错误文件。加载保留 `mod_order.json` 顺序，脚本按命名空间登记、后加载覆盖；仅登记资源，不把资源目录里的 Lua 全部自动执行。符号链接、Windows 联接和路径穿越不允许。
+
+脚本名忽略 ASCII 大小写，例如 `loadLua('Tools.Ping')` 与 `loadLua('tools.ping')` 查同一个全局脚本，后加载的 Mod 优先。`script/Tools/init.lua` 可用 `loadLua('Tools')` 调用，也保留 Next 的显式 `Tools.init` 写法；不会因此允许绝对路径或 `..`。
 
 ## msg_reply 因果规则（reply/*.lua）
 
@@ -69,19 +73,48 @@ msg_reply['好感'] = {
 | `keyword.match` | 精确等于才触发（字符串或数组；先做 `{模板}` 展开，所以 `{自称}好感` 可用） |
 | `keyword.prefix` | 前缀命中，剩余文本放进 `msg.suffix` |
 | `keyword.search` | 包含即命中 |
-| `keyword.regex` | 整条消息正则匹配，忽略大小写；保留旧版 400 字节输入上限，中文宽字符行为仍有差异 |
+| `keyword.regex` | 有执行时限的 ECMAScript `i` 整条匹配，保留旧版 400 字节输入上限；非 `u` 模式按 UTF-16 单元计数 |
 | `limit.cd` | 冷却秒数；`{user=10, grp=30}` 可分设 |
 | `limit.user_var.trust.at_least` | 信任等级门槛 |
-| `limit.grp_id` | 写成表即「仅群聊」 |
-| `echo` | 函数、静态文本或 `{lua = "脚本名"}`；数组式牌堆动作及旧 JS / Python 不是完整兼容 |
+| `limit.grp_id` / `limit.user_id` | ID / ID 列表；`{nor={...}}` 排除指定 ID；群 ID `0` 表示私聊，空列表不限制 |
+| `limit.prob` | 百分比触发概率；0 沿用旧版“不额外限制”语义 |
+| `limit.today` | 每日限次，服务器时区换日；支持共享名称与 user / chat / global 范围 |
+| `limit.lock` | 有界、非阻塞同步锁；支持共享名称及范围，Lua 暂停期间仍持锁 |
+| `limit.self_var` / `limit.user_var` / `limit.grp_var` | 骰娘自身、用户、群变量的真值或比较条件 |
+| `limit.dicemaid` | ignore / only / off，由宿主的骰娘名单判断，不相信消息伪造的身份 |
+| `echo` | 函数、静态文本、文本候选数组或 `{lua="脚本名 / 内联 Lua"}`；不执行旧 JS / Python |
 
 规则必须有 `echo` 且至少一种 `keyword` 才会被收录。回复文本会再做一次模板展开——`echo` 里写进 `msg` 表的字段（如 `msg.favor = 5`）可在回复里用 `{favor}` 引用。
 
-### TOML 回复与周期事件
+### TOML、条件与优先级
 
-`reply/*.toml` 支持常见 Match / Prefix / Search / Regex、`rule` / `type="Game"`、静态文本或 `echo.lua`、冷却及 `limit.user_var` / `limit.grp_var` 比较。条件支持真值、equal、neq、at_least、at_most、more、less；不支持的 TOML 限制会记录诊断并跳过该回复，不能把未解析的权限条件当成允许。
+`reply/*.toml` 通过 toml++ 解析，支持多行字符串、引号键、复杂表、内联表与数组。回复支持 Match / Prefix / Search / Regex、`rule` / `type="Game"`、静态文本、Lua 与文本候选；候选可用 `::权重::`，并继续嵌套 `{sample:甲|乙}`。空回复、仅副作用和暂停等待也算已处理，不会再触发 AI 等兜底回复。
 
-`event/*.lua` 支持正数 `trigger.cycle` 配合 `action.lua`，单位可为 second / minute / hour / day；注册后立即执行一次并周期重排，重载后旧回调失效。导入时保留 `ModList.json` 顺序与启停状态，同名回复由后加载项覆盖；模组启停同步刷新 XML 模板。
+条件支持真值、equal、neq、at_least、at_most、more、less，以及上表的名单 / 概率 / 计数 / 锁。多个比较条件须全部满足。标量冷却按聊天窗口计算，共享计数可显式指定范围与名称。兼容表声明与旧式 `limit="prob:50;grp_id:!0;cd:10"` 文本。未知或无效的条件会记录诊断并跳过整条规则，不会变成无条件允许。
+
+目录模组按“活动团规则 → Match → 最长 Prefix → Search → Regex”选择；同级目录按加载顺序覆盖。关键词的 ASCII 大小写兼容旧版；单文件插件仍保留原有匹配习惯。一次消息选一条回复，不复制旧版多个 Regex 同时连续发言的行为。
+
+### 定时与安全事件
+
+`event/*.lua` 的 `trigger.cycle` 支持 1 秒至 7 天，单位为 second / minute / hour / day；所有模组加载后立即执行一次并重排。`trigger.clock` 支持 `{hour=4, minute=0}` 或这类表的列表，使用服务器时区，不补跑错过的日期。
+
+可用 hook：`StartUp`、`DayEnd`、`DayNew`、`Message`、`FriendRequest`、`FriendAdd`、`GroupRequest`、`GroupAdd`、`GroupWelcome`、`GroupDecrease`、`GroupRecall`、`GroupUpload`、`Poke`、`LogEnd`。具体通知仍取决于适配器是否提供该入站事件。`StartUp` 仅在宿主启动时触发，重载不触发；日界事件按服务器日期变化执行。
+
+请求钩子可拒绝但不能越过宿主策略批准；钩子失败会留下待处理请求。消息与 tape 遵守黑名单、禁用、内容拦截及分群插件开关，凭据 / 恢复管理指令不会被吞掉。`LogEnd` 只提供受控日志路径和默认上传控制，不恢复任意文件发布。授权、审查和云黑名单策略覆盖钩子不执行。
+
+`LogEnd` 在 `.log end` 或 `.game over` 完成日志关闭与结算后调用。可读取 `log_file`（实际导出文件名）、`log_path`（绝对路径）、`log_id`、`log_name`、`log_count`，以及 uid / gid / fromUser / fromQQ / fromGroup / platform / adapterId / selfId / msgid / time；文件名不是用户可输入的显示标题，默认导出不发布本地图片。团务结束钩子运行时原团务已清理，不保留可修改的旧 Session 对象。
+
+cycle、clock、启动 / 日界动作可以用 `sleepTime` 暂停续跑；需要即时处理结果的消息、审批、通知及 tape 钩子同步执行，不能靠 `sleepTime` 延迟宿主决策。不可挂起的调用中它立即返回，不阻塞消息线程。
+
+事件动作可用 Lua 函数、脚本名或内联 Lua；不支持的混合动作 / 触发条件会整体报告，不能只执行支持的一半。回调与锁队列有数量上限，重载 / 销毁会取消旧任务。触发平台和帐号在延时后保留，原帐号离线时不会改用另一个帐号发送。
+
+目录文件 / 内联文本脚本的临时全局变量按每次执行隔离，延时续跑保留当次环境；`loadLua` 的子脚本与入口共享当次变量。`eventMsg` 嵌套触发其他指令后会恢复外层消息，外层回复不借用内层昵称、用户 ID 或变量。需要跨消息保存的数据请用配置或人物卡 API，不依赖上次脚本遗留的全局变量。已登记的 Lua 函数保留 Next 原有闭包能力；这不是为任意代码创建完整独立 LuaState 或安全沙箱。
+
+### XML 模型与规则书
+
+XML 支持属性别名、CDATA、基本实体及只读数值公式，包括算术、比较、短路、三元、属性默认值和 floor / ceil / round / min / max 等白名单函数。例如 `Math.floor(this.力量/2)` 可转换，但脚本块、赋值、动态调用和任意 JavaScript 不会执行。无法转换的属性会显示兼容性诊断；模组顺序、启停与重载会同步刷新模板，原生规则包的优先级不变。
+
+规则书支持当前规则优先、父规则继承和命名主题查询；tape 只在活动团务、参与者及分群开关允许时执行。
 
 ## msg_order 单文件插件（data/plugin/*.lua）
 
@@ -166,7 +199,7 @@ local skill = getPlayerCardAttr(msg.uid, msg.gid, '侦查', -1, false)
 | `logTrace/logDebug/logInfo/logSuccess/logWarn/logError(...)` | 按指定级别写运行日志；默认 INFO 隐藏 TRACE/DEBUG，延时和定时入口保留来源 |
 | `ranint(a?, b?)` | 闭区间随机整数；默认 `ranint()` 为 1–100，a>b 时自动交换 |
 | `getDiceDir()` | 数据目录绝对路径（`data`） |
-| `getDiceQQ()` | 骰娘账号 |
+| `getDiceQQ()` | 当前触发帐号；延时 / 事件续跑保留帐号。已知帐号身份缺失时为空，不借用另一帐号；仅无帐号上下文时用全局配置 |
 | `mkDirs(path)` | 建目录 |
 | `sleepTime(ms)` | 在 `msg_order` 消息处理中非阻塞等待；协程到时恢复，不占住消息线程 |
 
@@ -213,7 +246,7 @@ local success, delta, value = growFavor(msg.uid)
 | --- | --- |
 | `sendMsg(text, gid, uid)` | 主动发消息（gid 空 = 私聊） |
 | `eventMsg(text, gid, uid)` | 把文本当作某人发的消息跑完整指令管线（如 `eventMsg('.rd100', msg.gid, msg.uid)`） |
-| `drawDeck(gid, uid, 牌堆名)` | 抽公共牌堆 |
+| `drawDeck(gid, uid, 牌堆名)` | 优先抽当前群 Session 私有牌堆（不放回），无同名私有牌堆时才抽公共牌堆 |
 | `loadLua(名字)` | 目录型 mod 优先执行 `script/<名字>.lua`；旧式单文件插件也支持入口脚本同级子目录（支持 `a.b` 点分路径） |
 | `askExtra(table)` | 平台扩展查询（透传到适配器，如 OneBot 动作） |
 
@@ -254,9 +287,9 @@ Windows 下会在加载旧单文件插件时自动识别并转换 GBK / CP936 �
 | `growFavor(uid, platform?)` | `success, delta, value` | 按内置好感度成长规则判定并写回。 |
 | `sendMsg(text, gid?, uid?)` | — | gid 非空时向群发；gid 为空时向 uid 私聊。 |
 | `eventMsg(text, gid?, uid?)` | — | 将文本作为该用户发出的消息重新进入完整指令/回复管线。也可传 `{fromMsg=, gid=, uid=}`。 |
-| `drawDeck(gid, uid, deckName)` | 字符串 | 原版三参数签名；也兼容 `drawDeck(deckName)`。当前抽取公共牌堆。 |
+| `drawDeck(gid, uid, deckName)` | 字符串 | 三参优先使用当前群 Session 的私有牌堆，抽空不回退同名公共牌堆；一参 `drawDeck(deckName)` 仍抽公共牌堆。gid / uid 为 0 按未指定处理。 |
 | `askExtra({action=..., params=...})` | 表 / 字符串 / `nil` | 透传原生平台动作。当前只有 OneBot 适配器可响应；QQ 官方、Discord、KOOK 返回 `nil`。 |
-| `getDiceQQ()` / `getDiceDir()` | 字符串 | 骰娘自身账号 / `data` 目录绝对路径。 |
+| `getDiceQQ()` / `getDiceDir()` | 字符串 | 当前触发帐号的自身 ID / `data` 目录绝对路径；帐号无法确定时不借用其他帐号。 |
 | `mkDirs(path)` | boolean | 创建目录。 |
 | `loadLua(name)` | 脚本返回值 | 目录型 mod 优先执行 `script/<name>.lua`；旧式 `data/plugin/*.lua` 也会回退到入口同级路径，例如 `loadLua("求签/月老灵签")` 读取 `data/plugin/求签/月老灵签.lua`。`a.b` 仍映射为 `a/b.lua`。 |
 | `sleepTime(ms)` | — | 在可挂起的消息处理调用链中非阻塞等待并从原位置恢复；其他调用环境保持立即返回。 |
@@ -309,20 +342,46 @@ local named = getPlayerCardAttr(msg.uid, '备用卡', 'hp', 0, true)
 
 回复文本中 `{key}` 按此顺序解析：消息变量 → speech 词条（各 mod 的 `speech/*.yaml` 与描述档 `speech{}` 合并；值以 `&` 开头为别名）→ 内置 `{self}`（骰娘自称）。支持递归展开。
 
+speech 键忽略 ASCII 大小写，例如 `{reply_spells_list}` 可引用 `Reply_Spells_List`。消息变量先取同名精确项，再作 ASCII 不区分大小写的兼容查询，中文键不被改写。
+
+YAML 和 JSON 描述档都支持文本数组，每次引用均匀随机抽取一条，再展开其中的变量 / sample；不是只显示第一条。空数组返回空文本，别名仍可指向数组：
+
+```yaml
+Roll_Reply:
+  - "{nick}：{sample:干得漂亮|效果拔群}"
+  - "轮到 {nick} 了！"
+roll_alias: "&ROLL_REPLY"
+```
+
+这些改动属于 2026-10-16 的本地兼容收尾，是否进入所用安装包请核对实际源码版本。已对 ResourceSearchEngine、求签 / DailyNews、PC_Inventory 与 PC_Slots 做过副本验收；测试使用网络与发消息替身，不保证外部服务或真实帐号投递，插件自身源代码错误也不会由宿主偷偷改写。
+
+### 帮助词条与引用
+
+`helpdoc` 使用各活动 Mod 合并后的大小写不敏感命名空间，同名主题按加载顺序覆盖。帮助列表与 `{help:主题}` 一致，`&主题` 别名可跨 Mod、多级转向；循环别名不会卡住列表。普通 `.help` 保留 Next 原有内置 / JS 帮助优先级与搜索域过滤，仅渲染最终选中的 Mod 条目。
+
+帮助内容中的引用按「消息变量 → Mod 帮助主题 → speech → 内置变量」解析，可包含 sample。例如：
+
+```json
+{"helpdoc":{"骰子用法":"{nick}，输入 .r d100 即可。","掷骰帮助":"&骰子用法","索引":"{掷骰帮助}"}}
+```
+
+`.help 索引` 和 Lua 回复中的 `{help:索引}` 都会带入当前昵称。普通回复的 `{主题}` 不会因此自动改成帮助查询；需要帮助时请显式写 `{help:主题}`。
+
+模板展开最多 24 层、10,000 次变量 / 引用解析；单个结果最多 4 MiB，中间文本累计最多 32 MiB。超出大小或工作量限制返回空文本，不执行任意脚本。图片 URL / CQ 引用不会按图片文件体积计数，直接嵌入模板的 Base64 则属于文本。
+
 ## 与原版的兼容性说明
 
-原版 `DiceLua.cpp` 注册的全局函数已覆盖且签名对齐（含 `getUserConf(nil, field)` 枚举、`&key` 兜底、`drawDeck` 三参等细节），`Set/Context/SelfData/Actor/GameTable/http` 六个库语义可用；单文件插件的 `task_call` 与消息内 `sleepTime` 也已接入。以下原版能力**目前尚未支持**，含这些写法的 mod 对应部分会不生效：
+常见全局 API 与 `Set/Context/SelfData/Actor/GameTable/http` 对象层已接入，包含 `getUserConf(nil, field)` 枚举、`&key` 兜底、`drawDeck` 三参、单文件 `task_call` 与 `sleepTime`。`require('Set')`、`Actor`、`GameTable`、`SelfData` 可用公开别名。以下边界仍保留，不能承诺任意旧包无损复刻：
 
 | 未支持项 | 说明 |
 | --- | --- |
-| 复杂 TOML | 多行字符串、复杂表和完整旧版条件系统仍有缺口 |
-| clock/hook 与完整 rulebook/tape | 仅支持上述 cycle 子集，不是完整事件 / 规则运行时 |
-| 旧 JS / Python 动作与数组式 echo | 未接入；SealDice JS 引擎不等于旧 Dice! JS API |
-| 嵌套 Mod / XML 复杂派生 | 尚未完整发现、管理和复刻；简单 XML 模板支持不等于任意脚本派生可用 |
-| `limit.prob` / `limit.today` / `limit.user_id` | 概率、每日限次、用户名单门槛未接 |
-| `require` 二进制 C 扩展（`.dll`） | 未设置 `package.cpath` |
-| `require("Set")` 写法 | 对象层是全局变量，未注册进 `package.loaded`（直接用全局 `Set` 即可） |
+| 旧 JS / Python 动作与任意 XML 脚本 | 不执行；SealDice JS 引擎不等于旧 Dice! JS API，XML 仅转换安全数值公式 |
+| 旧远程安装与安全策略覆盖 | 不恢复 `.mod get/update/reinstall` 下载器，不允许绕过禁用、黑名单、内容拦截与请求审批 |
+| 多重回复 / 比较的历史行为 | 一次消息选一条回复；多个比较操作全部满足，不复制宽松的部分匹配或连续刷屏 |
+| 外部 Lua 字节码 | 不加载，仅接受文本 Lua；资源发现与队列有深度 / 数量上限 |
+| 二进制 C 扩展（`.dll`） | 沿用已有运行库搜索策略；需匹配平台与 Lua ABI，严格模式另限制搜索目录。本轮不新增原生库加载权限 |
+| 旧宿主特有对象 | 私聊 / 频道旧团务仍不自动启用；`LogEnd` 补齐常用字段，但不保证完整旧日志 / Session 对象逐字段等价 |
 
 迁移遇到问题欢迎带上 mod 文件反馈。
 
-配置库目前按字符串保存，不能无损区分字符串 `"false"` 与布尔 false 等类型；正则使用字节字符串，400 字节限制也不是执行时间限制。完整修复记录及历史测试范围见[主仓兼容记录](https://github.com/DiceZone/Dice-Next/blob/main/docs/legacy-mod-compatibility.md)。
+配置底层虽然使用字符串列，但 Lua 值通过类型编码区分文本、布尔、数字、空串与集合；未编码的历史值仍按兼容规则读取。正则引擎与原版 C++ locale / POSIX 扩展不保证等价，400 字节上限也不是执行时限的替代。完整实现状态、保留差异与测试范围见[主仓兼容记录](https://github.com/DiceZone/Dice-Next/blob/main/docs/legacy-mod-compatibility.md)。
