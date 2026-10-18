@@ -153,6 +153,8 @@ POST /api/adapters
 
 预览请求：`{ text, format: "plain"|"markdown", platform: "qq_group"|"qq_private"|"qq_channel"|"kook"|"discord"|"plain", style: "traditional"|"standard"|"visual", forcePlain: false }`。文本最大 64 KiB。返回 `data.preview` 的 `text`、`plain`、`markdown`、`actions` 和 `payload`；纯文本适配器的 payload 为 null，不伪造 CQ/媒体最终分段。旧版 `markdown` / `onebot` 字段仍保留。
 
+模板包含 `{FormFeed}` 显式分页时，额外返回 `data.preview.messages` 数组，每项具有上述五个字段，表示一个独立消息的预览；先分页，再分别转换 Markdown / 纯文本和生成 payload。汇总层 payload 为 null，不能把汇总文本当作单个发送请求。连续分页产生的空消息不进入数组；只有分页符时数组为空。没有显式分页时沿用原来的单消息结构。
+
 QQ/KOOK/Discord 的文本与卡片结构共用实际发送序列化器，但这不是客户端截图，不执行网络消息发送、媒体上传、身份映射或平台权限判断。真实账号发送与平台拒绝回退须另行验收。
 
 原生概率文案（build 926 起）：模板和人格条目的 PUT 可用 variants 数组替代单条 value，同时提供 locale、key、format。数组元素为 {text, weight}；权重为 0～999999 的整数，至少一条正权重，1～256 条，正文总量最多 64 KiB。导出以 variants 保留全部候选；旧 value 字段仍提供一条可用文本。普通字符串及旧版 sample 保留。
