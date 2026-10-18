@@ -48,7 +48,7 @@ WebUI 会话 Cookie 按安装实例稳定命名，而不是按主机或端口共
 | GET | `/api/system/status` | 运行状态 |
 | GET | `/api/system/settings` | 基础设置（host / port / 日志级别等） |
 | GET | `/api/dashboard/stats` | 仪表盘统计 |
-| GET / PUT | `/api/system/global` | 原版全局设置（响应开关 / 外部请求等） |
+| GET / PUT | `/api/system/global` | 分作用域设置（响应开关 / 外部请求 / BotMsg 等） |
 | GET / PUT | `/api/system/events` | 事件策略（审批 / 退群 / 自动清理等） |
 | GET / PUT | `/api/system/prefixes` | 指令前缀 |
 | GET / PUT / POST | `/api/system/censor` | 读取/整体保存敏感词规则；POST 用同一服务端匹配器测试文本 |
@@ -67,6 +67,12 @@ WebUI 会话 Cookie 按安装实例稳定命名，而不是按主机或端口共
 | GET / PUT | `/api/system/chat-config` | 聊天持久化（保留期等） |
 | GET | `/api/roadmap` | 开发计划数据（读 `docs/roadmap.md`） |
 | POST | `/api/system/update/cancel` | 请求取消正在连接、下载、校验或准备的更新；异步停止，不取消正式安装 |
+
+### BotMsg 附加说明
+
+通过 `/api/system/global` 的 `values.bot_msg` 编辑 `.bot` 固定信息之后的文本；`values.bot_header` 保留旧版页眉，但同样显示在固定信息之后。两项仅接受字符串，各不超过 65536 个 UTF-8 字节；空字符串表示不显示。
+
+GET 使用 `scope=global|adapter|account`、`target` 与 `platform` 查询，PUT 使用同名作用域字段及 `values`。非全局作用域可通过 `clear: ["bot_msg", "bot_header"]` 恢复继承。响应顶层 `default_locale` 是后端持久化的全局默认回复语言，只供读取；此接口不提供固定版本、编译信息和兼容引擎的编辑字段。
 
 ### 更新接口
 
