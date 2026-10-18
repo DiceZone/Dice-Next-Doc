@@ -220,11 +220,17 @@ QQ/KOOK/Discord 的文本与卡片结构共用实际发送序列化器，但这�
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET | `/api/help` | 统一帮助注册表查询（内置 / 规则包 / 插件三源，分页） |
-| GET | `/api/help/groups` | 帮助分组 |
-| GET | `/api/help/files` | 自定义帮助文档（helpdoc）文件列表 |
-| GET / POST | `/api/help/file` | 读取 / 保存 helpdoc 文件 |
-| DELETE | `/api/help/file/{name}` | 删除 helpdoc 文件 |
+| GET | `/api/help` | 统一帮助查询，支持搜索、来源类型、具体来源与分页 |
+| GET | `/api/help/groups` | 同条件下各具体来源的条目数 |
+| GET | `/api/help/files` | 自定义 Markdown 文件列表（`data/help/*.md`） |
+| GET / POST | `/api/help/file` | 读取 / 保存自定义 Markdown 文件 |
+| DELETE | `/api/help/file/{name}` | 删除自定义 Markdown 文件 |
+
+`/api/help` 参数：`lang`、`q`、`kind`、`source`、`page`、`size`（最多 200）、`management=1`。`kind` 可选 `custom`、`builtin`、`plugin`（JS / Lua）、`rule`、`helpdoc`、`other`，留空不限。搜索和来源筛选先于分页；`/api/help/groups` 接受 `lang`、`q`、`kind`、`management`。
+
+条目带 `source`、`kind`、`editable`、`customized`、`format`；管理模式返回未渲染的原始内容，并保留空条目与带 `shadowed` 的同名条目。内置和历史自定义词条还带 `i18nKey`、`locale`、`contentLocale`，编辑 / 删除使用该实际语言的 `/api/templates`，不要按浏览器语言覆盖另一份翻译。来源分别为 `builtin`、`custom`、`plugin:<名>`、`lua:<名>`、`rule:<包>`、`file:<名>`、`helpdoc:<包>`。
+
+规则包附带文档的 `source` 为兼容保留 `helpdoc:<规则包>/<文档包>`，但 `kind` 为 `rule`；客户端应优先使用响应中的 `kind`，不要仅按来源字符串猜测。
 
 ## 群组
 

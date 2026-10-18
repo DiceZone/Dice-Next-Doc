@@ -18,7 +18,7 @@
 | 黑名单 | `conf/BlackList.json` | 有效的本地用户封禁；撤销/无效记录不复活，未知云来源和群/关联人策略列入确认报告 |
 | 自定义回复 | `conf/CustomMsgReply.json` | 关键词回复（多结果随机 / 文本）；不能等价转换的限制默认停用，无法通过运行时校验的内容只保留原稿 |
 | 自定义文案 | `conf/CustomMsg.json` | 回复文案覆盖（写入简体中文层）；`strBotMsg` / `strBotHeader` 迁为 [.bot 附加说明](/manage/settings#botmsg-附加说明)，保留原文并在 BotMsg 末尾追加默认反馈信息 |
-| 自定义帮助 | `conf/CustomHelp.json` | `.help` 词条覆盖（写入简体中文层） |
+| 自定义帮助 | `conf/CustomHelp.json` | 写入简体中文帮助词条，可在[帮助文档](/manage/help-docs)的「用户自定义」中编辑和删除；原内容保留，不作为无效文案 |
 | 骰主 | `conf/console.yaml` / `Console.xml` | 选定账号的 Master 列表与支持的运行设置；YAML 优先，损坏时不采用过期 XML 权限 |
 | 外置牌堆 | `PublicDeck/` | 校验 JSON 内容后迁入 `data/decks/`；嵌套同名文件生成唯一安全文件名，并迁入可定位的本地媒体依赖 |
 | Lua 模组 | `mod/` | `data/mod/`（整棵复制，由 Lua 模组子系统识别） |
