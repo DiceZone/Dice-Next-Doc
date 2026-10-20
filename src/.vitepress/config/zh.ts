@@ -142,6 +142,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
         { text: '指令列表', link: '/commands' },
         { text: '群组管理', link: '/groups' },
         { text: '玩家管理', link: '/players' },
+        { text: '文件管理', link: '/files' },
         { text: '权限设置', link: '/permissions' },
         { text: '通知设置', link: '/notice' },
         { text: '定时任务', link: '/schedules' },
