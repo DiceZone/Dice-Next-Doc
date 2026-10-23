@@ -7,9 +7,14 @@
 vcpkg 依赖清单见 `server/vcpkg.json`（manifest 模式，配置时自动安装）：
 
 ```
-drogon · nlohmann-json · sqlite-orm · spdlog · yaml-cpp
+drogon · brotli · nlohmann-json · sqlite-orm · spdlog · yaml-cpp
 quickjs-ng · lua (5.4.x) · zstd
 ```
+
+Brotli 必须包含 CVE-2026-111497 的上游修复。项目通过
+`server/vcpkg-configuration.json` 加载 `server/vcpkg-overlays/brotli`，保留其余
+依赖的固定版本。经典模式安装时同样需要传入 `--overlay-ports=server/vcpkg-overlays`；
+不要绕过 CMake 的安全补丁检查。
 
 ::: warning 多仓布局：并列放在同一个父目录下
 Dice!Next 拆分为多个仓库，构建/打包脚本按**同级目录**互相寻找，请这样摆放：
@@ -83,6 +88,9 @@ cmake --build server/build -j$(nproc)
 ## 前端与文档
 
 前端管理面板与文档站是**独立仓库**，各自用 npm 构建：
+
+使用 Node.js **26.12.1 或更新的 26.x 安全版本**。CI 跟随 `26.x` 并开启
+`check-latest: true`，构建前检查最低安全版本、记录实际版本；不会自动跨到 27。
 
 ```bash
 # 管理面板（Dice-Next-WebUI 仓；构建产物 dist/ 由后端托管、被打包脚本收集）

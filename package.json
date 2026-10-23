@@ -4,12 +4,15 @@
   "license": "AGPL-3.0-or-later",
   "type": "module",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=26.12.1 <27"
   },
   "scripts": {
+    "predev": "node scripts/check-node-version.mjs",
     "catalog:check": "node scripts/check-text-catalog.mjs",
     "dev": "vitepress dev src",
+    "predocs:dev": "node scripts/check-node-version.mjs",
     "docs:dev": "vitepress dev src",
+    "predocs:build": "node scripts/check-node-version.mjs",
     "docs:build": "vitepress build src",
     "docs:preview": "vitepress preview src"
   },
