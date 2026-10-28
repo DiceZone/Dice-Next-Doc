@@ -31,6 +31,7 @@ Dice!Next 后端提供 REST API，管理面板即基于此构建。本页按功�
 | GET | `/api/auth/status` | 是否启用登录密码 / 当前会话状态 |
 | POST | `/api/auth/login` · `/api/auth/logout` | 登录 / 登出（Cookie 会话） |
 | GET / PUT | `/api/system/webui-auth` | 登录密码设置 |
+| GET / PUT | `/api/system/webui-version` | WebUI V1 / V2（预览版）选择；PUT 为 `{"version":"v1"}` 或 `{"version":"v2"}`，写入 `config/webui.json` 的 `ui_version`。GET 返回 `selected`、`effective`、`legacy` 与 `available`；受限管理员只读，资源缺失不可选 |
 | GET / PUT | `/api/system/server-config` | 运行 IP / 端口（改后需重启生效） |
 | POST | `/api/system/restart` | 重启后端 |
 | GET / PUT | `/api/system/autostart` | 开机自启（Windows） |

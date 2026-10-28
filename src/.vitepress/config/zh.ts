@@ -151,7 +151,8 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
         { text: '帮助文档', link: '/help-docs' },
         { text: '指令测试', link: '/playground' },
         { text: '基础设置', link: '/settings' },
-        { text: '云服务', link: '/cloud-services' }
+        { text: '云服务', link: '/cloud-services' },
+        { text: 'MCP 服务', link: '/mcp' }
       ]
     },
     {
