@@ -119,6 +119,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
         { text: '云服务与身份绑定', link: '/cloud' },
         { text: '牌堆与随机', link: '/deck' },
         { text: '规则速查', link: '/rules' },
+        { text: 'CoC7 Keeper Companion', link: '/coc7r' },
         { text: '娱乐与互动', link: '/fun' },
         { text: '团务管理', link: '/game' },
         { text: '跑团记录', link: '/log' },

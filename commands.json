@@ -1,5 +1,14 @@
 [
   {
+    "cmd": ".coc7r/.setcoc7r",
+    "title": { "zh-Hans": "CoC7 Keeper Companion", "zh-Hant": "CoC7 Keeper Companion", "en": "CoC7 Keeper Companion", "ja": "CoC7 Keeper Companion" },
+    "category": "COC",
+    "sources": ["Dice!Next"],
+    "example": ".set coc7r / .coc7r help / .coc7r show",
+    "descKey": "coc7r.help",
+    "replyPrefixes": ["coc7r."]
+  },
+  {
     "cmd": ".r/.rh/.h/.H/.rs",
     "title": {
       "zh-Hans": "掷骰",
