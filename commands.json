@@ -1,6 +1,6 @@
 [
   {
-    "cmd": ".coc7r/.setcoc7r",
+    "cmd": ".coc7r/.c7r/.setcoc7r",
     "title": { "zh-Hans": "CoC7 Keeper Companion", "zh-Hant": "CoC7 Keeper Companion", "en": "CoC7 Keeper Companion", "ja": "CoC7 Keeper Companion" },
     "category": "COC",
     "sources": ["Dice!Next"],
