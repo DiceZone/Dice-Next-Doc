@@ -314,6 +314,7 @@
     ],
     "replyPrefixes": [
       "card.st.",
+      "card.sheet.",
       "card.weapon.",
       "card.db.",
       "dice.st."

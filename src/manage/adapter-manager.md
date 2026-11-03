@@ -46,6 +46,15 @@ QQ 官方机器人已添加后，可前往 **高级回复 → 卡片与按钮**�
 公网连接仍需确认 NAT／容器端口映射、服务器防火墙与安全组。地址检测不会自动开放端口或修改这些设置；内网无 IPv4 或外部查询不可用时，不影响使用正确的手动地址。
 :::
 
+## QQ 官方机器人
+
+选择 **WebSocket** 或 **Webhook** 接收事件。卡片会直接显示实际连接方式，点击「连接方式」可查看连接说明。
+
+- 登录区为方形二维码，点击下方「手动输入 AppID 与 AppSecret」可切换为凭据表单。编辑已有账号时直接显示凭据，AppSecret 留空表示保留。机器人真实 QQ 号由官方 API 获取，无需手填。
+- 选择 Webhook 后，表单会按当前面板访问域名及部署路径生成回调地址；添加成功后也会打开连接信息，可复制地址到 QQ 开放平台。例：面板地址为 `https://dice.example/bot/#/adapters`，回调地址为 `https://dice.example/bot/qq-official/webhook`。反向代理需将该路径转发到骰子服务，QQ 必须能从公网访问它；本机地址仅供本地查看。同一个 AppID 只配置一个 Webhook 适配器。
+- WebSocket 由骰子主动连接 QQ，无需配置回调地址。界面中的 WebSocket 对应配置文件的 `receiveMode: gateway`，旧配置保持兼容。
+- 「高级选项」收纳 Markdown 图片资源强校验、群成员进出事件订阅、自动回应互动事件、富回复样式和快捷操作。**新建**默认 Markdown、消息按钮，群成员事件订阅与自动回应互动事件均开启；已有账号编辑时保留原设置。图片资源强校验默认关闭。
+
 ## Milky 连接
 
 API 填 HTTP / HTTPS 基址，事件使用 WebSocket；事件地址可单独设置，留空由 API 基址推导 `/event`。当前不支持 Webhook。不要把 OneBot 的端点直接作为 Milky 地址，详见[Milky 配置](/config/adapter#milky-适配器)。

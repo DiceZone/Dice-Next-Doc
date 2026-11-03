@@ -56,7 +56,7 @@
 | 需求 | 去哪里 |
 |------|--------|
 | 指令前缀 | [系统设置](/manage/settings) |
-| COC 房规（大成功 / 大失败判定） | 群内 `.setcoc 0-7`，`.rules coc:大失败` 速查，详见[掷骰与检定](/use/dice) |
+| COC 房规（大成功 / 大失败判定） | 群内 `.setcoc 0-7`，`.setcoc help` 查看各编号定义，详见[掷骰与检定](/use/dice) |
 | 规则包附带的帮助词条 | 自动进入 `.help` 统一帮助与[帮助文档](/manage/help-docs)页 |
 | 自定义关键词回复 | [高级回复](/manage/replies) |
 | 黑白名单 / 信任 | [权限设置](/manage/permissions) |

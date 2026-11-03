@@ -51,6 +51,7 @@ WebUI 会话 Cookie 按安装实例稳定命名，而不是按主机或端口共
 | GET / PUT | `/api/system/global` | 分作用域设置（响应开关 / 外部请求 / BotMsg 等） |
 | GET / PUT | `/api/system/events` | 事件策略（审批 / 退群 / 自动清理等） |
 | GET / PUT | `/api/system/prefixes` | 指令前缀 |
+| GET / PUT | `/api/system/random-source` | 全局掷骰随机源；请求与响应 data 为 `{ "source": "system" }` 或 `{ "source": "openssl" }`，默认 system，保存立即生效；修改需完整管理权限 |
 | GET / PUT / POST | `/api/system/censor` | 读取/整体保存敏感词规则；POST 用同一服务端匹配器测试文本 |
 | GET / PUT | `/api/system/log-mode` | 原始事件日志开关 |
 | GET / PUT | `/api/system/respond-self` | 自控开关（响应骰娘账号自身消息） |
@@ -63,7 +64,7 @@ WebUI 会话 Cookie 按安装实例稳定命名，而不是按主机或端口共
 | GET / PUT | `/api/system/auto-card` | 自动卡面（COC 自动算 HP/SAN/MP） |
 | GET / PUT | `/api/system/image-host` · `/api/system/image-send` | 图床 / 发图方式 |
 | GET / PUT | `/api/system/user-group` | 用户群强制 |
-| GET / PUT | `/api/system/friend-clean` | 好友自动清理 |
+| GET / PUT | `/api/system/friend-clean` | 好友、群聊与本地记录清理；`days` / `groupDays` / `userRecordDays` / `groupRecordDays`（0–3650 天）、`groupLimit`（0–10000）、`maxGroupSize`（0–1000000）；全部参数校验通过后原子保存 |
 | GET / PUT | `/api/system/chat-config` | 聊天持久化（保留期等） |
 | GET | `/api/roadmap` | 开发计划数据（读 `docs/roadmap.md`） |
 | POST | `/api/system/update/cancel` | 请求取消正在连接、下载、校验或准备的更新；异步停止，不取消正式安装 |
