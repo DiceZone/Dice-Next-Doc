@@ -53,6 +53,7 @@ GET 返回当前账号支持的 `actions` 和 `capabilities`。POST 请求固定
 | 全局菜单 | `qq_get_menu`、`qq_set_menu` |
 | 指令面板 | `qq_list_panels`、`qq_create_panel`、`qq_get_panel`、`qq_update_panel`、`qq_delete_panel`、`qq_panel_target` |
 | 富媒体与分片上传 | `qq_media_files`、`qq_upload_prepare`、`qq_upload_part_finish` |
+| Markdown 图片素材 | `qq_material_prepare`、`qq_material_complete`、`qq_material_list`、`qq_material_delete` |
 | 频道与机器人资料 | `qq_me`、`qq_my_guilds`、`qq_guild`、`qq_guild_channels`、`qq_create_channel`、`qq_channel`、`qq_update_channel`、`qq_delete_channel`、`qq_gateway` |
 | 互动回应 | `qq_interaction` |
 
@@ -63,6 +64,31 @@ GET 返回当前账号支持的 `actions` 和 `capabilities`。POST 请求固定
 `qq_set_menu` 的 `body` 是完整的 `{ "menu": { "items": [...] } }` 配置，会覆盖原有菜单。单聊菜单支持发送消息、HTTPS 链接、二级菜单和 `switch` 类型；开关的 `switch_id` 状态可从后续消息场景扩展中读取，不会自动改变 Dice!Next 的全局 AI 配置。
 
 面板列表使用 `scope`、`cursor`、`limit`；创建和修改使用官方面板 `body`。关联对象使用 `panelId`、`op: "add" | "del"` 和 `userOpenIds`／`groupOpenIds`，每次最多 20 个。全局面板或不支持关联对象的场景由平台拒绝，不会在本地偷偷转换。
+
+### Markdown 图片素材
+
+根据 [官方素材管理接口](https://bot.q.qq.com/wiki/develop/api-v2/server-inter/message/material-management.html)，新增四个后台动作：
+
+| 动作 | `params` | 用途 |
+| --- | --- | --- |
+| `qq_material_prepare` | `body: { file_name, file_size, content_type, md5, sha1 }` | 申请上传，返回 `upload_id` 和 `presigned_url` |
+| `qq_material_complete` | `body: { upload_id, md5 }` | 确认上传，取得素材引用 |
+| `qq_material_list` | 可选 `cursor` | 分页列出本账号的素材 |
+| `qq_material_delete` | `imageId` | 删除指定素材 |
+
+调用方在 prepare 和 complete 之间，把文件二进制 PUT 到平台返回的预签名地址，使用申请时的 Content-Type；该上传请求不附带 QQ AccessToken。Dice!Next 的动作入口只连接固定的官方接口，不代理任意上传地址。
+
+文件限 PNG、JPEG、GIF、WebP，最多 10 MB；文件名扩展名须与 MIME 类型一致，MD5 为 32 位、SHA-1 为 40 位十六进制。素材属于当前机器人账号，不应跨 AppID 复用。发送 Markdown 时使用返回的 `qqbot-media://image/v1/...` 引用，临时 `preview_url` 不适合作为持久图片地址。这些是 API 能力，当前「卡片与按钮」页尚无素材上传面板。
+
+### 图文卡片与 @全体成员
+
+`qq_send_message` 可通过 `params.body` 原样发送新版图文卡片：`msg_type: 8`、`card.type: "tuwen"`，卡片内容及链接使用 [官方群消息接口](https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_messages.post.html) 定义的字段。Next 保留这些字段；这不代表现有菜单编辑器已经增加了图文卡片编辑页。
+
+在明确使用 Markdown 的回复或原生消息请求中，`<qqbot-at-everyone />` 会原样送到 QQ。机器人须具备群管理员身份，且受平台每群每天一次的限额约束；普通用户文本不会自动转成全体提及。Markdown 图片素材引用也保持原样。以上能力以 [官方变更记录](https://bot.q.qq.com/wiki/develop/api-v2/changelog.html) 及账号实际权限为准。
+
+### 快捷按钮
+
+QQ 消息按钮标题最多 10 个字符。Next 会从操作说明中去掉逗号后的例子等附加内容；仍然过长的标题会保留省略号，完整指令参数不截断。「再次检定」会沿用原来的指令，包括前缀、技能加减值、优势／劣势及原因，点击后由用户确认发送。按钮本身不会自动再掷一次。
 
 ### 输入中状态
 
