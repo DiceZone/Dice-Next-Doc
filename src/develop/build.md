@@ -102,7 +102,7 @@ npm run docs:dev      # 本地预览
 npm run docs:build    # 构建（含死链检查）
 ```
 
-前端改动还应执行 `npm test` 与 `npm run lint`，不要只根据开发服务器能打开判断成功。安装为应用仅增加前端清单与图标，不引入 Service Worker 或 API 离线缓存。
+前端改动还应执行 `npm test` 与 `npm run lint`，不要只根据开发服务器能打开判断成功。安装为应用使用相对地址的清单、图标，以及只处理页面导航、不缓存任何内容的 `public/sw.js`（仅在 HTTPS / localhost 的生产构建中注册）；不要在其中加入 API 或资源缓存。
 
 ## Release 缓存与测试门禁
 

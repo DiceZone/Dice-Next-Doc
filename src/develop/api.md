@@ -51,7 +51,7 @@ WebUI 会话 Cookie 按安装实例稳定命名，而不是按主机或端口共
 | GET / PUT | `/api/system/global` | 分作用域设置（响应开关 / 外部请求 / BotMsg 等） |
 | GET / PUT | `/api/system/events` | 事件策略（审批 / 退群 / 自动清理等） |
 | GET / PUT | `/api/system/prefixes` | 指令前缀 |
-| GET / PUT | `/api/system/random-source` | 全局掷骰随机源；请求与响应 data 为 `{ "source": "system" }` 或 `{ "source": "openssl" }`，默认 system，保存立即生效；修改需完整管理权限 |
+| GET / PUT | `/api/system/random-source` | 全局掷骰随机源。PUT 请求为 `{ "source": "system" \| "openssl" \| "hardware" }`（CPU 不支持 RDSEED 时拒绝 `hardware`），默认 system，保存立即生效，修改需完整管理权限。响应 data 另含 `active`（最近一次掷骰实际来源，可为 `pseudo`）、`fallbacks`（回退次数）与 `hardware_available` |
 | GET / PUT / POST | `/api/system/censor` | 读取/整体保存敏感词规则；POST 用同一服务端匹配器测试文本 |
 | GET / PUT | `/api/system/log-mode` | 原始事件日志开关 |
 | GET / PUT | `/api/system/respond-self` | 自控开关（响应骰娘账号自身消息） |
@@ -137,7 +137,7 @@ POST /api/adapters
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET / PUT | `/api/dice/rules` | 规则开关与默认骰面 |
+| GET / PUT | `/api/dice/rules` | 旧版占位规则开关，仅为兼容保留；掷骰引擎不读取这些值，WebUI 已不再提供入口 |
 | POST | `/api/dice/roll` | 服务端掷骰（调试用） |
 
 ## 指令、文案与 i18n
