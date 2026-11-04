@@ -149,6 +149,8 @@ POST /api/adapters
 | GET | `/api/i18n/all` | 全部文案键（含覆盖值与原版键） |
 | PUT | `/api/templates` | 设置某文案覆盖 |
 | POST | `/api/templates/preview` | 只读文本/卡片序列化预览，不发送消息 |
+| POST | `/api/templates/markdown-source` | 把纯文本文案转为显示效果相同的 Markdown 原稿（`{value}` 或 `{variants}`），只返回结果不保存 |
+| POST | `/api/templates/convert-markdown` | 把全局或某人格（`personaId`）的纯文本覆盖批量转为 Markdown，可限定 `locale`；`dryRun: true` 只返回 `total` 与需要转义的 `escaped` 数量 |
 | DELETE | `/api/templates/{locale}/{key}` | 重置某文案 |
 | GET | `/api/templates/export` · POST `/api/templates/import` | 导出 / 导入文案覆盖 |
 
