@@ -152,6 +152,10 @@ POST /api/adapters
 | DELETE | `/api/templates/{locale}/{key}` | 重置某文案 |
 | GET | `/api/templates/export` · POST `/api/templates/import` | 导出 / 导入文案覆盖 |
 
+指令目录的回复条目与全部文案条目提供 `presets: {traditional, standard, visual}`，每项包含原始 `value` 与 `format`；`presetStyle` 是全局显示方案，`default` / `defaultFormat` 与该方案一致。预设不会包含已有覆盖值。保存后的自定义文本仍按原有全局 / 人格继承规则生效，加载预设不会改变显示方案设置。
+
+模板内可以保存 `[[action:标题|指令]]`、`[[bar:名称|当前值|上限]]`。指令和人格模板还支持 `[[math:TeX|普通文本替代文字]]`，公式变量使用 `{{变量名}}`，替代文字使用普通 `{变量名}`。QQ 群聊 / C2C Markdown 使用公式，其他平台、传统方案及强制纯文本使用替代文字。
+
 预览请求：`{ text, format: "plain"|"markdown", platform: "qq_group"|"qq_private"|"qq_channel"|"kook"|"discord"|"plain", style: "traditional"|"standard"|"visual", forcePlain: false }`。文本最大 64 KiB。返回 `data.preview` 的 `text`、`plain`、`markdown`、`actions` 和 `payload`；纯文本适配器的 payload 为 null，不伪造 CQ/媒体最终分段。旧版 `markdown` / `onebot` 字段仍保留。
 
 模板包含 `{FormFeed}` 显式分页时，额外返回 `data.preview.messages` 数组，每项具有上述五个字段，表示一个独立消息的预览；先分页，再分别转换 Markdown / 纯文本和生成 payload。汇总层 payload 为 null，不能把汇总文本当作单个发送请求。连续分页产生的空消息不进入数组；只有分页符时数组为空。没有显式分页时沿用原来的单消息结构。
