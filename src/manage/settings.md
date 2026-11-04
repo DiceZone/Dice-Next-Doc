@@ -91,7 +91,7 @@ Dice!Next 通过独立维护的 [dicescript-c-lib](https://github.com/DiceZone/d
 
 | 预设 | 显示方式 |
 |---|---|
-| 彩色文字（默认） | 使用 QQ 公式格式 `scriptsize` 与 `\textcolor`，默认红色 `#E5484D`；选中后下方出现色盘、常用色块和 #RRGGBB 输入框，可直接改颜色。不发送 HTML `<font>` |
+| 彩色文字（默认） | 使用 QQ 公式格式 `scriptsize` 与 `\textcolor`，默认红色 `#E5484D`；选中后下方出现色盘、取色器、常用色块和 #RRGGBB 输入框，可直接改颜色。取色器可从屏幕任意位置吸取颜色（Esc 取消），需 Chrome / Edge 且通过 HTTPS 或 localhost 打开面板，其他情况按钮不可用。不发送 HTML `<font>` |
 | 引用 | Markdown 引用块 |
 | 普通文字 | 不加额外装饰 |
 | 自定义格式 | 编辑 Markdown，用占位符插入状态内容 |
