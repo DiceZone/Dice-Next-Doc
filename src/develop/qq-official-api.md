@@ -67,24 +67,25 @@ GET 返回当前账号支持的 `actions` 和 `capabilities`。POST 请求固定
 
 ### Markdown 图片素材
 
-根据 [官方素材管理接口](https://bot.q.qq.com/wiki/develop/api-v2/server-inter/message/material-management.html)，新增四个后台动作：
+根据 [官方素材管理接口](https://bot.q.qq.com/wiki/develop/api-v2/server-inter/message/material-management.html)，提供以下后台动作：
 
 | 动作 | `params` | 用途 |
 | --- | --- | --- |
+| `qq_material_upload` | `fileName`、`base64` | 一次完成申请、图片直传、摘要校验和上传确认 |
 | `qq_material_prepare` | `body: { file_name, file_size, content_type, md5, sha1 }` | 申请上传，返回 `upload_id` 和 `presigned_url` |
 | `qq_material_complete` | `body: { upload_id, md5 }` | 确认上传，取得素材引用 |
 | `qq_material_list` | 可选 `cursor` | 分页列出本账号的素材 |
 | `qq_material_delete` | `imageId` | 删除指定素材 |
 
-调用方在 prepare 和 complete 之间，把文件二进制 PUT 到平台返回的预签名地址，使用申请时的 Content-Type；该上传请求不附带 QQ AccessToken。Dice!Next 的动作入口只连接固定的官方接口，不代理任意上传地址。
+调用方在 prepare 和 complete 之间，把文件二进制 PUT 到平台返回的预签名地址，使用申请时的 Content-Type；该上传请求不附带 QQ AccessToken。`qq_material_upload` 由服务端自动完成这三步，仅接受平台返回的 HTTPS COS 上传地址，不接受调用方指定任意上传 URL。
 
-文件限 PNG、JPEG、GIF、WebP，最多 10 MB；文件名扩展名须与 MIME 类型一致，MD5 为 32 位、SHA-1 为 40 位十六进制。素材属于当前机器人账号，不应跨 AppID 复用。发送 Markdown 时使用返回的 `qqbot-media://image/v1/...` 引用，临时 `preview_url` 不适合作为持久图片地址。这些是 API 能力，当前「卡片与按钮」页尚无素材上传面板。
+文件限 PNG、JPEG、GIF、WebP，最多 10 MB；文件名扩展名须与 MIME 类型一致，MD5 为 32 位、SHA-1 为 40 位十六进制。素材属于当前机器人账号，不应跨 AppID 复用。发送 Markdown 时使用返回的 `qqbot-media://image/v1/...` 引用，临时 `preview_url` 不适合作为持久图片地址。在「卡片与按钮 → 图片素材」可上传、分页查看、按需预览、复制图片代码和删除。列表不自动加载图片；每个账号最多 100 张，连续 90 天未使用的素材会过期，实际期限以平台响应为准。
 
 ### 图文卡片与 @全体成员
 
-`qq_send_message` 可通过 `params.body` 原样发送新版图文卡片：`msg_type: 8`、`card.type: "tuwen"`，卡片内容及链接使用 [官方群消息接口](https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_messages.post.html) 定义的字段。Next 保留这些字段；这不代表现有菜单编辑器已经增加了图文卡片编辑页。
+`qq_send_message` 可通过 `params.body` 原样发送新版图文卡片：`msg_type: 8`、`card.type: "tuwen"`，卡片内容及链接使用 [官方群消息接口](https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_messages.post.html) 定义的字段。可在「卡片与按钮 → 消息与图文卡片」填写标题（1–50 字）、描述（1–200 字）、HTTPS 跳转与图片地址。指定当前 AppID 下的群或用户 OpenID 后，确认才实际发送；回复已有消息时可填写有效消息 ID，主动发送仍受平台额度限制。
 
-在明确使用 Markdown 的回复或原生消息请求中，`<qqbot-at-everyone />` 会原样送到 QQ。机器人须具备群管理员身份，且受平台每群每天一次的限额约束；普通用户文本不会自动转成全体提及。Markdown 图片素材引用也保持原样。以上能力以 [官方变更记录](https://bot.q.qq.com/wiki/develop/api-v2/changelog.html) 及账号实际权限为准。
+在明确使用 Markdown 的回复或原生消息请求中，`<qqbot-at-everyone />` 会原样送到 QQ。机器人须具备群管理员身份，且受平台每群每天一次的限额约束；普通用户文本不会自动转成全体提及。消息编辑页切换为 Markdown 后，可用「插入 @全体成员」添加该标签。Markdown 图片素材引用也保持原样。以上能力以 [官方变更记录](https://bot.q.qq.com/wiki/develop/api-v2/changelog.html) 及账号实际权限为准。
 
 ### 快捷按钮
 
