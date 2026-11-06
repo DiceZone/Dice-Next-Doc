@@ -319,9 +319,9 @@ QQ/KOOK/Discord 的文本与卡片结构共用实际发送序列化器，但这�
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET / PUT | `/api/system/ai` | AI 全套设置（网关 / 模型 / 润色 / 翻译 / 对话 / 记忆 / 工具 / NPC / 视觉） |
+| GET / PUT | `/api/system/ai` | AI 全套设置（提供商 `providers` / 模型 `models` / 用途分配 `usages` / 润色 / 翻译 / 对话 / 记忆 / 工具 / NPC / 视觉 / 语音 `speech`） |
 | GET / POST / DELETE | `/api/system/ai/memory` | AI 记忆（摘要 / 长期事实）查看与管理 |
-| POST | `/api/system/ai/test` | 模型连通性测试 |
+| POST | `/api/system/ai/test` | 模型连通性测试：`{model, provider?}` 可测未保存的设置；嵌入模型返回向量维度 |
 
 ## 资源与数据迁移
 
