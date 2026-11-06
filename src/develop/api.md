@@ -322,6 +322,11 @@ QQ/KOOK/Discord 的文本与卡片结构共用实际发送序列化器，但这�
 | GET / PUT | `/api/system/ai` | AI 全套设置（提供商 `providers` / 模型 `models` / 用途分配 `usages` / 润色 / 翻译 / 对话 / 记忆 / 工具 / NPC / 视觉 / 语音 `speech`） |
 | GET / POST / DELETE | `/api/system/ai/memory` | AI 记忆（摘要 / 长期事实）查看与管理 |
 | POST | `/api/system/ai/test` | 模型连通性测试：`{model, provider?}` 可测未保存的设置；嵌入模型返回向量维度 |
+| GET / PUT | `/api/knowledge/settings` | 知识库设置（只读写 `dice/ai.knowledge`） |
+| GET | `/api/knowledge/status` | 各来源条目数、是否已分配嵌入模型 |
+| POST | `/api/knowledge/search` | 检索测试：`{query, settings?}`，返回命中、相关度、FAQ 直答与将注入的文字 |
+| GET / POST / DELETE | `/api/knowledge/entries` | 自定义条目列表 / 新增或更新 `{entry}` / 删除 `?id=` |
+| POST | `/api/knowledge/import` | 批量导入 `{entries: [...]}` |
 
 ## 资源与数据迁移
 
