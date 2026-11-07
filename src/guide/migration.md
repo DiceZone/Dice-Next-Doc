@@ -189,6 +189,6 @@ JS 插件的兼容来源是 **SealDice（海豹）`sealdice-core`**，不是旧 
 
 旧 Dice 的 `InactiveUserLine` / `InactiveGroupLine` 是**本地记录保留期限**，分别导入 `dice/user_record_days` / `dice/group_record_days`，在基础设置的“本地记录保留”里查看。它们不会启用删除好友或退出群聊。用户档案和群列表资料的清理范围见[基础设置](/manage/settings#自动清理好友、群聊与本地记录)。
 
-`GroupClearLimit` 对应每轮退群数量上限；旧群配置的“免清”会映射为清理豁免，“忽略”保持彻底禁用并免清。适用的 `GroupInvalidSize`、`LeaveBlackQQ` 设置继续按已有兼容方式导入。未允许覆盖数据时，已有设置优先。
+`GroupClearLimit` 对应每轮退群数量上限；旧群配置的“免清”会映射为清理豁免，“忽略”保持彻底禁用并免清，“免黑”映射为拉黑豁免。适用的 `GroupInvalidSize`、`LeaveBlackQQ`、`ListenGroupKick`、`ListenGroupBan`、`KickedBanInviter`、`BannedBanInviter` 设置按已有兼容方式导入。控制台文件里没有写出的项保持 Dice!Next 默认（被踢/禁言自动拉黑默认关）。未允许覆盖数据时，已有设置优先。
 
 早期 Dice!Next 曾把 `InactiveUserLine` 误映射为删好友天数。新版修正后续导入，不会猜测并重置已经保存的删好友设置；用旧版迁移过的骰主请核对“好友未使用指令期限”，无需删好友时设为 0。既有“自动退群”定时任务不会被迁移器重新设置、停用或删除。
