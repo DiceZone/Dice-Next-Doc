@@ -9,16 +9,20 @@
   "scripts": {
     "predev": "node scripts/check-node-version.mjs",
     "catalog:check": "node scripts/check-text-catalog.mjs",
+    "i18n:hant": "node scripts/i18n-hant.mjs",
+    "i18n:check": "node scripts/i18n-check.mjs && node scripts/i18n-anchors.mjs",
+    "i18n:anchors": "node scripts/i18n-anchors.mjs --fix",
     "dev": "vitepress dev src",
     "predocs:dev": "node scripts/check-node-version.mjs",
     "docs:dev": "vitepress dev src",
-    "predocs:build": "node scripts/check-node-version.mjs",
+    "predocs:build": "node scripts/check-node-version.mjs && node scripts/i18n-hant.mjs",
     "docs:build": "vitepress build src",
     "docs:preview": "vitepress preview src"
   },
   "author": "",
   "dependencies": {
     "canvas-confetti": "^1.9.3",
+    "lucide-vue-next": "^1.0.0",
     "mermaid": "^11.10.1",
     "vitepress": "^1.6.4",
     "vitepress-plugin-mermaid": "^2.0.17",
@@ -27,6 +31,7 @@
   "devDependencies": {
     "@types/node": "^25.0.10",
     "@vitejs/plugin-vue": "^6.0.7",
+    "opencc-js": "^1.4.2",
     "typescript": "^5.9.2"
   }
 }
