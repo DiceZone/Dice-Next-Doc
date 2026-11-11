@@ -1,6 +1,6 @@
 # AI
 
-**Web panel → AI** connects OpenAI-compatible large language models to give the bot reply polishing, translation, conversation, NPC role-play, image recognition and more. The sidebar has six subpages: **Models / Conversation / NPC Role-play / Knowledge Base / Reply Polishing / Reply Translation** (except for the knowledge base, they share editing state, and clicking "Save" on any subpage saves everything; the knowledge base page has its own save button).
+**Web panel → AI** configures conversation, NPCs, knowledge, polishing, translation, vision and speech. Switches outside Models save immediately. Save text and parameter changes on the current page; drafts on other pages are not submitted. Knowledge is enabled by default, while explicit opt-outs are preserved and the AI master switch still applies.
 
 ::: warning Cost and latency
 With AI on, the related features are billed by the models you configure, and replies processed by AI are delayed (depending on the network and model response speed). Set token / cost limits for every model. Every AI feature falls back on failure or timeout: polishing / translation send the original text, and conversation doesn't reply.
@@ -20,6 +20,8 @@ Model settings are split into three tabs: **Providers → Models → Usage assig
 
 ### Providers
 
+Providers and models are added and edited in dialogs. Compact entries offer enable, edit and delete actions. Provider presets include DeepSeek, OpenAI, Claude, Volcengine and SiliconFlow; choose one to fill the endpoint, then enter its API key. Custom endpoints remain available. Claude uses its official OpenAI compatibility API without conflicting sampling options. Changes on Models take effect after saving the page.
+
 A provider is one set of endpoint address and key, shared by all its models, so you don't need to repeat the key for every model from the same service.
 
 | Field | Description |
@@ -31,6 +33,8 @@ A provider is one set of endpoint address and key, shared by all its models, so 
 After a provider is disabled, none of its models are called any more. A provider still used by models can't be deleted.
 
 ### Models
+
+Model presets include `deepseek-flash`, `deepseek-v4-pro` and SiliconFlow embedding model `BAAI/bge-m3`. Choosing a preset fills settings without automatically enabling paid features. Estimates use USD per million tokens. Verified 2026-11-11: DeepSeek peak, cache-miss rates are Flash $0.30 input / $1.20 output and Pro $1.32 input / $3.96 output; standard `BAAI/bge-m3` is free. Prices are editable. Check [DeepSeek](https://api-docs.deepseek.com/quick_start/pricing/) and [SiliconFlow](https://siliconflow.cn/pricing) for current billing and availability.
 
 | Field | Description |
 |------|------|
@@ -45,6 +49,8 @@ After a provider is disabled, none of its models are called any more. A provider
 Each model shows the tokens used and total cost, and has a "Test" button: general models run one real conversation, and embedding models run one real embedding and show the vector dimension.
 
 ### Usage assignment
+
+Reply, decision, vision, speech and embedding assignments are shown by default. Polishing, translation, summaries, fact extraction, NPC and mood assignments are under Advanced usage assignments.
 
 Choose which models each feature uses:
 
@@ -94,6 +100,8 @@ Context rounds (recent chat history read from the group as context), maximum rep
 
 ### Group history memory (rolling summary)
 
+Open Stored group summaries or Stored facts to view a large memory dialog. Select a group and search its nodes; the relationship graph displays eight nodes per page. Select a node to view, edit or delete it. Fact edits regenerate embeddings and retain the original on failure. Deleting a summary preserves its folding watermark so old messages are not immediately summarized again. Background folding does not overwrite an intervening summary edit or deletion.
+
 Once the conversation goes beyond the recent window, older chat is compressed in batches into a group summary injected as background, so the bot remembers things from further back. Summaries use the "Memory summary" model; you can configure the kept rounds (folding batch size), the summary length limit and the summary prompt, and view / clear each group's stored summary on the page. The model is only called once enough messages have slid out of the window to make a batch (naturally rate-limited and cost-controlled).
 
 ### Long-term memory (persistent facts, vector retrieval)
@@ -121,11 +129,9 @@ When on, only allowlisted groups / private chats can use AI conversation and NPC
 
 ### Image recognition (multimodal)
 
-When a message has images, a multimodal model recognizes the image content and the text description is injected into the conversation, so the bot "understands" the image. Recognition only happens when triggered by @mentions or keyword matches (to control cost). It uses the "Image recognition" model (the model needs "Supports image input" on); you can configure the maximum number of images per message and the recognition prompt.
+The bot downloads and validates images before uploading Base64 image data. Direct link forwarding is no longer offered. The default per-image limit is **1024 KB**, configurable from 1–8192 KB. Oversized, unavailable or unsupported images are skipped with a logged reason. File size is not a token count; vision charges also depend on resolution and model.
 
-**Pass image links directly** switch: when on, QQ image links are passed straight to the model (fast, but links may expire); when off, images are downloaded and uploaded as base64 (slower but reliable).
-
-The switch is saved with the other AI settings: after turning it off and saving, reopening the page or restarting the program should keep it off, with no need to edit `dice.json` by hand.
+Use an image-capable model assigned to Vision. Cache identity includes image contents, the vision prompt and candidate models. When a decision is required, image recognition runs first and its description is supplied to the decision model. Recognition failures explicitly tell the conversation model that the image was not read.
 
 ### Speech recognition
 
@@ -201,6 +207,8 @@ All model calls run serially in a separate background queue and never occupy the
 :::
 
 ## Troubleshooting: DEBUG Logs
+
+INFO logs correlate the trigger, chosen model, vision or transcription output, decision and reason, generated reply and outgoing msgID. Text-only messages use the same chain. Direct triggers and disabled decision checks are identified explicitly. Message logs report delivery success or failure. Neither image Base64 nor API keys are logged. DEBUG provides additional request and context detail.
 
 Set the minimum recorded level under "WebUI Settings → Console log" to **DEBUG** to see every step of AI processing:
 
