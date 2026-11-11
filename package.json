@@ -21,7 +21,6 @@
   },
   "author": "",
   "dependencies": {
-    "canvas-confetti": "^1.9.3",
     "lucide-vue-next": "^1.0.0",
     "mermaid": "^11.10.1",
     "vitepress": "^1.6.4",

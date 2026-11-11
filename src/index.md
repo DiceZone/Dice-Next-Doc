@@ -5,8 +5,8 @@ title: Dice!Next
 titleTemplate: '新一代 TRPG 骰子机器人'
 
 hero:
-  name: Dice!Next
-  text: '新一代 TRPG 骰子机器人'
+  name: 'Dice<span class="bang">!</span>Next'
+  text: '新一代！<br>骰子机器人'
   tagline: '高性能 C++ 后端 · 现代 Web 管理面板 · 多平台跑团骰子机器人 · 公测进行中'
   actions:
     - theme: brand

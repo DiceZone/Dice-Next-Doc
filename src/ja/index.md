@@ -5,8 +5,8 @@ title: Dice!Next
 titleTemplate: '次世代の TRPG ダイスボット'
 
 hero:
-  name: Dice!Next
-  text: '次世代の TRPG ダイスボット'
+  name: 'Dice<span class="bang">!</span>Next'
+  text: '次世代！<br>ダイスボット'
   tagline: '高性能な C++ バックエンド · モダンな Web 管理パネル · マルチプラットフォーム対応のダイスボット · 公開ベータ中'
   actions:
     - theme: brand

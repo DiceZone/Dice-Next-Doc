@@ -5,8 +5,8 @@ title: Dice!Next
 titleTemplate: 'A Next-Generation TRPG Dice Bot'
 
 hero:
-  name: Dice!Next
-  text: 'A Next-Generation TRPG Dice Bot'
+  name: 'Dice<span class="bang">!</span>Next'
+  text: 'Next-Gen!<br>Dice Bot'
   tagline: 'High-performance C++ backend · Modern web panel · Multi-platform tabletop dice bot · Public beta'
   actions:
     - theme: brand

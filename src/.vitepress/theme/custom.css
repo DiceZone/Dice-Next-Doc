@@ -120,3 +120,23 @@
     width: 24px;
     height: 24px;
 }
+
+/* ─── Hero 标题里 Dice!Next 的感叹号使用 Dice!Next 主题紫（与管理面板 --primary 一致） ─── */
+.VPHomeHero .main .name .bang {
+    background: none !important;
+    -webkit-text-fill-color: hsl(239 84% 58%);
+    color: hsl(239 84% 58%);
+}
+.dark .VPHomeHero .main .name .bang {
+    -webkit-text-fill-color: hsl(239 84% 64%);
+    color: hsl(239 84% 64%);
+}
+
+/* ─── Hero 标题 Dice!Next：Dice 与 Next 用浅灰，突出紫色感叹号 ─── */
+:root {
+    --vp-home-hero-name-color: #679aff;
+    --vp-home-hero-name-background: none;
+}
+.dark {
+    --vp-home-hero-name-color: #d8e7ff;
+}
