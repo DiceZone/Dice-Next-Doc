@@ -40,7 +40,7 @@ drogon、nlohmann/json、SQLite / sqlite_orm、spdlog、React、Vite、shadcn/ui
 | <img src="https://q1.qlogo.cn/g?b=qq&nk=2130369737&s=100" width="40" height="40" alt="韶华" style="border-radius:50%"> | 韶华 | <img src="https://q1.qlogo.cn/g?b=qq&nk=2431692084&s=100" width="40" height="40" alt="细雪" style="border-radius:50%"> | 细雪 |
 | <img src="https://q1.qlogo.cn/g?b=qq&nk=2294044530&s=100" width="40" height="40" alt="察生" style="border-radius:50%"> | 察生 | <img src="https://q1.qlogo.cn/g?b=qq&nk=404507568&s=100" width="40" height="40" alt="霜桦" style="border-radius:50%"> | 霜桦 |
 
-正是你们的细致测试与建议，让 Dice!Next 不断变得更好。🎲
+正是你们的细致测试与建议，让 Dice!Next 不断变得更好。
 
 ## 许可证
 

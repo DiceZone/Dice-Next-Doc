@@ -110,3 +110,13 @@
 .dark ::-webkit-scrollbar-thumb:hover {
     background: #6b7280;
 }
+
+/* ─── 首页特性卡片的 Lucide SVG 图标 ─── */
+.VPFeature .icon {
+    color: var(--vp-c-brand-1);
+}
+
+.VPFeature .icon svg {
+    width: 24px;
+    height: 24px;
+}

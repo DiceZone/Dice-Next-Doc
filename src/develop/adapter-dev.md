@@ -81,7 +81,7 @@ void requestGroupHistory(groupId, count);    // 历史消息（结果以 kGroupH
 void uploadGroupFile(groupId, name, content, localPath = "");
 
 // 同步调用平台 API 并等待响应（群文件列表/下载链等请求-响应式接口）。
-// ⚠️ 不得在适配器接收线程上调用（会死锁）；供 WebUI 的 drogon 处理线程使用。
+// 注意：不得在适配器接收线程上调用（会死锁）；供 WebUI 的 drogon 处理线程使用。
 json invokeAction(action, params, timeoutMs = 8000);
 ```
 

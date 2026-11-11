@@ -175,13 +175,13 @@
 
 | 模块 | 进度 | 当前能力 |
 | --- | --- | --- |
-| 掷骰与规则 | ✅ 可用 | 通用骰、COC、BRP、DND、WOD 骰池、暗骰、角色卡与规则速查 |
-| 人物卡与团务 | ✅ 可用 | 多人物卡、BDC 云人物卡授权与手动同步、自动制卡、`.game`、群共享 NPC、HP/先攻/钱币 |
-| 群管理与日志 | ✅ 可用 | 日志 / 回复 / 投掷 / 插件分群开关、权限、通知、自动化、跑团记录、跨团日志导出、牌堆、跨窗口转发 |
-| AI（可选） | ✅ 可用 | OpenAI 兼容网关、润色/翻译、对话记忆、工具调用、NPC 扮演 |
-| 模组与规则包 | 🔧 进行中 | 海豹 JS 插件、Lua mod、规则包；自定义规则继续完善，Python 暂不纳入计划 |
-| 平台与面板 | ✅ 可用 | QQ OneBot v11 / Milky / QQ 官方机器人 2.0、Discord、KOOK、Web 管理面板、云服务、只读新手教程、多语言、数据迁移、模拟聊天、Release 自动检测与下载 |
-| 测试与文档 | 🔧 进行中 | 公测反馈、稳定性与文档完善 |
+| 掷骰与规则 | <Icon name="circle-check" tone="ok" />可用 | 通用骰、COC、BRP、DND、WOD 骰池、暗骰、角色卡与规则速查 |
+| 人物卡与团务 | <Icon name="circle-check" tone="ok" />可用 | 多人物卡、BDC 云人物卡授权与手动同步、自动制卡、`.game`、群共享 NPC、HP/先攻/钱币 |
+| 群管理与日志 | <Icon name="circle-check" tone="ok" />可用 | 日志 / 回复 / 投掷 / 插件分群开关、权限、通知、自动化、跑团记录、跨团日志导出、牌堆、跨窗口转发 |
+| AI（可选） | <Icon name="circle-check" tone="ok" />可用 | OpenAI 兼容网关、润色/翻译、对话记忆、工具调用、NPC 扮演 |
+| 模组与规则包 | <Icon name="wrench" tone="warn" />进行中 | 海豹 JS 插件、Lua mod、规则包；自定义规则继续完善，Python 暂不纳入计划 |
+| 平台与面板 | <Icon name="circle-check" tone="ok" />可用 | QQ OneBot v11 / Milky / QQ 官方机器人 2.0、Discord、KOOK、Web 管理面板、云服务、只读新手教程、多语言、数据迁移、模拟聊天、Release 自动检测与下载 |
+| 测试与文档 | <Icon name="wrench" tone="warn" />进行中 | 公测反馈、稳定性与文档完善 |
 
 ## 已知问题与待做
 
@@ -410,7 +410,7 @@
 - 细化备份项目选择：采用父子级勾选，在保留“一键完整备份”的同时，可分别选择各功能区配置、玩家/群组/权限、人物卡、聊天记录、跑团日志、统计数据、牌堆、规则包、帮助、模板、JS/Lua 插件及不同类型媒体；手动备份与自动备份共用选择清单，恢复时按清单覆盖并校验依赖。
 - 完成规则包属性映射的群级隔离：将 `alias`、`computed`、`defaults`、`derived` 从进程级兼容注册表迁移到当前群激活规则上下文。
 - 继续完善 Discord / KOOK 的实机兼容性，并规划更多 TRPG 规则与可选云端能力。
-- 低优先级保留 QQ 官方机器人 2.0 Webhook 接收方案。现阶段继续以无需公网 HTTPS 的 Gateway WebSocket 为默认；仅在形成实际用户需求后，再实现回调验证、请求验签、多账号路由、事件去重与重试处理。完整对比见[讨论归档](./discussion-archive#2026-08-11-qq-官方机器人-20-webhook-接收模式低优先级)。
+- 低优先级保留 QQ 官方机器人 2.0 Webhook 接收方案。现阶段继续以无需公网 HTTPS 的 Gateway WebSocket 为默认；仅在形成实际用户需求后，再实现回调验证、请求验签、多账号路由、事件去重与重试处理。完整对比见[讨论归档](./discussion-archive#_2026-08-11-·-qq-官方机器人-2-0-webhook-接收模式-低优先级)。
 
 ::: tip 反馈
 问题与建议请优先通过 [GitHub Issues](https://github.com/DiceZone/Dice-Next/issues) 提交；也欢迎加入 QQ 群 **933145116** 交流。

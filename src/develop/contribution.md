@@ -50,7 +50,7 @@ cmake --build server/build --config Release
 npm install && npm run build
 ```
 
-## ⚠️ 注意事项（重要）
+## 注意事项（重要）
 
 这些是本项目特有的约定，**动手前请务必了解**：
 

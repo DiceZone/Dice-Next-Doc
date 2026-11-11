@@ -10,13 +10,13 @@ Dice!Next 是 **Dice!** 的重构延续，而 Dice! 采用 AGPLv3 协议。作�
 
 | 权限 / 义务 | 说明 |
 |------|------|
-| 商业使用 | ✅ 允许 |
-| 修改 | ✅ 允许 |
-| 分发 | ✅ 允许 |
-| 私有使用 | ✅ 允许 |
-| 开源义务 | ⚠️ 修改后分发、**或通过网络提供服务**，都必须以 AGPLv3 公开对应源代码 |
-| 协议保留 | ⚠️ 必须保留版权声明与许可证 |
-| 担保 | ❌ 无任何担保 |
+| 商业使用 | <Icon name="circle-check" tone="ok" />允许 |
+| 修改 | <Icon name="circle-check" tone="ok" />允许 |
+| 分发 | <Icon name="circle-check" tone="ok" />允许 |
+| 私有使用 | <Icon name="circle-check" tone="ok" />允许 |
+| 开源义务 | <Icon name="triangle-alert" tone="warn" />修改后分发、**或通过网络提供服务**，都必须以 AGPLv3 公开对应源代码 |
+| 协议保留 | <Icon name="triangle-alert" tone="warn" />必须保留版权声明与许可证 |
+| 担保 | <Icon name="circle-x" tone="no" />无任何担保 |
 
 ::: warning 网络服务条款
 AGPLv3 的核心区别在于：即使你只是把修改版**作为网络服务**对外提供（而非分发软件本体），也需要向使用者提供对应的源代码。
