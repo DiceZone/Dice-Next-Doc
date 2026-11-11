@@ -91,6 +91,7 @@ cmake --build server/build -j$(nproc)
 
 使用 Node.js **26.12.1 或更新的 26.x 安全版本**。CI 跟随 `26.x` 并开启
 `check-latest: true`，构建前检查最低安全版本、记录实际版本；不会自动跨到 27。
+文档站另外接受 Node.js **24.18.0 或更新的 24.x**，以便在只提供 Node 24 的托管平台上部署。
 
 ```bash
 # 管理面板（Dice-Next-WebUI 仓；构建产物 dist/ 由后端托管、被打包脚本收集）

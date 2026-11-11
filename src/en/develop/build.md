@@ -86,7 +86,7 @@ cmake --build server/build -j$(nproc)
 
 The web panel and the documentation site are **separate repositories**, each built with npm:
 
-Use Node.js **26.12.1 or a newer secure 26.x release**. CI follows `26.x` with `check-latest: true`, checks the minimum secure version before building and records the actual version; it never moves to 27 automatically.
+Use Node.js **26.12.1 or a newer secure 26.x release**. CI follows `26.x` with `check-latest: true`, checks the minimum secure version before building and records the actual version; it never moves to 27 automatically. The docs site also accepts Node.js **24.18.0 or a newer 24.x**, so it can be deployed on hosting platforms that only offer Node 24.
 
 ```bash
 # Web panel (Dice-Next-WebUI repository; the build output dist/ is served by the backend and collected by the packaging script)

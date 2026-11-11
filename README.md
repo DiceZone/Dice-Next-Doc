@@ -15,7 +15,7 @@ The user documentation project of Dice!Next. It contains the VitePress documenta
 
 ## Local Preview
 
-Requirements: Node.js 26.12.1 or a newer 26.x release, with the bundled npm.
+Requirements: Node.js 26.12.1 or a newer 26.x release (24.18.0 or a newer 24.x also works), with the bundled npm.
 
 ```powershell
 npm ci
