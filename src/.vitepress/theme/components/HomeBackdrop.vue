@@ -4,17 +4,29 @@
 //   aurora  — 几团主题色光晕缓慢漂移
 //   horizon — 画面下半部的透视网格地面，缓慢向前推进
 //   ripple  — 点阵网格，从中上方定期扩散波纹
+//   rainbow — 页面顶部一道斜向流动的彩虹光带（不画在 canvas 上，见 HomeRainbow.vue）
 // 系统要求减少动态效果时只画静态画面。
 import { onBeforeUnmount, onMounted, ref } from 'vue'
+import HomeRainbow from './HomeRainbow.vue'
 
-type Layer = 'aurora' | 'horizon' | 'ripple'
+type Layer = 'aurora' | 'horizon' | 'ripple' | 'rainbow'
+const ALL_LAYERS: Layer[] = ['aurora', 'horizon', 'ripple', 'rainbow']
 
 // 部署时在这里选择要启用的图层。
-const LAYERS: Layer[] = [
+// 也可以在构建时用环境变量覆盖，例如：VITE_HOME_LAYERS=rainbow,horizon npm run docs:build
+// 设为 none 则不显示任何底纹。
+const DEFAULT_LAYERS: Layer[] = [
   'aurora',
   'horizon',
   // 'ripple',
+  // 'rainbow',
 ]
+const fromEnv = import.meta.env.VITE_HOME_LAYERS as string | undefined
+const LAYERS: Layer[] = fromEnv === undefined || fromEnv.trim() === ''
+  ? DEFAULT_LAYERS
+  : fromEnv.split(',').map((s) => s.trim()).filter((s): s is Layer => (ALL_LAYERS as string[]).includes(s))
+const showRainbow = LAYERS.includes('rainbow')
+const canvasLayers = LAYERS.filter((layer) => layer !== 'rainbow')
 
 const GAP = 34
 
@@ -210,8 +222,8 @@ onMounted(() => {
   }
 
   const painters = { aurora: drawAurora, horizon: drawHorizon, ripple: drawRipple }
-  const order: Layer[] = ['aurora', 'horizon', 'ripple']
-  const active = order.filter((layer) => LAYERS.includes(layer)).map((layer) => painters[layer])
+  const order = ['aurora', 'horizon', 'ripple'] as const
+  const active = order.filter((layer) => canvasLayers.includes(layer)).map((layer) => painters[layer])
   const draw = (t: number) => active.forEach((paint) => paint(t))
 
   const frame = (now: number) => {
@@ -250,7 +262,8 @@ onBeforeUnmount(() => stop())
 </script>
 
 <template>
-  <canvas ref="canvas" class="home-backdrop" aria-hidden="true" />
+  <canvas v-if="canvasLayers.length" ref="canvas" class="home-backdrop" aria-hidden="true" />
+  <HomeRainbow v-if="showRainbow" />
 </template>
 
 <style scoped>
