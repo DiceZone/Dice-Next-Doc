@@ -1,5 +1,7 @@
 # Troubleshooting
 
+For password recovery, manual configuration, backups and upgrades, start with the [FAQ](/en/guide/faq).
+
 When something goes wrong, work through this page in order. When reporting a problem, please attach the relevant log or crash report files.
 
 ## Find the Logs First
@@ -36,7 +38,7 @@ If `data/logs/` is not writable, the report is written to `crash.txt` in the pro
 
 ## "Nothing Happens" After Double-Clicking the exe
 
-This is expected: by default the program **minimizes to the system tray as soon as it starts** (a balloon notification appears in the lower-right corner) and shows no console window.
+First check whether the process is still running. By default the program **minimizes to the system tray as soon as it starts** (a balloon notification appears in the lower-right corner) and shows no console window.
 
 - Find the tray icon in the lower-right corner of the taskbar. Right-click it to open the web panel, show the console, open the program folder or exit.
 - To restore the old behavior of showing the console at startup, set `dice.console_start_hidden` to `false`.
@@ -46,7 +48,7 @@ This is expected: by default the program **minimizes to the system tray as soon 
 **Only one process may run on the same data** (the same `data/` directory). At startup the program writes a single-instance lock, `.instance.lock`, in the data directory. When it detects an existing instance, the second process exits right away and prints a message to the console / log, to prevent two processes from writing to the database at once and corrupting it.
 
 - To run several dice bots, copy the whole program folder so that each one has its own `data/`.
-- If you are sure no other instance is running but still get this message, delete `.instance.lock` from the data directory and try again.
+- Stop the process using the same data directory and any service that restarts it before launching the intended instance. The operating system manages the lock; do not delete `.instance.lock` to bypass it. If it still fails, check runtime logs and directory permissions.
 
 ## The WebUI Won't Open
 
@@ -57,7 +59,7 @@ This is expected: by default the program **minimizes to the system tray as soon 
 
 ### Forgot the WebUI login password
 
-Stop the program, edit `config/webui.json`, delete the `password` field (or set it to an empty string `""`), then start again. An empty password turns login off, so remember to set a new one.
+Follow the [password recovery steps](/en/guide/faq#reset-password): restrict external access, stop and back up the service, clear the `password` field in the active configuration directory’s `webui.json`, delete the old `webui_sessions.json`, then start and set a new password. An empty password opens initial setup; it does not disable authentication.
 
 ## An Adapter Won't Connect
 

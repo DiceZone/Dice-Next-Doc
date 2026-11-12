@@ -1,5 +1,7 @@
 # Basic Configuration
 
+Before editing files, stop the service and back up the original. Preserve existing fields and JSON structure. See [manual configuration](/en/guide/faq#edit-config) for the procedure and common mistakes.
+
 Dice!Next stores its configuration as **JSON** in the `config/` directory; the first launch creates one file per area.
 
 Almost everything can be changed in the [web panel](/en/manage/dashboard), so you rarely need to edit files by hand. The files created at first launch contain only a few keys; **many keys only appear in the file after you set them in the panel** (built-in defaults apply while they are missing).
@@ -21,8 +23,9 @@ Each area is saved separately. Changes saved in the panel, and manual edits that
 
 The example below shows one file (what you actually get after startup is authoritative):
 
+File: `config/server.json` (a field illustration; do not overwrite an existing file):
+
 ```json
-// config/server.json
 {
   "host": "0.0.0.0",
   "port": 18088,
@@ -45,7 +48,7 @@ The example below shows one file (what you actually get after startup is authori
 | `log_level` | Minimum recorded level: trace/debug/info/success/warn/error. Affects new log entries immediately; old warning/critical values are still accepted | `info` |
 
 ::: tip WebUI login password vs. api_key
-**Access to the web panel is controlled by the WebUI login password.** Once you set it on the panel's WebUI Settings page, every `/api/*` request requires login first (the `webui.password` key; empty = no authentication). When logging in you can choose "Trust this device for 30 days"; trusted sessions are stored only on this machine in `config/webui_sessions.json`. `server.api_key` is the API key that panel requests carry, intended for integrations; it does not replace the login password.
+The panel uses a WebUI login password. Clearing `password` in `webui.json` requires setup again; it does not allow anonymous access. Password login can trust a device for 30 days, provided both the browser cookie and the server’s `config/webui_sessions.json` remain available. `server.api_key` is a separate API credential: keep it secure and do not enter it as a panel login password. See [password recovery](/en/guide/faq#reset-password).
 :::
 
 ### dice
@@ -54,7 +57,7 @@ The main switches for dice behavior. Common keys (most can be changed visually i
 
 | Field | Description |
 |------|------|
-| `command_prefixes` | Array of command prefixes, default `.` `。` `!` `！` |
+| `command_prefixes` | Array of command prefixes, default `.` `。` `!` `！` `/` |
 | `masters` | List of dice masters (`{platform, id}`, multiple allowed) |
 | `summon_word` | Summon word (empty = off) |
 | `whitelist_only` | Allowlist mode: only allowlisted groups get responses |

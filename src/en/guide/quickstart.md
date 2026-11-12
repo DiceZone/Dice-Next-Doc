@@ -1,5 +1,7 @@
 # Quick Start
 
+For password recovery, manual configuration, backups and upgrades, start with the [FAQ](/en/guide/faq).
+
 Get started with Dice!Next 3.0 in 5 minutes, from launching it to rolling your first die.
 
 ## 1. Download and start Dice!Next

@@ -2,6 +2,8 @@
 
 # 基礎配置
 
+手動修改前請先停服並備份，保留原有欄位與 JSON 結構。詳細步驟和常見錯誤見[手動修改配置](/zh-hant/guide/faq#edit-config)。
+
 Dice!Next 使用 `config/` 目錄儲存 **JSON 格式**配置；首次啟動會生成各功能區的檔案。
 
 絕大多數配置都能在 [Web 管理面板](/zh-hant/manage/dashboard) 裡修改，通常無需手動改檔案。首次生成的檔案只含少量鍵，**很多鍵在你通過面板設定後才會出現在檔案裡**（預設時使用內建預設值）。
@@ -23,8 +25,9 @@ Dice!Next 使用 `config/` 目錄儲存 **JSON 格式**配置；首次啟動會�
 
 以下示例按檔案展示（實際以啟動後生成的內容為準）：
 
+檔案：`config/server.json`（僅供說明欄位，不要覆蓋現有檔案）：
+
 ```json
-// config/server.json
 {
   "host": "0.0.0.0",
   "port": 18088,
@@ -47,7 +50,7 @@ Dice!Next 使用 `config/` 目錄儲存 **JSON 格式**配置；首次啟動會�
 | `log_level` | 最低記錄級別 trace/debug/info/success/warn/error；立即影響新日誌，舊 warning/critical 配置仍相容 | `info` |
 
 ::: tip WebUI 登入密碼與 api_key 的關係
-管理面板的**訪問控制以「WebUI 登入密碼」為準**：在面板的 WebUI 設定頁設定後，所有 `/api/*` 請求都需要先登入（`webui.password` 鍵，留空 = 關閉鑑權）。登入時可選擇“信任此裝置 30 天”，可信會話僅儲存在本機 `config/webui_sessions.json`。`server.api_key` 是面板請求隨附的 API 金鑰，供對接場景使用，不能代替登入密碼。
+管理面板使用 WebUI 登入密碼認證；清空 `webui.json` 的 `password` 後會要求重新設定密碼，不是開放匿名訪問。密碼登入可選擇“信任此裝置 30 天”，需要瀏覽器 Cookie 和伺服器 `config/webui_sessions.json` 同時保留。`server.api_key` 屬於 API 憑據，應單獨保管，不能拿它當作面板登入密碼輸入。忘記密碼見[恢復步驟](/zh-hant/guide/faq#reset-password)。
 :::
 
 ### dice
@@ -56,7 +59,7 @@ Dice!Next 使用 `config/` 目錄儲存 **JSON 格式**配置；首次啟動會�
 
 | 欄位 | 說明 |
 |------|------|
-| `command_prefixes` | 指令字首陣列，預設 `.` `。` `!` `！` |
+| `command_prefixes` | 指令字首陣列，預設 `.` `。` `!` `！` `/` |
 | `masters` | 骰主列表（`{platform, id}`，可多個） |
 | `summon_word` | 召喚詞（留空關閉） |
 | `whitelist_only` | 白名單模式：僅白名單群響應 |

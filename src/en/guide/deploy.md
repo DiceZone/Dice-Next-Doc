@@ -26,7 +26,7 @@ DiceNext/
 └── docs/              # roadmap / command table (data for panel pages)
 ```
 
-**`config/` and `data/` are what matter most.** To back up or move your installation, you only need these two directories.
+Configuration and user data normally live in `config/` and `data/`. Include databases, plugins and resources stored outside them when using custom paths. See [backups and server moves](/en/guide/faq#backup).
 
 ## Connecting a OneBot Client
 
@@ -77,7 +77,7 @@ location / {
 
 ## Backups and Upgrades
 
-- **Backups**: copy the `config/` and `data/` directories regularly.
+- **Backups**: use panel backups and check the selected categories. For manual copies, stop the service first and save its actual configuration directory, `data/` and custom data stored elsewhere.
 - **Upgrading a native installation**: stop the service, extract the new package over the old files completely, then start again. Configuration files and databases are not in the archive and won't be overwritten; see [Installation](/en/guide/install#upgrading).
 - **Upgrading a container deployment**: inside a container the program only checks for and announces new versions, and the server refuses manual or automatic download and installation. Pull the new image and recreate the container; do not extract files over the program in a running container's layer. The mounted `config/` and `data/` are kept.
 - Back up `data/` before upgrading.

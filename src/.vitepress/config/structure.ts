@@ -22,6 +22,7 @@ export const SECTIONS: Section[] = [
       { text: t('快速开始', '快速開始', 'Quick Start', 'クイックスタート'), link: '/quickstart' },
       { text: t('部署与运维', '部署與維運', 'Deployment & Operations', 'デプロイと運用'), link: '/deploy' },
       { text: t('数据迁移', '資料遷移', 'Data Migration', 'データ移行'), link: '/migration' },
+      { text: t('常见问题 FAQ', '常見問題 FAQ', 'FAQ', 'よくある質問 FAQ'), link: '/faq' },
       { text: t('故障排查', '疑難排解', 'Troubleshooting', 'トラブルシューティング'), link: '/troubleshooting' }
     ]
   },

@@ -272,7 +272,7 @@ There is only one panel interface (the former V2 became the official version, an
 | Setting | Description |
 |--------|------|
 | API Key | The authentication key for the backend API, the same as `server/api_key` in the configuration file |
-| Panel login password | Once set, opening the panel requires the password first (cookie session authentication); when logging in you can trust the device for 30 days, surviving program restarts. Saving it empty turns login off, and changing / clearing it invalidates existing login sessions; several installations on the same machine use separate cookies, and logging out only affects the current instance |
+| Panel login password | Once set, opening the panel requires the password first (cookie session authentication); when logging in you can trust the device for 30 days, surviving program restarts. Clearing it requires password setup again, and changing / clearing it invalidates existing login sessions; several installations on the same machine use separate cookies, and logging out only affects the current instance |
 | Listening IP and port | The listening address of the panel and API (`0.0.0.0` means all network interfaces) and the port (default 18088). **A restart is needed after changing** (HTTP listening is bound at startup and can't be switched on the fly); after saving you can click "Restart now" |
 | Theme | Light / dark / follow the system |
 | Console log | Minimum recorded level TRACE / DEBUG / INFO / SUCCESS / WARN / ERROR, default INFO; protocol event diagnostics still follow the level, with normal heartbeats at TRACE and polling at DEBUG, never raised to INFO |

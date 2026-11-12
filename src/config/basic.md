@@ -1,5 +1,7 @@
 # 基础配置
 
+手动修改前请先停服并备份，保留原有字段与 JSON 结构。详细步骤和常见错误见[手动修改配置](/guide/faq#edit-config)。
+
 Dice!Next 使用 `config/` 目录保存 **JSON 格式**配置；首次启动会生成各功能区的文件。
 
 绝大多数配置都能在 [Web 管理面板](/manage/dashboard) 里修改，通常无需手动改文件。首次生成的文件只含少量键，**很多键在你通过面板设置后才会出现在文件里**（缺省时使用内置默认值）。
@@ -21,8 +23,9 @@ Dice!Next 使用 `config/` 目录保存 **JSON 格式**配置；首次启动会�
 
 以下示例按文件展示（实际以启动后生成的内容为准）：
 
+文件：`config/server.json`（仅供说明字段，不要覆盖现有文件）：
+
 ```json
-// config/server.json
 {
   "host": "0.0.0.0",
   "port": 18088,
@@ -45,7 +48,7 @@ Dice!Next 使用 `config/` 目录保存 **JSON 格式**配置；首次启动会�
 | `log_level` | 最低记录级别 trace/debug/info/success/warn/error；立即影响新日志，旧 warning/critical 配置仍兼容 | `info` |
 
 ::: tip WebUI 登录密码与 api_key 的关系
-管理面板的**访问控制以「WebUI 登录密码」为准**：在面板的 WebUI 设置页设置后，所有 `/api/*` 请求都需要先登录（`webui.password` 键，留空 = 关闭鉴权）。登录时可选择“信任此设备 30 天”，可信会话仅保存在本机 `config/webui_sessions.json`。`server.api_key` 是面板请求随附的 API 密钥，供对接场景使用，不能代替登录密码。
+管理面板使用 WebUI 登录密码认证；清空 `webui.json` 的 `password` 后会要求重新设置密码，不是开放匿名访问。密码登录可选择“信任此设备 30 天”，需要浏览器 Cookie 和服务器 `config/webui_sessions.json` 同时保留。`server.api_key` 属于 API 凭据，应单独保管，不能拿它当作面板登录密码输入。忘记密码见[恢复步骤](/guide/faq#reset-password)。
 :::
 
 ### dice
@@ -54,7 +57,7 @@ Dice!Next 使用 `config/` 目录保存 **JSON 格式**配置；首次启动会�
 
 | 字段 | 说明 |
 |------|------|
-| `command_prefixes` | 指令前缀数组，默认 `.` `。` `!` `！` |
+| `command_prefixes` | 指令前缀数组，默认 `.` `。` `!` `！` `/` |
 | `masters` | 骰主列表（`{platform, id}`，可多个） |
 | `summon_word` | 召唤词（留空关闭） |
 | `whitelist_only` | 白名单模式：仅白名单群响应 |
