@@ -48,6 +48,20 @@ Model presets include `deepseek-flash`, `deepseek-v4-pro` and SiliconFlow embedd
 
 Each model shows the tokens used and total cost, and has a "Test" button: general models run one real conversation, and embedding models run one real embedding and show the vector dimension.
 
+### Thinking, output budgets and off-peak prices {#model-request-options}
+
+The model editor provides:
+
+- **Thinking mode**: automatic, enabled or disabled. Automatic normally keeps provider defaults. When both model and vision settings are automatic, official DeepSeek vision disables thinking by default. An explicit vision choice overrides the model.
+- **Parameter format and effort**: automatic uses `thinking` for official DeepSeek URLs or model names beginning with `deepseek`, and `reasoning_effort` otherwise. Relays can choose explicitly. Low, medium and high effort require provider support; leave thinking automatic if unsupported.
+- **Output budget per request**: 0 uses the purpose default. A nonzero value overrides text-request budgets; vision uses the smaller of the model and vision budgets. This differs from cumulative token limits. Thinking and final text may share the budget, so allow enough tokens.
+- **Input, output and cached-input rates**: USD per million tokens. Cached rates require upstream-reported cache-hit usage; other input uses the regular rate. Older settings without a cached rate inherit the input rate.
+- **Off-peak pricing**: a daily interval, fixed UTC offset and input/cached-input/output rates. Regular rates apply otherwise. Selection uses request start time. Overnight intervals are supported: start is inclusive, end exclusive; equal endpoints mean no interval. The timezone is independent of browser/server time, with no daylight-saving adjustment.
+
+These are local estimates, not changes to provider billing. Existing cumulative costs are not recalculated; the provider invoice is authoritative. Cumulative token/cost limits do not reset daily. Checks happen before a call, so concurrent or current calls can exceed the threshold. Reported usage is counted even for empty or truncated responses.
+
+Save changes on the Models page. Vision thinking selection saves immediately; its budget and timeout save with the current page's parameters.
+
 ### Usage assignment
 
 Reply, decision, vision, speech and embedding assignments are shown by default. Polishing, translation, summaries, fact extraction, NPC and mood assignments are under Advanced usage assignments.
@@ -132,6 +146,14 @@ When on, only allowlisted groups / private chats can use AI conversation and NPC
 The bot downloads and validates images before uploading Base64 image data. Direct link forwarding is no longer offered. The default per-image limit is **1024 KB**, configurable from 1–8192 KB. Oversized, unavailable or unsupported images are skipped with a logged reason. File size is not a token count; vision charges also depend on resolution and model.
 
 Use an image-capable model assigned to Vision. Cache identity includes image contents, the vision prompt and candidate models. When a decision is required, image recognition runs first and its description is supplied to the decision model. Recognition failures explicitly tell the conversation model that the image was not read.
+
+#### Empty or incorrect image descriptions? {#vision-empty-result}
+
+Vision defaults to **2048 output tokens** and a **60-second timeout**, configurable under AI → Conversation & Memory → Vision, instead of a fixed 300-token budget. Official `deepseek-flash` accepts images. Automatic mode disables its vision thinking; increase the budget and timeout if you enable thinking.
+
+Logs distinguish output-limit exhaustion, reasoning without final text, empty text, refusal and HTTP errors, and identify the model, finish reason and actual request budget. Failures try backup models for that purpose, up to three candidates. If all fail, incomplete descriptions are not cached and reasoning is not used as a description.
+
+Each submitted image records a content fingerprint, size and associated message. Follow that chain through the model result, decision and final reply. Fingerprints are not image URLs; Base64 and keys are not logged. Different fingerprints indicate different inputs, but identical inputs do not guarantee correct recognition. Prompt, model-request or vision-setting changes invalidate cached interpretations. Per-request temporary files are isolated across bot processes sharing an OS temporary directory.
 
 ### Speech recognition
 
