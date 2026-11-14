@@ -27,6 +27,10 @@
   pointer-events: none;
 }
 
+html.dark .home-rainbow {
+  display: none;
+}
+
 .jumbo {
   --stripes: repeating-linear-gradient(100deg, #fff 0%, #fff 7%, transparent 10%, transparent 12%, #fff 16%);
   --rainbow: repeating-linear-gradient(100deg, #60a5fa 10%, #e879f9 16%, #5eead4 22%, #60a5fa 30%);

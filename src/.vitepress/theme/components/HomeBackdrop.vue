@@ -19,7 +19,7 @@ const DEFAULT_LAYERS: Layer[] = [
   'aurora',
   'horizon',
   // 'ripple',
-  // 'rainbow',
+  'rainbow',
 ]
 const fromEnv = import.meta.env.VITE_HOME_LAYERS as string | undefined
 const LAYERS: Layer[] = fromEnv === undefined || fromEnv.trim() === ''

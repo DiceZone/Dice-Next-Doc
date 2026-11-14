@@ -134,9 +134,9 @@
 
 /* ─── Hero 标题 Dice!Next：Dice 与 Next 用浅灰，突出紫色感叹号 ─── */
 :root {
-    --vp-home-hero-name-color: #679aff;
+    --vp-home-hero-name-color: #292929;
     --vp-home-hero-name-background: none;
 }
 .dark {
-    --vp-home-hero-name-color: #d8e7ff;
+    --vp-home-hero-name-color: #f1f1f1;
 }
