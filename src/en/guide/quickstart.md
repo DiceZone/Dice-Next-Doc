@@ -22,6 +22,8 @@ We recommend setting a login password on the **WebUI Settings** page of the pane
 
 ## 3. Configure a OneBot adapter
 
+For built-in login, Milky, QQ Official Bot, Discord or KOOK, follow the [setup instructions for your platform](/en/manage/adapter-manager).
+
 Go to **Web panel → Adapters** and click "Add adapter".
 
 ### Forward WebSocket (recommended)

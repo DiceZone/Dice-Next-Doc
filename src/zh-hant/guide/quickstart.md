@@ -24,6 +24,8 @@
 
 ## 3. 配置 OneBot 適配器
 
+使用內建登入、Milky、QQ 官方機器人、Discord 或 KOOK，請直接按[對應平臺的接入教程](/zh-hant/manage/adapter-manager)操作。
+
 進入 **管理面板 → 適配器管理**，點選「新增適配器」。
 
 ### 正向 WebSocket（推薦）

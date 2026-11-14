@@ -22,6 +22,8 @@
 
 ## 3. 配置 OneBot 适配器
 
+使用内置登录、Milky、QQ 官方机器人、Discord 或 KOOK，请直接按[对应平台的接入教程](/manage/adapter-manager)操作。
+
 进入 **管理面板 → 适配器管理**，点击「添加适配器」。
 
 ### 正向 WebSocket（推荐）
