@@ -69,7 +69,17 @@ onMessageReceived → built-in command or cmd.solve → drain async tasks → on
 | `ext.onBecomeFriend(ctx, msg)` | Friend added |
 | `ext.onMessageDeleted(ctx, msg)` | A message recall event was received; `msg.rawId` is the recalled message's ID (when the adapter provides it) |
 | `ext.onPoke(ctx, event)` | Poke; `event={groupId,senderId,targetId,isPrivate}` |
-| `ext.onGroupLeave(ctx, event)` | A group member left / was removed; `event={groupId,userId,operatorId}` |
+| `ext.onGroupLeave(ctx, event)` | A group member left / was removed; `event={groupId,userId,operatorId,subType}` |
+| `ext.onGroupKicked(ctx, event)` | **Dice!Next extension**. Kick (`subType` is `kick` / `kick_me` / `removed`); `onGroupLeave` still fires first |
+| `ext.onGroupUpload(ctx, event)` | **Dice!Next extension**. Group file upload; `event.file={id,name,size,busid}` |
+| `ext.onGroupBan(ctx, event)` | **Dice!Next extension**. Mute / unmute / whole-group mute; `event.duration` is seconds, `isWhole` is whole-group |
+| `ext.onGroupAdmin(ctx, event)` | **Dice!Next extension**. Admin set / unset; `subType` is `set` / `unset` |
+| `ext.onFriendRecall(ctx, event)` | **Dice!Next extension**. Friend / private recall; also fires `onMessageDeleted` |
+| `ext.onGroupTitle(ctx, event)` | **Dice!Next extension**. Custom title change; `event.title` |
+| `ext.onGroupHonor(ctx, event)` | **Dice!Next extension**. Group honor (Dragon King etc.); `event.honorType` |
+| `ext.onGroupEssence(ctx, event)` | **Dice!Next extension**. Essence add / remove; `subType` is `add` / `delete`, `messageId` is the message ID |
+| `ext.onGroupRequest(ctx, event)` | **Dice!Next extension** (not in SealDice JS). A join request or invitation arrived; see [`dicenext`](#dicenext-group-request) |
+| `ext.onFriendRequest(ctx, event)` | **Dice!Next extension**. A friend request arrived; veto only, see [`dicenext`](#dicenext-friend-request) |
 
 Even if a registered command object has no `solve`, or the command word matches no `cmdMap`, parsed command messages still go into `onCommandReceived`. Whether event hooks fire depends on whether the adapter reports the corresponding `BotEvent`.
 
@@ -77,6 +87,8 @@ The QQ Official adapter also provides native hooks for interactions, subscriptio
 
 ::: warning Boundaries with SealDice
 `onMessageEdit` isn't available yet, because Dice!Next's current `BotEvent` transport has no message edit event. `onCommandOverride` has no JS binding in `sealdice-core` itself, so it isn't a JS plugin compatibility target.
+
+Join-request approval is also a Dice!Next extension: the hook is `ext.onGroupRequest`, and submitting approve/reject uses the global `dicenext.setGroupAddRequest`. Do not write `seal.setGroupAddRequest` — SealDice JS has no such API. Friend requests use `ext.onFriendRequest` + `dicenext.setFriendAddRequest` and can **only veto**; they cannot force-approve past the host `friend_policy`. Kick, group file, mute, admin, friend recall, title, honor and essence are likewise Dice!Next observation hooks — do not put them on `seal.*`.
 :::
 
 ## ctx / msg / cmdArgs
@@ -247,6 +259,73 @@ Subject to a security gate: you must turn on the **external API switch** in "Sys
 | `seal.ban.remove(ctx, id)` | Remove from the lists |
 | `seal.ban.getList()` / `seal.ban.getUser(id)` | Query the lists |
 
+## `dicenext` extension: join requests {#dicenext-group-request}
+
+SealDice JS has no join-request hook and no approve/reject API. Dice!Next puts this host capability on the global `dicenext` object so it is not mistaken for a `seal.*` API that would also work on SealDice.
+
+`ext.onGroupRequest(ctx, event)` fires when the adapter reports a group request:
+
+| `event` field | Meaning |
+| --- | --- |
+| `groupId` | Group ID |
+| `userId` | Applicant (for invitations, usually the inviter) |
+| `operatorId` | Operator |
+| `flag` | Request token; pass it back unchanged when submitting the decision |
+| `subType` | `add`: someone applied to join; `invite`: the bot was invited into a group |
+| `comment` | Verification comment |
+| `platform` / `adapterId` | Source platform and adapter |
+
+```javascript
+ext.onGroupRequest = (ctx, event) => {
+  if (event.subType !== 'add') return; // invite = the bot was invited, not a member applying
+  dicenext.setGroupAddRequest(ctx, event, true);                      // approve
+  // dicenext.setGroupAddRequest(ctx, event, false, 'members only');  // reject with a reason
+};
+```
+
+The long form `dicenext.setGroupAddRequest(ctx, flag, subType, approve, reason?)` is also accepted.
+
+If the plugin does not call it, the request stays for human review (the host may still apply `.group auto pass` afterwards). Once the plugin submits approve or reject, the host does not override that request. The bot needs group-admin permission for the platform to actually apply it. You can `await fetch(...)` in this hook; the HTTP call is still synchronous and blocking.
+
+## `dicenext` extension: friend requests and notices {#dicenext-friend-request}
+
+SealDice JS has no friend-request approval and no group-file / mute / admin / recall / title / essence hooks. Dice!Next puts them on `ext.on*` and the global `dicenext` object.
+
+### Friend requests (veto only)
+
+`ext.onFriendRequest(ctx, event)` fires when the adapter reports a friend request. `event` fields match join requests (`flag`, `userId`, `comment`, `platform`, `adapterId`; `groupId` is usually empty).
+
+```javascript
+ext.onFriendRequest = (ctx, event) => {
+  if (event.comment.indexOf('spam') >= 0)
+    dicenext.setFriendAddRequest(ctx, event, false, 'rejected spam');
+  // dicenext.setFriendAddRequest(ctx, event, true) is ignored: friend requests cannot be force-approved
+};
+```
+
+The long form `dicenext.setFriendAddRequest(ctx, flag, approve, reason?)` is also accepted.
+
+- `approve === false`: submit reject immediately and skip host `friend_policy` and Lua.
+- `approve === true`: log a warning and ignore; the request still follows host policy and Lua (Lua can also only veto, never override a restrictive host).
+- No call: host policy runs, then Lua.
+
+### Observation hooks
+
+These hooks cannot stop later host logic (mute punishment, chat-log ingest, and so on). Shared `event` fields: `groupId`, `userId`, `operatorId`, `selfId`, `subType`, `platform`, `adapterId`, `isSelf`.
+
+| Hook | Extra fields |
+| --- | --- |
+| `onGroupKicked` | `subType`: `kick` / `kick_me` / `removed`. Voluntary leaves do not fire it |
+| `onGroupUpload` | `file={id,name,size,busid}` |
+| `onGroupBan` | `duration` (seconds), `isWhole` |
+| `onGroupAdmin` | `subType`: `set` / `unset` |
+| `onFriendRecall` | `messageId`; also fires `onMessageDeleted` |
+| `onGroupTitle` | `title` (OneBot `notify/title`) |
+| `onGroupHonor` | `honorType` (OneBot `notify/honor`, e.g. `talkative`) |
+| `onGroupEssence` | `messageId`; `subType`: `add` / `delete` |
+
+Notices the adapter does not map never fire. Milky currently reports friend recall and essence, not custom title / honor.
+
 ## Rolling on Someone's Behalf
 
 ```javascript
@@ -275,6 +354,8 @@ const mctx = seal.getCtxProxyFirst(ctx, cmdArgs) || ctx;  // act for the @mentio
 | `console.log/info/warn/error/debug/trace(...)` | Written to the `[插件]` (plugin) log with the actual script source; log/info=INFO, warn=WARN, error=ERROR, debug=DEBUG, trace=TRACE |
 | `seal.getVersion()` | `{version, versionSimple, versionCode, ...}` |
 | `seal.getEndPoints()` | Placeholder, always an empty array |
+| `dicenext.setGroupAddRequest(...)` | **Dice!Next extension**: submit a join / invitation decision; see [join requests](#dicenext-group-request) |
+| `dicenext.setFriendAddRequest(...)` | **Dice!Next extension**: veto a friend request only; see [friend requests](#dicenext-friend-request) |
 
 ## Complete JS API List and Signatures
 
@@ -314,6 +395,10 @@ Below is the complete public API exported by the current runtime. Items marked "
 | `seal.applyPlayerGroupCardByTemplate(ctx, template)` | `0` | **Compatibility placeholder**; currently does nothing. |
 | `seal.memberBan(ctx, groupId, userId, durationSec?)` | — | Mute; has no effect when the platform doesn't support it or permission is insufficient. |
 | `seal.memberKick(ctx, groupId, userId)` | — | Kick; has no effect when the platform doesn't support it or permission is insufficient. |
+| `dicenext.setGroupAddRequest(ctx, event, approve, reason?)` | — | **Dice!Next extension** (not on `seal`). `event` is the second argument of `onGroupRequest`. |
+| `dicenext.setGroupAddRequest(ctx, flag, subType, approve, reason?)` | — | Same, with explicit `flag` / `subType`. Omit the call to leave human review; after a call the host does not override this request. |
+| `dicenext.setFriendAddRequest(ctx, event, approve, reason?)` | — | **Dice!Next extension**. `approve=false` submits reject; `true` is ignored. |
+| `dicenext.setFriendAddRequest(ctx, flag, approve, reason?)` | — | Same, with explicit `flag`. |
 
 The public fields of `ctx.player` are `userId`, `name`, `card`; of `ctx.group`, `groupId`, `logOn`, `logCurName`. `msg.sender` has `userId`, `nickname`, `card`. Cross-platform IDs are all strings and can't be assumed to be QQ numbers.
 
@@ -375,7 +460,7 @@ seal.ext.register(ext);
 
 Boundaries worth knowing before writing a plugin (which are also our improvement roadmap):
 
-1. `onMessageEdit` isn't available yet; other platform events only fire when the adapter reports the corresponding `BotEvent`.
+1. `onMessageEdit` isn't available yet; other platform events only fire when the adapter reports the corresponding `BotEvent`. Join requests use `ext.onGroupRequest` + `dicenext.setGroupAddRequest`; friend requests use `ext.onFriendRequest` + `dicenext.setFriendAddRequest` (veto only); kick / file / mute / admin / friend recall / title / honor / essence use the matching `ext.on*`. Do not put them on `seal.*`.
 2. `msg.segment` holds the adapter's native segments, not a unified cross-platform structure; it is empty when not reported, and there's no dedicated image-sending API (you can send `[CQ:image]` codes).
 3. There's no `require`/`import` and no file system API; plugins must be self-contained single files.
 4. Execution is serial on a single thread, with no timeouts or resource quotas; avoid infinite loops and slow synchronous operations.

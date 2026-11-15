@@ -69,7 +69,17 @@ onMessageReceived → 内置指令或 cmd.solve → 清空异步任务 → onCom
 | `ext.onBecomeFriend(ctx, msg)` | 好友添加完成 |
 | `ext.onMessageDeleted(ctx, msg)` | 收到消息撤回事件；`msg.rawId` 为被撤回消息 ID（适配器提供时） |
 | `ext.onPoke(ctx, event)` | 戳一戳；`event={groupId,senderId,targetId,isPrivate}` |
-| `ext.onGroupLeave(ctx, event)` | 群成员退出 / 被移出；`event={groupId,userId,operatorId}` |
+| `ext.onGroupLeave(ctx, event)` | 群成员退出 / 被移出；`event={groupId,userId,operatorId,subType}` |
+| `ext.onGroupKicked(ctx, event)` | **Dice!Next 扩展**。被踢（`subType` 为 `kick` / `kick_me` / `removed`）；仍会先触发 `onGroupLeave` |
+| `ext.onGroupUpload(ctx, event)` | **Dice!Next 扩展**。群文件上传；`event.file={id,name,size,busid}` |
+| `ext.onGroupBan(ctx, event)` | **Dice!Next 扩展**。禁言 / 解禁 / 全体禁言；`event.duration` 为秒，`isWhole` 为全体 |
+| `ext.onGroupAdmin(ctx, event)` | **Dice!Next 扩展**。管理员设置 / 取消；`subType` 为 `set` / `unset` |
+| `ext.onFriendRecall(ctx, event)` | **Dice!Next 扩展**。好友 / 私聊撤回；同时触发 `onMessageDeleted` |
+| `ext.onGroupTitle(ctx, event)` | **Dice!Next 扩展**。专属头衔变更；`event.title` |
+| `ext.onGroupHonor(ctx, event)` | **Dice!Next 扩展**。群荣誉（龙王等）；`event.honorType` |
+| `ext.onGroupEssence(ctx, event)` | **Dice!Next 扩展**。精华设置 / 取消；`subType` 为 `add` / `delete`，`messageId` 为消息 ID |
+| `ext.onGroupRequest(ctx, event)` | **Dice!Next 扩展**（海豹 JS 没有）。收到加群申请或邀请；见 [`dicenext`](#dicenext-group-request) |
+| `ext.onFriendRequest(ctx, event)` | **Dice!Next 扩展**。收到加好友申请；只能否决，见 [`dicenext`](#dicenext-friend-request) |
 
 即使注册的指令对象没有 `solve`，或指令词未在任何 `cmdMap` 中命中，已解析的指令消息仍会进入 `onCommandReceived`。事件类钩子是否触发取决于适配器是否上报对应 `BotEvent`。
 
@@ -77,6 +87,8 @@ QQ 官方适配器另外提供互动、订阅授权与其他官方事件的原�
 
 ::: warning 与 SealDice 边界
 `onMessageEdit` 暂不可用，因为 Dice!Next 当前的 `BotEvent` 传输层没有消息编辑事件。`onCommandOverride` 在 `sealdice-core` 本身没有 JS 绑定，因此不属于 JS 插件兼容目标。
+
+入群申请审批也是 Dice!Next 扩展：钩子写在 `ext.onGroupRequest`，提交同意/拒绝用全局 `dicenext.setGroupAddRequest`。不要写 `seal.setGroupAddRequest`——海豹 JS 没有这项 API。好友申请用 `ext.onFriendRequest` + `dicenext.setFriendAddRequest`，且**只能否决**，不能越过宿主 `friend_policy` 强制通过。被踢、群文件、禁言、管理员、好友撤回、头衔、荣誉、精华同样是 Dice!Next 观察钩子，不要写到 `seal.*`。
 :::
 
 ## ctx / msg / cmdArgs
@@ -247,6 +259,73 @@ const resp = await fetch(url, { method: 'POST', headers: {...}, body: {...} });
 | `seal.ban.remove(ctx, id)` | 移出名单 |
 | `seal.ban.getList()` / `seal.ban.getUser(id)` | 查询名单 |
 
+## `dicenext` 扩展：入群申请 {#dicenext-group-request}
+
+海豹 JS 没有入群申请钩子，也没有同意/拒绝接口。Dice!Next 把这类宿主能力放在全局 `dicenext` 上，避免让人误以为 `seal.*` 在海豹里也能用。
+
+`ext.onGroupRequest(ctx, event)` 在适配器上报加群请求时调用：
+
+| `event` 字段 | 说明 |
+| --- | --- |
+| `groupId` | 群号 |
+| `userId` | 申请人（邀请骰子进群时通常是邀请人） |
+| `operatorId` | 操作者 |
+| `flag` | 请求标识，提交审批时原样回传 |
+| `subType` | `add`：有人申请入群；`invite`：邀请骰子进群 |
+| `comment` | 验证信息 |
+| `platform` / `adapterId` | 来源平台与适配器 |
+
+```javascript
+ext.onGroupRequest = (ctx, event) => {
+  if (event.subType !== 'add') return; // invite = 邀请骰子进群，不是成员申请
+  dicenext.setGroupAddRequest(ctx, event, true);                      // 同意
+  // dicenext.setGroupAddRequest(ctx, event, false, '仅限本群成员');    // 拒绝并附言
+};
+```
+
+也可以写成 `dicenext.setGroupAddRequest(ctx, flag, subType, approve, reason?)`。
+
+不调用则保持人工审核（随后仍可能走宿主的 `.group auto pass` 等策略）。插件一旦提交同意或拒绝，宿主不再覆盖这次申请。骰娘需要该群的管理权限，平台才会真正生效。这个钩子里可以 `await fetch(...)`；底层仍是同步阻塞。
+
+## `dicenext` 扩展：好友申请与平台通知 {#dicenext-friend-request}
+
+海豹 JS 没有加好友审批，也没有群文件 / 禁言 / 管理员 / 撤回 / 头衔 / 精华钩子。Dice!Next 把它们放在 `ext.on*` 与全局 `dicenext` 上。
+
+### 好友申请（只能否决）
+
+`ext.onFriendRequest(ctx, event)` 在适配器上报加好友请求时调用。`event` 字段与入群申请相同（`flag`、`userId`、`comment`、`platform`、`adapterId`；`groupId` 通常为空）。
+
+```javascript
+ext.onFriendRequest = (ctx, event) => {
+  if (event.comment.indexOf('广告') >= 0)
+    dicenext.setFriendAddRequest(ctx, event, false, '拒绝广告号');
+  // dicenext.setFriendAddRequest(ctx, event, true) 会被忽略：好友申请不能强制通过
+};
+```
+
+也可以写成 `dicenext.setFriendAddRequest(ctx, flag, approve, reason?)`。
+
+- `approve === false`：立即提交拒绝，跳过宿主 `friend_policy` 和 Lua。
+- `approve === true`：记录警告并忽略，申请仍走宿主策略与 Lua（Lua 同样只能否决、不能强过宿主）。
+- 不调用：继续宿主策略，再交给 Lua。
+
+### 观察钩子
+
+这些钩子不能阻止宿主后续逻辑（禁言惩罚、聊天记录入库等）。`event` 公共字段：`groupId`、`userId`、`operatorId`、`selfId`、`subType`、`platform`、`adapterId`、`isSelf`。
+
+| 钩子 | 额外字段 |
+| --- | --- |
+| `onGroupKicked` | `subType`：`kick` / `kick_me` / `removed`。主动退群不会触发 |
+| `onGroupUpload` | `file={id,name,size,busid}` |
+| `onGroupBan` | `duration`（秒）、`isWhole` |
+| `onGroupAdmin` | `subType`：`set` / `unset` |
+| `onFriendRecall` | `messageId`；同时触发 `onMessageDeleted` |
+| `onGroupTitle` | `title`（OneBot `notify/title`） |
+| `onGroupHonor` | `honorType`（OneBot `notify/honor`，如 `talkative`） |
+| `onGroupEssence` | `messageId`；`subType`：`add` / `delete` |
+
+OneBot 未上报或适配器未映射的通知不会触发。Milky 目前有好友撤回和精华，没有专属头衔 / 荣誉事件。
+
 ## 代骰
 
 ```javascript
@@ -275,6 +354,8 @@ const mctx = seal.getCtxProxyFirst(ctx, cmdArgs) || ctx;  // 有 @ 目标则代�
 | `console.log/info/warn/error/debug/trace(...)` | 写入 `[插件]` 日志并标明实际脚本来源；log/info=INFO、warn=WARN、error=ERROR、debug=DEBUG、trace=TRACE |
 | `seal.getVersion()` | `{version, versionSimple, versionCode, ...}` |
 | `seal.getEndPoints()` | 占位，恒空数组 |
+| `dicenext.setGroupAddRequest(...)` | **Dice!Next 扩展**：提交加群/邀请审批，见 [入群申请](#dicenext-group-request) |
+| `dicenext.setFriendAddRequest(...)` | **Dice!Next 扩展**：只能否决好友申请，见 [好友申请](#dicenext-friend-request) |
 
 ## 完整 JS API 清单与签名
 
@@ -314,6 +395,10 @@ const mctx = seal.getCtxProxyFirst(ctx, cmdArgs) || ctx;  // 有 @ 目标则代�
 | `seal.applyPlayerGroupCardByTemplate(ctx, template)` | `0` | **兼容占位**，当前不执行设置。 |
 | `seal.memberBan(ctx, groupId, userId, durationSec?)` | — | 禁言；平台不支持或权限不足时不会生效。 |
 | `seal.memberKick(ctx, groupId, userId)` | — | 踢人；平台不支持或权限不足时不会生效。 |
+| `dicenext.setGroupAddRequest(ctx, event, approve, reason?)` | — | **Dice!Next 扩展**（不在 `seal` 上）。`event` 为 `onGroupRequest` 的第二参。 |
+| `dicenext.setGroupAddRequest(ctx, flag, subType, approve, reason?)` | — | 同上，显式传 `flag` / `subType`。不调用则保持人工审核；调用后宿主不再覆盖本次申请。 |
+| `dicenext.setFriendAddRequest(ctx, event, approve, reason?)` | — | **Dice!Next 扩展**。`approve=false` 提交拒绝；`true` 被忽略。 |
+| `dicenext.setFriendAddRequest(ctx, flag, approve, reason?)` | — | 同上，显式传 `flag`。 |
 
 `ctx.player` 公开字段为 `userId`、`name`、`card`；`ctx.group` 为 `groupId`、`logOn`、`logCurName`。`msg.sender` 为 `userId`、`nickname`、`card`。跨平台 ID 均为字符串，不能假定为 QQ 数字。
 
@@ -375,7 +460,7 @@ seal.ext.register(ext);
 
 写插件前值得知道的边界（也是我们的改进路线）：
 
-1. `onMessageEdit` 暂不可用；其他平台事件也只有在适配器上报对应 `BotEvent` 时才触发。
+1. `onMessageEdit` 暂不可用；其他平台事件也只有在适配器上报对应 `BotEvent` 时才触发。入群申请用 `ext.onGroupRequest` + `dicenext.setGroupAddRequest`；好友申请用 `ext.onFriendRequest` + `dicenext.setFriendAddRequest`（只能否决）；被踢 / 文件 / 禁言 / 管理员 / 好友撤回 / 头衔 / 荣誉 / 精华用对应 `ext.on*`。不要写到 `seal.*`。
 2. `msg.segment` 是适配器原生分段、并非跨平台统一结构；未上报时为空，也没有专用的发图 API（可发 `[CQ:image]` 码）。
 3. 没有 `require`/`import` 与文件系统 API，插件必须单文件自包含。
 4. 单线程串行执行，无超时与资源配额——请避免死循环与慢同步操作。
