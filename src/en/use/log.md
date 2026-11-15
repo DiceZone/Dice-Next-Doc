@@ -2,6 +2,17 @@
 
 Dice!Next can record your sessions in a group. When you finish, it organizes the log, uploads it to the log site and sends it as a group file, so it's easy to look back at and archive.
 
+## Live cloud logs
+
+A bot owner or group admin can send `.log live Name` in the group. Configure a valid BDC bot key for this adapter first. The bot returns the log code and viewer URL as soon as the site creates the log. Tell participants before starting: anyone with the full link can watch. Send `.log live` again to retrieve the link.
+
+Use `.log off` to pause, `.log on` to resume recording and `.log end` to finish. Queued messages survive temporary outages and are sent in order. You can also continue a log after the site closes it for inactivity.
+
+When switching bots, check that the last message appears in the original viewer. Then send `.log fork VIEWER_URL` or `.log fork CODE PASSWORD` to the new bot in its group. You can also join the code and password with `#`. The new bot needs its own valid BDC key, and a bot owner or group admin must run the command. The new link contains a snapshot of the original plus subsequent messages from the new bot. Local file exports from that bot cover only its own session. Both live and finished logs can be continued, except Parquet logs.
+
+- `.log fork aB3d#123456` keeps the original title.
+- `.log fork aB3d#123456 Act II` names the new log “Act II”.
+
 ## Command Overview
 
 | Command | Description |
