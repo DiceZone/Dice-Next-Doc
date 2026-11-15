@@ -69,7 +69,17 @@ onMessageReceived → 内蔵のコマンドまたは cmd.solve → 非同期の�
 | `ext.onBecomeFriend(ctx, msg)` | 友だちの追加が完了した |
 | `ext.onMessageDeleted(ctx, msg)` | メッセージの取り消しのイベントを受け取った。`msg.rawId` は取り消されたメッセージの ID（アダプターが提供する場合） |
 | `ext.onPoke(ctx, event)` | つつく。`event={groupId,senderId,targetId,isPrivate}` |
-| `ext.onGroupLeave(ctx, event)` | グループのメンバーが退出した / 外された。`event={groupId,userId,operatorId}` |
+| `ext.onGroupLeave(ctx, event)` | グループのメンバーが退出した / 外された。`event={groupId,userId,operatorId,subType}` |
+| `ext.onGroupKicked(ctx, event)` | **Dice!Next の拡張**。キック（`subType` は `kick` / `kick_me` / `removed`）。先に `onGroupLeave` も呼ばれる |
+| `ext.onGroupUpload(ctx, event)` | **Dice!Next の拡張**。グループのファイルアップロード。`event.file={id,name,size,busid}` |
+| `ext.onGroupBan(ctx, event)` | **Dice!Next の拡張**。ミュート / 解除 / 全体ミュート。`event.duration` は秒、`isWhole` は全体 |
+| `ext.onGroupAdmin(ctx, event)` | **Dice!Next の拡張**。管理者の設定 / 解除。`subType` は `set` / `unset` |
+| `ext.onFriendRecall(ctx, event)` | **Dice!Next の拡張**。友だち / 私聊の取り消し。同時に `onMessageDeleted` も呼ばれる |
+| `ext.onGroupTitle(ctx, event)` | **Dice!Next の拡張**。専用タイトルの変更。`event.title` |
+| `ext.onGroupHonor(ctx, event)` | **Dice!Next の拡張**。グループの栄誉（竜王など）。`event.honorType` |
+| `ext.onGroupEssence(ctx, event)` | **Dice!Next の拡張**。エッセンスの設定 / 解除。`subType` は `add` / `delete`、`messageId` はメッセージ ID |
+| `ext.onGroupRequest(ctx, event)` | **Dice!Next の拡張**（SealDice の JS にはない）。参加申請または招待を受け取った。[`dicenext`](#dicenext-group-request) を参照 |
+| `ext.onFriendRequest(ctx, event)` | **Dice!Next の拡張**。友だち申請を受け取った。拒否だけ。[`dicenext`](#dicenext-friend-request) を参照 |
 
 登録したコマンドのオブジェクトに `solve` がない場合や、コマンドの語がどの `cmdMap` にも一致しない場合でも、解析済みのコマンドのメッセージは `onCommandReceived` に入ります。イベント系のフックが呼ばれるかどうかは、アダプターが対応する `BotEvent` を送るかどうかによります。
 
@@ -77,6 +87,8 @@ QQ 公式アダプターには、インタラクション、購読の認可、�
 
 ::: warning SealDice との境界
 `onMessageEdit` はまだ使えません。Dice!Next の現在の `BotEvent` の伝送層にメッセージの編集のイベントがないためです。`onCommandOverride` は `sealdice-core` 自体に JS のバインディングがないため、JS プラグインの互換の対象ではありません。
+
+参加申請の承認も Dice!Next の拡張です。フックは `ext.onGroupRequest`、同意 / 拒否の提出はグローバルの `dicenext.setGroupAddRequest` です。`seal.setGroupAddRequest` と書かないでください。SealDice の JS にその API はありません。友だち申請は `ext.onFriendRequest` と `dicenext.setFriendAddRequest` で、**拒否だけ**できます。ホストの `friend_policy` を越えて強制同意はできません。キック、ファイル、ミュート、管理者、友だちの取り消し、タイトル、栄誉、エッセンスも Dice!Next の観察フックです。`seal.*` には書かないでください。
 :::
 
 ## ctx / msg / cmdArgs
@@ -247,6 +259,73 @@ const resp = await fetch(url, { method: 'POST', headers: {...}, body: {...} });
 | `seal.ban.remove(ctx, id)` | リストから外す |
 | `seal.ban.getList()` / `seal.ban.getUser(id)` | リストを照会 |
 
+## `dicenext` の拡張：参加申請 {#dicenext-group-request}
+
+SealDice の JS には参加申請のフックも、同意 / 拒否の API もありません。Dice!Next はこのホスト側の能力をグローバルの `dicenext` に置き、`seal.*` が SealDice でも使えると誤解されないようにしています。
+
+`ext.onGroupRequest(ctx, event)` は、アダプターがグループへのリクエストを送ったときに呼ばれます。
+
+| `event` の項目 | 意味 |
+| --- | --- |
+| `groupId` | グループ ID |
+| `userId` | 申請者（ボットを招待するイベントでは、通常は招待した人） |
+| `operatorId` | 操作した人 |
+| `flag` | リクエストの識別子。承認を提出するときはそのまま返す |
+| `subType` | `add`：誰かが参加を申請した。`invite`：ボットがグループに招待された |
+| `comment` | 確認のメッセージ |
+| `platform` / `adapterId` | 元のプラットフォームとアダプター |
+
+```javascript
+ext.onGroupRequest = (ctx, event) => {
+  if (event.subType !== 'add') return; // invite = ボットへの招待であり、メンバーの申請ではない
+  dicenext.setGroupAddRequest(ctx, event, true);                      // 同意
+  // dicenext.setGroupAddRequest(ctx, event, false, 'メンバー限定');  // 拒否と理由
+};
+```
+
+`dicenext.setGroupAddRequest(ctx, flag, subType, approve, reason?)` と書くこともできます。
+
+呼ばなければ人手の確認のままです（その後ホストの `.group auto pass` などが続く場合があります）。プラグインが同意または拒否を提出したあと、ホストはその申請を上書きしません。ボットにそのグループの管理権限がないと、プラットフォーム側では実際には効きません。このフックの中で `await fetch(...)` できます。内部の HTTP は引き続き同期でブロックします。
+
+## `dicenext` の拡張：友だち申請と通知 {#dicenext-friend-request}
+
+SealDice の JS には友だち申請の承認も、グループファイル / ミュート / 管理者 / 取り消し / タイトル / エッセンスのフックもありません。Dice!Next はそれらを `ext.on*` とグローバルの `dicenext` に置きます。
+
+### 友だち申請（拒否だけ）
+
+`ext.onFriendRequest(ctx, event)` は、アダプターが友だち申請を送ったときに呼ばれます。`event` のフィールドは参加申請と同じです（`flag`、`userId`、`comment`、`platform`、`adapterId`。`groupId` は通常空です）。
+
+```javascript
+ext.onFriendRequest = (ctx, event) => {
+  if (event.comment.indexOf('広告') >= 0)
+    dicenext.setFriendAddRequest(ctx, event, false, '広告を拒否');
+  // dicenext.setFriendAddRequest(ctx, event, true) は無視される：友だち申請は強制同意できない
+};
+```
+
+`dicenext.setFriendAddRequest(ctx, flag, approve, reason?)` と書くこともできます。
+
+- `approve === false`：すぐに拒否を提出し、ホストの `friend_policy` と Lua を飛ばす。
+- `approve === true`：警告を残して無視する。申請はホストの方針と Lua に進む（Lua も拒否だけで、厳しいホスト方針は越えられない）。
+- 呼ばない：ホストの方針のあと Lua。
+
+### 観察フック
+
+これらのフックは、その後のホストの処理（ミュートの罰、チャット記録の取り込みなど）を止めません。共通の `event` フィールドは `groupId`、`userId`、`operatorId`、`selfId`、`subType`、`platform`、`adapterId`、`isSelf` です。
+
+| フック | 追加フィールド |
+| --- | --- |
+| `onGroupKicked` | `subType`：`kick` / `kick_me` / `removed`。自分から退出したときは呼ばない |
+| `onGroupUpload` | `file={id,name,size,busid}` |
+| `onGroupBan` | `duration`（秒）、`isWhole` |
+| `onGroupAdmin` | `subType`：`set` / `unset` |
+| `onFriendRecall` | `messageId`。同時に `onMessageDeleted` も呼ばれる |
+| `onGroupTitle` | `title`（OneBot `notify/title`） |
+| `onGroupHonor` | `honorType`（OneBot `notify/honor`、例 `talkative`） |
+| `onGroupEssence` | `messageId`。`subType`：`add` / `delete` |
+
+アダプターが対応する `BotEvent` を送らない通知は呼ばれません。Milky は現在、友だちの取り消しとエッセンスを送り、専用タイトル / 栄誉は送りません。
+
 ## 代理のロール
 
 ```javascript
@@ -275,6 +354,8 @@ const mctx = seal.getCtxProxyFirst(ctx, cmdArgs) || ctx;  // @ した相手が�
 | `console.log/info/warn/error/debug/trace(...)` | `[插件]`（プラグイン）のログに実際のスクリプトの出所付きで書き込む。log/info=INFO、warn=WARN、error=ERROR、debug=DEBUG、trace=TRACE |
 | `seal.getVersion()` | `{version, versionSimple, versionCode, ...}` |
 | `seal.getEndPoints()` | 仮の項目で常に空の配列 |
+| `dicenext.setGroupAddRequest(...)` | **Dice!Next の拡張**：参加 / 招待の承認を提出する。[参加申請](#dicenext-group-request) を参照 |
+| `dicenext.setFriendAddRequest(...)` | **Dice!Next の拡張**：友だち申請は拒否だけ。[友だち申請](#dicenext-friend-request) を参照 |
 
 ## JS API の完全な一覧とシグネチャ
 
@@ -314,6 +395,10 @@ const mctx = seal.getCtxProxyFirst(ctx, cmdArgs) || ctx;  // @ した相手が�
 | `seal.applyPlayerGroupCardByTemplate(ctx, template)` | `0` | **互換用の仮の項目**。現在は設定を行わない。 |
 | `seal.memberBan(ctx, groupId, userId, durationSec?)` | — | ミュート。プラットフォームが対応していない場合や権限が足りない場合は効果がない。 |
 | `seal.memberKick(ctx, groupId, userId)` | — | キック。プラットフォームが対応していない場合や権限が足りない場合は効果がない。 |
+| `dicenext.setGroupAddRequest(ctx, event, approve, reason?)` | — | **Dice!Next の拡張**（`seal` にはない）。`event` は `onGroupRequest` の第 2 引数。 |
+| `dicenext.setGroupAddRequest(ctx, flag, subType, approve, reason?)` | — | 同上。`flag` / `subType` を明示する。呼ばなければ人手の確認のまま。呼んだあとホストはその申請を上書きしない。 |
+| `dicenext.setFriendAddRequest(ctx, event, approve, reason?)` | — | **Dice!Next の拡張**。`approve=false` は拒否を提出。`true` は無視。 |
+| `dicenext.setFriendAddRequest(ctx, flag, approve, reason?)` | — | 同上。`flag` を明示する。 |
 
 `ctx.player` の公開の項目は `userId`、`name`、`card`、`ctx.group` は `groupId`、`logOn`、`logCurName` です。`msg.sender` は `userId`、`nickname`、`card` です。プラットフォームをまたぐ ID はすべて文字列で、QQ の数字だとは考えないでください。
 
@@ -375,7 +460,7 @@ seal.ext.register(ext);
 
 プラグインを書く前に知っておきたい境界です（これが私たちの改善の道筋でもあります）。
 
-1. `onMessageEdit` はまだ使えません。ほかのプラットフォームのイベントも、アダプターが対応する `BotEvent` を送ったときだけ呼ばれます。
+1. `onMessageEdit` はまだ使えません。ほかのプラットフォームのイベントも、アダプターが対応する `BotEvent` を送ったときだけ呼ばれます。参加申請は `ext.onGroupRequest` と `dicenext.setGroupAddRequest`、友だち申請は `ext.onFriendRequest` と `dicenext.setFriendAddRequest`（拒否だけ）、キック / ファイル / ミュート / 管理者 / 友だちの取り消し / タイトル / 栄誉 / エッセンスは対応する `ext.on*` を使います。`seal.*` には書かないでください。
 2. `msg.segment` はアダプターのネイティブのセグメントで、プラットフォームをまたいで統一された構造ではありません。送られなければ空で、専用の画像の送信の API もありません（`[CQ:image]` のコードは送れます）。
 3. `require`/`import` とファイルシステムの API はなく、プラグインは単一ファイルで完結している必要があります。
 4. 単一のスレッドで順に実行し、タイムアウトやリソースの割り当て量はありません。無限ループや遅い同期の処理は避けてください。
