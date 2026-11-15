@@ -2,6 +2,8 @@
 
 **Web panel → AI** configures conversation, NPCs, knowledge, polishing, translation, vision and speech. Switches outside Models save immediately. Save text and parameter changes on the current page; drafts on other pages are not submitted. Knowledge is enabled by default, while explicit opt-outs are preserved and the AI master switch still applies.
 
+Separate chat keywords, translation keywords, and NPC triggers with either kind of comma, for example `hello, help，roll`. When you leave a page with unsaved changes, choose **Keep editing** to return to your draft or **Discard changes** to restore the last saved settings.
+
 ::: warning Cost and latency
 With AI on, the related features are billed by the models you configure, and replies processed by AI are delayed (depending on the network and model response speed). Set token / cost limits for every model. Every AI feature falls back on failure or timeout: polishing / translation send the original text, and conversation doesn't reply.
 :::
