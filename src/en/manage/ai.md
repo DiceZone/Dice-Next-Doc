@@ -124,6 +124,12 @@ Once the conversation goes beyond the recent window, older chat is compressed in
 
 Facts worth remembering long term (character sheets / plot / agreements) are extracted from the conversation, vectorized and stored; while chatting, the most relevant few are retrieved by similarity to the current topic and injected. You first need to add a model with the kind "Embedding model" on the "Models" page (such as `text-embedding-3-small`) and assign it under "Usage assignment → Embedding"; extraction uses the "Fact extraction" model. You can configure the number retrieved (Top-K), the similarity threshold, the per-group fact limit and the extraction prompt, and view / clear stored facts as well.
 
+When several people speak in one turn, the bot can answer a specific message or address the room. With reply mentions enabled, only an individual target receives a mention. When the planner can answer from the conversation, it skips long-term vector retrieval for that turn.
+
+Under AI → Chat → Long-term memory, open stored facts to inspect their source and previous versions. A Keeper correcting the original location of a key can revise a fact. A character subsequently taking the key is a separate event.
+
+Open Group terms and nicknames, select a group and review the source and meaning. Choose Approve and enable to use a term when mentioned in that group. Terms can be edited, disabled or deleted.
+
 ### Tool calls
 
 When on, the bot uses function calling to call real features instead of making up numbers (the model must support tools):

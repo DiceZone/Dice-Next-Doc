@@ -25,6 +25,7 @@ Dice!Next 站在前人的肩膀上。向以下專案與社群致以誠摯的敬�
 - **[NapCat](https://github.com/NapNeko/NapCatQQ)** —— 基於 NTQQ 的機器人協議端實現。
 - **[LLOneBot](https://www.llonebot.com/)** —— QQ 機器人框架與 OneBot 協議實現。
 - **[SnowLuma](https://snowluma.github.io/)** —— 面向 NTQQ 與 OneBot 生態的遠端協議框架。
+- [MaiBot](https://github.com/Mai-with-u/MaiBot) — 群聊決策與記憶設計為 Dice!Next 的 AI 對話提供了參考。
 
 ### 技術依賴
 
