@@ -64,8 +64,7 @@ The toolbar only adds and removes markers in the source; template syntax such as
 
 The variable and image buttons sit right below the text box:
 
-- Command-specific variables are shown as light chips; click to insert at the cursor;
-- General variables such as `{nick}` and `{user}` are inserted with "Insert global variable";
+- Select **Insert variable** to search the variables available for this reply. Selecting one inserts it at the cursor or replaces the selected text.
 - `{FormFeed}` is the old-compatible forced page break marker, not a display value like a nickname, and the preview shows the actual separate messages.
 
 Buttons, status bars and formulas are all written into the same template; you can add, edit and delete them separately below the body or edit the source directly, and they are kept when the body changes.

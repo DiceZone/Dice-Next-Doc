@@ -152,7 +152,8 @@ QQ Official can't change real group card names, so after you run `.sn` or `/sn`,
 
 ```
 .setsn hp san dex  → set which items group card names show in this group (group admin required)
-.sn                → update your group card name from the group template
+.sn                → Use your saved format, or the group default if none is set
+.sn hp mp san      → Show these attributes in order, omitting missing values
 .sn {nick} SAN{san} → set your personal status content
 .sn auto           → turn on automatic sync: the card name updates as soon as attributes change
 .sn auto off       → turn automatic sync off

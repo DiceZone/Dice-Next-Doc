@@ -81,7 +81,7 @@ GET 返回當前賬號支援的 `actions` 和 `capabilities`。POST 請求固定
 
 呼叫方在 prepare 和 complete 之間，把檔案二進位制 PUT 到平臺返回的預簽名地址，使用申請時的 Content-Type；該上傳請求不附帶 QQ AccessToken。`qq_material_upload` 由服務端自動完成這三步，僅接受平臺返回的 HTTPS COS 上傳地址，不接受呼叫方指定任意上傳 URL。
 
-檔案限 PNG、JPEG、GIF、WebP，最多 10 MB；檔名副檔名須與 MIME 型別一致，MD5 為 32 位、SHA-1 為 40 位十六進位制。素材屬於當前機器人賬號，不應跨 AppID 複用。傳送 Markdown 時使用返回的 `qqbot-media://image/v1/...` 引用，臨時 `preview_url` 不適合作為持久圖片地址。在「卡片與按鈕 → 圖片素材」可上傳、分頁檢視、按需預覽、複製圖片程式碼和刪除。列表不自動載入圖片；每個賬號最多 100 張，連續 90 天未使用的素材會過期，實際期限以平臺響應為準。
+檔案限 PNG、JPEG、GIF、WebP，最多 10 MB；檔名副檔名須與 MIME 型別一致，MD5 為 32 位、SHA-1 為 40 位十六進位制。素材屬於當前機器人賬號，不應跨 AppID 複用。傳送 Markdown 時使用返回的 `qqbot-media://image/v1/...` 引用，臨時 `preview_url` 不適合作為持久圖片地址。在「檔案管理 → 官機圖床」選擇機器人賬號後會顯示縮圖，點圖可放大；可複製圖片程式碼，在「更多」中保留、替換或刪除素材。每個賬號最多 100 張，連續 90 天未使用的素材會過期，實際期限以平臺響應為準。
 
 ### 圖文卡片與 @全體成員
 

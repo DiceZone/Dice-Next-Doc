@@ -79,7 +79,7 @@ GET 返回当前账号支持的 `actions` 和 `capabilities`。POST 请求固定
 
 调用方在 prepare 和 complete 之间，把文件二进制 PUT 到平台返回的预签名地址，使用申请时的 Content-Type；该上传请求不附带 QQ AccessToken。`qq_material_upload` 由服务端自动完成这三步，仅接受平台返回的 HTTPS COS 上传地址，不接受调用方指定任意上传 URL。
 
-文件限 PNG、JPEG、GIF、WebP，最多 10 MB；文件名扩展名须与 MIME 类型一致，MD5 为 32 位、SHA-1 为 40 位十六进制。素材属于当前机器人账号，不应跨 AppID 复用。发送 Markdown 时使用返回的 `qqbot-media://image/v1/...` 引用，临时 `preview_url` 不适合作为持久图片地址。在「卡片与按钮 → 图片素材」可上传、分页查看、按需预览、复制图片代码和删除。列表不自动加载图片；每个账号最多 100 张，连续 90 天未使用的素材会过期，实际期限以平台响应为准。
+文件限 PNG、JPEG、GIF、WebP，最多 10 MB；文件名扩展名须与 MIME 类型一致，MD5 为 32 位、SHA-1 为 40 位十六进制。素材属于当前机器人账号，不应跨 AppID 复用。发送 Markdown 时使用返回的 `qqbot-media://image/v1/...` 引用，临时 `preview_url` 不适合作为持久图片地址。在「文件管理 → 官机图床」选择机器人账号后会显示缩略图，点图可放大；可复制图片代码，在「更多」中保留、替换或删除素材。每个账号最多 100 张，连续 90 天未使用的素材会过期，实际期限以平台响应为准。
 
 ### 图文卡片与 @全体成员
 
