@@ -100,7 +100,8 @@
     "replyPrefixes": [
       "dice.brp.",
       "dice.outcome.brp.",
-      "dice.outcome.resist."
+      "dice.outcome.resist.",
+      "dice.outcome_detail.resist"
     ]
   },
   {
@@ -123,7 +124,8 @@
     ],
     "replyPrefixes": [
       "dice.rav.",
-      "dice.outcome.opposed."
+      "dice.outcome.opposed.",
+      "dice.outcome_detail.opposed"
     ]
   },
   {
@@ -280,6 +282,7 @@
     "replyPrefixes": [
       "card.sc.",
       "dice.outcome.sanity.",
+      "dice.outcome_detail.sanity",
       "dice.compat.sanity.",
       "dice.sc."
     ]
@@ -398,6 +401,7 @@
     "replyPrefixes": [
       "card.en.",
       "dice.outcome.growth.",
+      "dice.outcome_detail.growth",
       "dice.compat.growth."
     ]
   },
@@ -1082,7 +1086,8 @@
     "descKey": "help.topic.rx",
     "replyPrefixes": [
       "dice.rx.",
-      "dice.outcome.psychology."
+      "dice.outcome.psychology.",
+      "dice.outcome_detail.psychology"
     ]
   },
   {

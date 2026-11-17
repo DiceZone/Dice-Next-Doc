@@ -127,6 +127,8 @@ This check's reply for the level → the standard check's reply for the same lev
 
 Levels that aren't set keep inheriting, and no fixed copy of the text is created automatically. Clicking "Restore inheritance" only deletes the override in the current editing layer; when editing a persona, items the persona doesn't set inherit the global item with the same name first. The interface shows the current source and previews the inherited text.
 
+When a sanity check, growth check, hidden Psychology roll, opposed check or resistance check uses the standard check's reply, a line with that check's own result is added at the end, for example "San -3 → 59 left", so the standard text does not leave out the SAN lost, the new skill value or the other side's result. This line can be edited in the command's reply list; once the check has its own reply for that level, the line is no longer added.
+
 | Check | Results that can be set separately |
 | --- | --- |
 | COC `.ra/.rc/.rad`, including hidden checks | The six COC levels; the detailed reply of hidden checks is still only sent privately |
