@@ -196,7 +196,11 @@ Non-masters using these commands are politely refused. Dice masters are configur
 ```
 .system info       → system information (OS, CPU, memory, this process's memory)
 .system stats      → runtime statistics (uptime, commands, friends / groups / players / records)
+.system update     → check for updates; the result is posted back to this chat
+.system update install → download and install the update (restarts)
 ```
+
+`.system update` uses the same update service as **About → Updates** in the web console, with the same download sources and verification. `install` checks first (skipped when a newer release is already known), then restarts and installs once the download finishes; a package that is already downloaded is installed directly. When Dice!Next runs in a container, or was not started through `dice-next.exe` / `start.sh`, it cannot install updates itself and the command says why.
 
 ::: warning No remote shell
 The old `.system cmd` has not been restored. Chat messages should never be an entry point for operating system commands; do system maintenance in a terminal on the host or in a controlled management environment.

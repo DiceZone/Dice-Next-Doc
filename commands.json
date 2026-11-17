@@ -1559,11 +1559,11 @@
     "sources": [
       "Dice!Next"
     ],
-    "example": ".system info / .system stats（不提供 .system cmd）",
+    "example": ".system info / .system stats / .system update [install]（不提供 .system cmd）",
     "desc": {
-      "zh-Hans": "仅骰主可用：查看系统统计；出于安全原因不提供旧版远程 Shell。",
-      "zh-Hant": "僅骰主可用：查看系統統計；基於安全原因不提供舊版遠端 Shell。",
-      "en": "Owner only: inspect system statistics; the legacy remote shell is intentionally unavailable."
+      "zh-Hans": "仅骰主可用：查看系统统计，检查并安装更新；出于安全原因不提供旧版远程 Shell。",
+      "zh-Hant": "僅骰主可用：查看系統統計，檢查並安裝更新；基於安全原因不提供舊版遠端 Shell。",
+      "en": "Owner only: inspect system statistics and check for or install updates; the legacy remote shell is intentionally unavailable."
     },
     "replyPrefixes": [
       "system."
