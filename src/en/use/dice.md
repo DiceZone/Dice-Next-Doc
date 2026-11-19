@@ -205,6 +205,26 @@ Good for "show the die first, then apply it to a skill": both lines use **the sa
 .sc p2 1/1d6       → with 2 penalty dice
 ```
 
+Core CoC7 `.sc` appends insanity checks after the result, including when a custom reply is used:
+
+- Losing at least 5 actual SAN at once rolls the card’s INT. **Success** causes temporary insanity for `1D10` hours; failure avoids temporary insanity from this loss. Missing INT prompts a manual roll instead of using a default value.
+- Reaching zero SAN takes precedence: permanent insanity, without another INT roll.
+- An explicit SAN value, such as `.sc 5/5 60`, is calculation-only. It neither edits the card nor adds to tracked losses, and does not borrow the card’s INT.
+
+To track indefinite insanity, start at the beginning of an **in-game day**:
+
+```text
+.sc day            → Start/reset the day using current SAN as the baseline
+.sc show           → Show starting SAN, accumulated loss and threshold
+.sc day off        → Stop tracking
+```
+
+Once enabled, this card’s actual `.sc` losses in this conversation accumulate. Reaching one fifth of starting SAN (rounded down, minimum 1) prompts indefinite insanity without an INT roll. The record persists with the card and is separate for each conversation and adapter. Run `.sc day` again when a new in-game day begins; real midnight never resets it. Temporary and permanent insanity checks work without day tracking.
+
+Only subsequent `.sc` losses count. Manual `.st`, plugin or WebUI changes do not count, and recovery does not cancel accumulated losses. Resetting does not cure insanity. The bot checks triggers; the Keeper still manages existing insanity, immunity during a bout, symptoms and recovery. `.ti` / `.li` roll real-time / summary bouts; their duration differs from the `1D10` hours of temporary insanity.
+
+[CoC7R](./coc7r) keeps its separate shock, aftershock and chapter rules.
+
 ### Skill improvement `.en`
 
 ```
