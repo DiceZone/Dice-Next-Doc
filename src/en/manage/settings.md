@@ -195,7 +195,7 @@ Advanced visual presets can be loaded into the editor in full, and the body, but
 |--------|------|
 | Start at login | Start automatically when you sign in to Windows (Windows only) |
 | Windows tray tooltip text | Set the tray icon hover name in the "Network & system" tab, up to 10 characters; empty uses `Dice!Next`; the actual port is appended automatically, takes effect as soon as you save, and can only be changed on Windows |
-| Save log images | Images in session logs are saved to `data/logs/images` and embedded when exporting web pages |
+| Save log images | With QQ hosting, additionally caches images in `data/images/cache/log` for embedded HTML export |
 | Respond to own messages (self-control) | Messages sent by the bot's own account are processed too, so you can control the bot from its own account; built-in self-echo deduplication and cross-bot loop guards; off by default |
 | Disable roll reasons | When on, `.r` only shows the result without the reason: `.r 1d6 攻击` only replies with the 1d6 result, and text alone rolls the default die. Off by default, so reasons are shown as usual |
 | Quote the roller's message | Replies quote the message that triggered the command, in QQ's "quote" style |
@@ -209,7 +209,32 @@ Custom tray names are supported since build 926 and saved as `tray_text` in `con
 ## Image Settings
 
 - **Image sending**: images inserted in replies are saved as `[img,file=local path]` and converted when sending into embedded base64 (default, works across devices) or an HTTP link (NapCat must be able to reach this machine).
-- **Image hosting (stable image links)**: decides how log images stay visible on the log site long term: don't upload / third-party image hosting (generic multipart upload, works with ImgBB, sm.ms, Lsky and similar) / local links (self-hosted, requires public HTTPS).
+### Images in session logs
+
+Select an image source in **Basic settings → Images and data → Image hosting**:
+
+| Source | Newly recorded messages |
+|---|---|
+| QQ image host (default) | Records the original URL as `[CQ:image,file=https://…]`, without rehosting. Other platforms keep their own URLs |
+| Do not upload | Records only `[图片]`, without image links in live logs or exports |
+| Third-party host | Uploads the image and records the URL returned by that service |
+| Panel links | Stores the image on your bot server and shares a public link. Requires an HTTPS address reachable by the log viewer; viewing uses server bandwidth |
+
+QQ URLs can expire. The log viewer must maintain rkey or other access parameters; Dice!Next does not refresh platform credentials. Missing URLs and failed transfers produce `[图片]`. Existing explicit settings are retained. Source changes affect subsequent messages, without rewriting history or retracting previously synced images.
+
+With QQ hosting, **Save log images** optionally caches images in `data/images/cache/log` for embedded HTML exports. Third-party hosting and panel links download or rehost automatically; Do not upload saves no images.
+
+Choose a provider, then enter its upload URL and API key/token. For a self-hosted service, use your own site's full upload endpoint.
+
+| Provider | Upload endpoint | File field | Response URL path |
+|---|---|---|---|
+| [ImgBB](https://api.imgbb.com/) | `https://api.imgbb.com/1/upload` | `image` | `data.url` |
+| [Lsky Pro](https://v1.lskypro.com/page/api-docs.html) | `https://your-host/api/v1/upload` | `file` | `data.links.url` |
+| [Chevereto](https://v4-docs.chevereto.com/api/1/file-upload.html) | `https://your-host/api/1/upload` | `source` | `image.url` |
+| Custom | Follow the service documentation | Editable | Editable |
+
+Advanced settings include headers, upload and response fields, and extra form fields (a JSON object with string values). Re-enter the appropriate credentials after changing providers.
+
 
 ## Chat and Friend Maintenance
 

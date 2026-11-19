@@ -59,7 +59,7 @@ The `.sn` status line at the top of QQ Official replies is only a stand-in for c
 
 ### QQ Official stickers
 
-- Custom stickers are recorded as images with the official attachment address. Image references in TXT, CSV and log site uploads use standard CQ codes, such as `[CQ:image,file=https://…]`.
+- Custom emoji follow the selected image-host setting: original attachment URLs for QQ hosting, rehosted URLs for third-party or panel hosting, and `[图片]` for Do not upload. Image URLs use standard CQ codes in exports and uploads.
 - QQ's built-in emoji appear as `[表情]` (emoji) in text records; their names aren't inferred from emoji IDs yet.
 - Old `<faceType=…>` markers in earlier records are converted when exporting; custom stickers can only be restored as images if the record kept the image address, and those without an address are shown as `[图片]` (image).
 - When the log site's "sticker image filter" is on, old `<faceType=…>` markers and their HTML-escaped forms are filtered too; with the filter off, the original text is kept.
@@ -112,3 +112,7 @@ In the web panel under **Data → Session logs → Log management** you can:
 - Upload to the log site manually to get a link, or delete a record after a styled confirmation; deleting also removes the log messages and locally cached images
 
 The panel's group management also offers **group file viewing and downloading**, so you can get log files sent during sessions back from there directly.
+
+### Image source
+
+In [Basic settings → Image hosting](/en/manage/settings#images-in-session-logs), choose QQ hosting (default), Do not upload, a third-party host, or panel links. This applies to new player messages and bot replies. Live logs carry CQ image codes from the selected source. Do not upload records only `[图片]`, including custom emoji. URLs missing from old records cannot be recovered.
