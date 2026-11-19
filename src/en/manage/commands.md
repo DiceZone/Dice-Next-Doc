@@ -292,3 +292,13 @@ The configuration is kept across restarts. Switching back to a single persona cl
 ::: tip Compatibility
 This page shows Dice!Next's native commands and the compatibility entries verified one by one. For differences from the original Dice! and safety limits, see [Data Migration → Compatibility limits of old commands](/en/guide/migration#compatibility-limits-of-old-commands); for the scope of SealDice JS plugin compatibility, see the [JS Plugin API](/en/develop/js-plugin-api).
 :::
+
+“Add formula” opens a preset picker with red text, a Gothic heading, a boxed sanity check, SAN changes and a custom formula. After insertion, both the formula and its plain-text fallback remain editable. Examples are illustrations; presets requiring variables unavailable to this reply are disabled and list the missing names.
+
+Do not paste bare TeX into ordinary reply text: braces in `\textcolor{red}{...}` may be interpreted as template variables. Use `[[math:formula|fallback]]` without additional `$` delimiters. Select Markdown and a presentation style that supports formulas.
+
+## Insert variables and read their descriptions
+
+Click **Insert variable** while editing a reply. Search by token or purpose, then click an entry to insert it at the cursor or replace the selected text. Each entry explains its use; descriptions supplied by the current check template take precedence. For example, `{char.hp}` reads the current character’s HP, `{sample:A|B}` chooses an option, and `{roll:1d100}` performs an additional roll.
+
+Options depend on the editor: replies offer matching captures, decks offer references to other decks, Webhooks have notification variables, and formulas use double braces. A value may be unavailable without the relevant card or group context. Replace example function names and arguments as needed. If a plugin or custom template provides no description, the picker says so; consult its documentation.
