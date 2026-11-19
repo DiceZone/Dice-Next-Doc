@@ -8,6 +8,12 @@ At the top of the page are the persona dropdown and the "Persona management" and
 
 The search box above the category tabs works across all categories: search by command name (with or without `.`), example, description, category, reply key or current reply text, and multiple keywords must all match. While searching, the list shows matching commands from every category labeled with their category; clicking a category label clears the search and jumps to that category, and the tabs on the left show each category's match count. If reply texts also match, a count appears above the results; click it to view them in "All texts".
 
+## Formula presets and Markdown tables
+
+Choose **Add formula** in the reply editor. Use **Boxed roll** for ordinary rolls or **Boxed skill check** to show a skill, roll, target and outcome. Presets that require unavailable variables are disabled. Platforms without formula support show the fallback text.
+
+**Insert table** in the Markdown toolbar inserts two columns and selects the first heading. Edit the cells or duplicate a row. In visual style, Markdown output for `.st show` uses separate tables for abilities, vitals and skills. Plain output remains grouped text; a single attribute query stays short. QQ Official sends compact tables as formulas and wide or lengthy tables as readable rows.
+
 ## Show Character Status in Roll Replies
 
 Edit a roll text, and under the body choose **Buttons, status bars & formulas → Add status bar**, then fill in the name, current value and maximum. By default `[[bar:HP|{hp}|{hpmax}]]` is inserted. After saving, the current sheet's HP and maximum are read when the reply is sent; you can change it to `[[bar:SAN|{san}|{sanmax}]]`. A global search for "SN" or "状态条" (status bar) also finds the entry.
@@ -58,7 +64,7 @@ Above the text box is a Markdown format toolbar: **bold, italic, strikethrough, 
 - A selection spanning several lines is applied line by line, because inline formatting on QQ, Discord and KOOK can't span lines.
 - When you add a list after ordinary text, the blank line QQ requires is added automatically.
 - The horizontal rule `***` is only displayed by QQ Official; Discord and KOOK show it as raw text.
-- QQ Official Markdown supports headings, bold / italic / strikethrough, links, images, lists, quotes and horizontal rules, but not tables or code blocks, and the built-in presets only use these forms.
+- QQ Official Markdown supports headings, bold / italic / strikethrough, links, images, lists, quotes and horizontal rules, but not native tables or code blocks. The adapter converts editor tables before sending.
 
 The toolbar only adds and removes markers in the source; template syntax such as `{variables}`, `[[buttons]]` and `{sample:…}` always stays exactly as you see it and is never rewritten or escaped.
 
