@@ -90,7 +90,7 @@ QQ 官方適配器另外提供互動、訂閱授權與其他官方事件的原�
 ::: warning 與 SealDice 邊界
 `onMessageEdit` 暫不可用，因為 Dice!Next 當前的 `BotEvent` 傳輸層沒有訊息編輯事件。`onCommandOverride` 在 `sealdice-core` 本身沒有 JS 繫結，因此不屬於 JS 插件相容目標。
 
-入群申請審批也是 Dice!Next 擴展：鉤子寫在 `ext.onGroupRequest`，提交同意/拒絕用全域 `dicenext.setGroupAddRequest`。不要寫 `seal.setGroupAddRequest`——海豹 JS 沒有這項 API。好友申請用 `ext.onFriendRequest` + `dicenext.setFriendAddRequest`，且**只能否決**，不能越過宿主 `friend_policy` 強制通過。被踢、群檔案、禁言、管理員、好友撤回、頭銜、榮譽、精華同樣是 Dice!Next 觀察鉤子，不要寫到 `seal.*`。
+入群申請審批也是 Dice!Next 擴展：鉤子寫在 `ext.onGroupRequest`，提交同意/拒絕用全域性 `dicenext.setGroupAddRequest`。不要寫 `seal.setGroupAddRequest`——海豹 JS 沒有這項 API。好友申請用 `ext.onFriendRequest` + `dicenext.setFriendAddRequest`，且**只能否決**，不能越過宿主 `friend_policy` 強制通過。被踢、群檔案、禁言、管理員、好友撤回、頭銜、榮譽、精華同樣是 Dice!Next 觀察鉤子，不要寫到 `seal.*`。
 :::
 
 ## ctx / msg / cmdArgs
@@ -263,7 +263,7 @@ const resp = await fetch(url, { method: 'POST', headers: {...}, body: {...} });
 
 ## `dicenext` 擴展：入群申請 {#dicenext-group-request}
 
-海豹 JS 沒有入群申請鉤子，也沒有同意/拒絕介面。Dice!Next 把這類宿主能力放在全域 `dicenext` 上，避免讓人誤以為 `seal.*` 在海豹裡也能用。
+海豹 JS 沒有入群申請鉤子，也沒有同意/拒絕介面。Dice!Next 把這類宿主能力放在全域性 `dicenext` 上，避免讓人誤以為 `seal.*` 在海豹裡也能用。
 
 `ext.onGroupRequest(ctx, event)` 在適配器上報加群請求時呼叫：
 
@@ -279,19 +279,19 @@ const resp = await fetch(url, { method: 'POST', headers: {...}, body: {...} });
 
 ```javascript
 ext.onGroupRequest = (ctx, event) => {
-  if (event.subType !== 'add') return; // invite = 邀請骰子進群，不是成員申請
+  if (event.subType !== 'add') return; // invite = 邀请骰子进群，不是成员申请
   dicenext.setGroupAddRequest(ctx, event, true);                      // 同意
-  // dicenext.setGroupAddRequest(ctx, event, false, '僅限本群成員');    // 拒絕並附言
+  // dicenext.setGroupAddRequest(ctx, event, false, '仅限本群成员');    // 拒绝并附言
 };
 ```
 
 也可以寫成 `dicenext.setGroupAddRequest(ctx, flag, subType, approve, reason?)`。
 
-不呼叫則保持人工審核（隨後仍可能走宿主的 `.group auto pass` 等策略）。插件一旦提交同意或拒絕，宿主不再覆蓋這次申請。骰娘需要該群的管理權限，平臺才會真正生效。這個鉤子裡可以 `await fetch(...)`；底層仍是同步阻塞。
+不呼叫則保持人工稽核（隨後仍可能走宿主的 `.group auto pass` 等策略）。插件一旦提交同意或拒絕，宿主不再覆蓋這次申請。骰娘需要該群的管理許可權，平臺才會真正生效。這個鉤子裡可以 `await fetch(...)`；底層仍是同步阻塞。
 
 ## `dicenext` 擴展：好友申請與平臺通知 {#dicenext-friend-request}
 
-海豹 JS 沒有加好友審批，也沒有群檔案 / 禁言 / 管理員 / 撤回 / 頭銜 / 精華鉤子。Dice!Next 把它們放在 `ext.on*` 與全域 `dicenext` 上。
+海豹 JS 沒有加好友審批，也沒有群檔案 / 禁言 / 管理員 / 撤回 / 頭銜 / 精華鉤子。Dice!Next 把它們放在 `ext.on*` 與全域性 `dicenext` 上。
 
 ### 好友申請（只能否決）
 
@@ -299,9 +299,9 @@ ext.onGroupRequest = (ctx, event) => {
 
 ```javascript
 ext.onFriendRequest = (ctx, event) => {
-  if (event.comment.indexOf('廣告') >= 0)
-    dicenext.setFriendAddRequest(ctx, event, false, '拒絕廣告號');
-  // dicenext.setFriendAddRequest(ctx, event, true) 會被忽略：好友申請不能強制通過
+  if (event.comment.indexOf('广告') >= 0)
+    dicenext.setFriendAddRequest(ctx, event, false, '拒绝广告号');
+  // dicenext.setFriendAddRequest(ctx, event, true) 会被忽略：好友申请不能强制通过
 };
 ```
 
@@ -398,7 +398,7 @@ const mctx = seal.getCtxProxyFirst(ctx, cmdArgs) || ctx;  // 有 @ 目标则代�
 | `seal.memberBan(ctx, groupId, userId, durationSec?)` | — | 禁言；平臺不支援或許可權不足時不會生效。 |
 | `seal.memberKick(ctx, groupId, userId)` | — | 踢人；平臺不支援或許可權不足時不會生效。 |
 | `dicenext.setGroupAddRequest(ctx, event, approve, reason?)` | — | **Dice!Next 擴展**（不在 `seal` 上）。`event` 為 `onGroupRequest` 的第二參。 |
-| `dicenext.setGroupAddRequest(ctx, flag, subType, approve, reason?)` | — | 同上，顯式傳 `flag` / `subType`。不呼叫則保持人工審核；呼叫後宿主不再覆蓋本次申請。 |
+| `dicenext.setGroupAddRequest(ctx, flag, subType, approve, reason?)` | — | 同上，顯式傳 `flag` / `subType`。不呼叫則保持人工稽核；呼叫後宿主不再覆蓋本次申請。 |
 | `dicenext.setFriendAddRequest(ctx, event, approve, reason?)` | — | **Dice!Next 擴展**。`approve=false` 提交拒絕；`true` 被忽略。 |
 | `dicenext.setFriendAddRequest(ctx, flag, approve, reason?)` | — | 同上，顯式傳 `flag`。 |
 
@@ -465,6 +465,6 @@ seal.ext.register(ext);
 1. `onMessageEdit` 暫不可用；其他平臺事件也只有在適配器上報對應 `BotEvent` 時才觸發。入群申請用 `ext.onGroupRequest` + `dicenext.setGroupAddRequest`；好友申請用 `ext.onFriendRequest` + `dicenext.setFriendAddRequest`（只能否決）；被踢 / 檔案 / 禁言 / 管理員 / 好友撤回 / 頭銜 / 榮譽 / 精華用對應 `ext.on*`。不要寫到 `seal.*`。
 2. `msg.segment` 是適配器原生分段、並非跨平臺統一結構；未上報時為空，也沒有專用的發圖 API（可發 `[CQ:image]` 碼）。
 3. 沒有 `require`/`import` 與檔案系統 API，插件必須單檔案自包含。
-4. 單執行緒序列執行，無超時與資源配額——請避免死迴圈與慢同步操作。
+4. 單執行緒序列執行。每次執行預設最多 5 秒、每個執行時最多 256 MiB 記憶體，超時的插件會暫停到下次重新載入——請避免死迴圈與慢同步操作，詳見[執行限制與故障保護](/zh-hant/manage/plugins#執行限制與故障保護)。
 5. `registerTask` 只支援每日任務；`seal.coc` 自訂判定與 `seal.getEndPoints` 等仍為佔位。
 6. `fetch` 受外接 API 開關與白名單門控（這是刻意的安全設計，不是 bug）。

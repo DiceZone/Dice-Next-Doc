@@ -463,6 +463,6 @@ Boundaries worth knowing before writing a plugin (which are also our improvement
 1. `onMessageEdit` isn't available yet; other platform events only fire when the adapter reports the corresponding `BotEvent`. Join requests use `ext.onGroupRequest` + `dicenext.setGroupAddRequest`; friend requests use `ext.onFriendRequest` + `dicenext.setFriendAddRequest` (veto only); kick / file / mute / admin / friend recall / title / honor / essence use the matching `ext.on*`. Do not put them on `seal.*`.
 2. `msg.segment` holds the adapter's native segments, not a unified cross-platform structure; it is empty when not reported, and there's no dedicated image-sending API (you can send `[CQ:image]` codes).
 3. There's no `require`/`import` and no file system API; plugins must be self-contained single files.
-4. Execution is serial on a single thread, with no timeouts or resource quotas; avoid infinite loops and slow synchronous operations.
+4. Execution is serial on a single thread. Each run is limited to 5 seconds by default and each runtime to 256 MiB of memory; a plugin that times out is paused until the next reload. Avoid infinite loops and slow synchronous operations; see [Limits and fault protection](/en/manage/plugins#limits-and-fault-protection).
 5. `registerTask` only supports daily tasks; `seal.coc` custom judgments, `seal.getEndPoints` and others are still placeholders.
 6. `fetch` is gated by the external API switch and allowlist (a deliberate security design, not a bug).

@@ -463,6 +463,6 @@ seal.ext.register(ext);
 1. `onMessageEdit` 暂不可用；其他平台事件也只有在适配器上报对应 `BotEvent` 时才触发。入群申请用 `ext.onGroupRequest` + `dicenext.setGroupAddRequest`；好友申请用 `ext.onFriendRequest` + `dicenext.setFriendAddRequest`（只能否决）；被踢 / 文件 / 禁言 / 管理员 / 好友撤回 / 头衔 / 荣誉 / 精华用对应 `ext.on*`。不要写到 `seal.*`。
 2. `msg.segment` 是适配器原生分段、并非跨平台统一结构；未上报时为空，也没有专用的发图 API（可发 `[CQ:image]` 码）。
 3. 没有 `require`/`import` 与文件系统 API，插件必须单文件自包含。
-4. 单线程串行执行，无超时与资源配额——请避免死循环与慢同步操作。
+4. 单线程串行执行。每次执行默认最多 5 秒、每个运行时最多 256 MiB 内存，超时的插件会暂停到下次重新加载——请避免死循环与慢同步操作，详见[运行限制与故障保护](/manage/plugins#运行限制与故障保护)。
 5. `registerTask` 只支持每日任务；`seal.coc` 自定义判定与 `seal.getEndPoints` 等仍为占位。
 6. `fetch` 受外置 API 开关与白名单门控（这是刻意的安全设计，不是 bug）。

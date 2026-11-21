@@ -432,4 +432,4 @@ roll_alias: "&ROLL_REPLY"
 
 遷移遇到問題歡迎帶上 mod 檔案反饋。
 
-配置底層雖然使用字串列，但 Lua 值通過型別編碼區分文本、布林、數字、空串與集合；未編碼的歷史值仍按相容規則讀取。正則引擎與原版 C++ locale / POSIX 擴展不保證等價，400 位元組上限也不是執行時限的替代。完整實現狀態、保留差異與測試範圍見[主倉相容記錄](https://github.com/DiceZone/Dice-Next/blob/main/docs/legacy-mod-compatibility.md)。
+配置底層雖然使用字串列，但 Lua 值通過型別編碼區分文本、布林、數字、空串與集合；未編碼的歷史值仍按相容規則讀取。正則引擎與原版 C++ locale / POSIX 擴展不保證等價，400 位元組上限也不是執行時限的替代。

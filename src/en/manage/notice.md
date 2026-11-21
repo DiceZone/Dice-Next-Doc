@@ -34,11 +34,11 @@ Update checks are system events without a specific source group. Automatic insta
 ## How Notifications Describe Results
 
 ```text
-[骰娘被踢出群聊] 骰娘被小明(3569827618)踢出群未归星璇(792364383)。
-适配器 OneBot:3626455591
+[骰娘被踢出群聊] 骰娘被小明(12345)踢出群周末调查团(90001)。
+适配器 OneBot:10000
 ```
 
-("[Bot kicked from group] The bot was kicked from 未归星璇(792364383) by 小明(3569827618). Adapter OneBot:3626455591")
+("[Bot kicked from group] The bot was kicked from 周末调查团(90001) by 小明(12345). Adapter OneBot:10000")
 
 An active leave is split into "request submitted, waiting for the platform to confirm" and the platform's actual receipt. A kick receipt that names someone else, and a disband receipt, take priority over an earlier leave request. A "kick" receipt with no other operator (the operator is empty, 0 or the bot itself) that matches a leave request this program just submitted is confirmed as an active leave and is not written to the blacklist or cloud blacklist.
 
@@ -67,7 +67,7 @@ When adding a window, choose Webhook and enter the full HTTP(S) address. A missi
 Generic JSON, WeCom, DingTalk and Feishu presets are built in. Choose the matching type to generate a text message request body; when a DingTalk or Feishu bot has signing enabled, enter the signing secret in the advanced options, and a timestamp and signature are generated when sending. The bot's own keyword, IP allowlist and similar restrictions still need to be configured as the provider requires. Generic JSON uses `POST` by default with a compatible format:
 
 ```json
-{ "ts": "…", "level": 2, "op": "group_left", "title": "骰娘被踢出群聊", "msg": "[骰娘被踢出群聊] …", "origin": "onebot_v11:792364383" }
+{ "ts": "…", "level": 2, "op": "group_left", "title": "骰娘被踢出群聊", "msg": "[骰娘被踢出群聊] …", "origin": "onebot_v11:90001" }
 ```
 
 `op` is the stable subscription key; `title` distinguishes the specific result, such as kicked, active leave or disbanded. Email and webhooks are also controlled by the rule's level / event and source filters, and remain compatible with the old global channels.
@@ -113,8 +113,6 @@ All notification events are persisted in `data/audit/notice_*.jsonl`, so you can
 Each table row has a fixed height, and long content is truncated to one line; click it to open a details dialog with the full body and event information. On narrow screens the table scrolls horizontally, and the headers don't wrap character by character.
 
 The same kind of error from the same source is merged over a short period, without hiding new errors from other groups or plugins. When a notification window itself is unreachable, only a local error log is written; it can't generate its own failure notification, to avoid endless nesting. The detailed platform reason stays in the local structured log.
-
-The full template review draft is in the main repository at `docs/notification-templates.md`, listing each trigger condition, level, text and how missing information is handled.
 
 ::: tip
 Events are written to the audit log whether or not any notification windows are configured; windows and delivery only decide "whether anyone is told proactively".

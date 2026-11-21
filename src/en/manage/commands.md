@@ -115,6 +115,8 @@ The preview area offers:
 
 Template variables are filled with sample values in the preview; this is only for viewing the layout, and no real dice are rolled and no messages are sent.
 
+Dice results, success levels and losses in the preview are generated together under the command's actual rules, so they stay consistent: a sanity check, for example, shows the roll, the sanity loss and the remaining sanity together. When you edit the reply for one success level, only examples where that level applies are generated. Examples use preset attributes; they do not read the current group's character cards or house rules, write any data, or run plugins. If the text uses a variable that does not exist, the preview keeps it as written and points out the missing sample value.
+
 ::: tip Switching the whole display style
 Choose traditional, standard or advanced visual texts in **System settings → Replies & display → Reply texts and visual style**, or override only a platform or an account. Personas still control the tone, and the display style only controls layout and interaction.
 :::

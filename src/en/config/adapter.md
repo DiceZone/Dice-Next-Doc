@@ -133,6 +133,24 @@ Since the [QQ Bot 2.0 capability update on 2026-08-10](https://bot.q.qq.com/wiki
 
 With the "standard" or "advanced visual" text style, the adapter can send Markdown. The adapter edit page has a **strict check for Markdown image resources**: when on, if the QQ platform can't store the images in the Markdown, the whole message fails and falls back to plain text. It is off by default to keep the platform's original compatible behavior. The matching field in `config/adapters.json` is `force_verify_image_resource`. If the same adapter receives two HTTP rejections of Markdown / cards in a row, Dice!Next sends pre-rendered plain text for the next 10 minutes, then automatically tries again after the cooldown, with no manual reconnect needed.
 
+### Character card rich replies and shortcuts
+
+In the adapter edit page, expand **Advanced options → Rich replies and shortcuts** to have `.st` view / edit, `.pc show` and `.pc status` reply with a status card. This works with the "standard" or "advanced visual" text style; with the traditional style, or after `.bot text plain` in the current conversation, the full text is still sent.
+
+| Setting | Options |
+| --- | --- |
+| Rich reply style | Off (keep existing replies) / Markdown rich replies / Colored formula components (experimental) |
+| Shortcuts | Off / Click text to fill a command / Message buttons (permission required) |
+
+New connections default to Markdown rich replies with message buttons; connections that already existed stay off until you turn them on.
+
+- HP, SAN and MP use the real values and maximums of the current character card. Attributes that are not set are not filled with sample values, and no bar is drawn without a maximum.
+- When a value is negative or above its maximum, the bar stops at the edge and the actual number is still shown next to it.
+- Attribute changes show the value before and after plus the difference: increases in green, decreases in red.
+- Shortcuts offer four actions (view status, view card, edit an attribute, make a check), using the current command prefix and COC / DND mode. Clicking only fills the command into the input box and never sends it; message buttons only work for the player who triggered the reply.
+
+Colored formulas rely on the QQ client's formula rendering and may look different between clients; if they display incorrectly, switch back to Markdown rich replies. When the platform explicitly rejects a rich reply, the full text is sent once instead; network timeouts and platform server errors are not retried, to avoid duplicate replies. Message buttons need a separate permission for the bot on the QQ Open Platform.
+
 The QQ official platform identifies users and groups by OpenID rather than providing real QQ numbers. Dice!Next can link a verified OneBot QQ identity with an official OpenID so that character sheets, group settings and logs continue the same records. Use `.info` to see the identity of the current chat and binding instructions.
 
 ::: warning Group permissions

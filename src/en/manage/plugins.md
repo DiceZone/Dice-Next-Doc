@@ -66,6 +66,30 @@ The original Dice!'s `.mod` has been restored as **global mod management**, whic
 
 `.mod get/update/reinstall` only point you to the WebUI; the old remote downloader isn't restored. Enabling, disabling, reloading, deleting and importing all refresh XML templates; disabled mods no longer contribute templates. Deleting removes files, so back up first.
 
+## Limits and fault protection
+
+So that one misbehaving plugin cannot stall the whole bot, JS plugins and Lua mods run under the following limits. They guard against common faults and are not a security sandbox; only install plugins you trust.
+
+| Item | Limit |
+| --- | --- |
+| Time per run | 5 seconds by default; nested calls, the Promise queue and HTTP requests made by the plugin share this time |
+| Waiting for a runtime | When the same runtime is busy, a call waits at most 0.1 seconds and then returns a "busy" error |
+| Script memory | At most 256 MiB per JS / Lua runtime |
+| Single source file | At most 4 MiB; larger files are not run, and the JS plugin list shows why |
+| Deferred callbacks | Timers, WebSocket events and Lua delayed callbacks queue at most 128 per language |
+
+Trusted plugins that really need longer external requests can set `plugin_timeout_ms` in `config/dice.json` (100–60000 milliseconds); it takes effect after a restart. A longer limit also means a longer wait when something goes wrong.
+
+**After a plugin times out**: the plugin is paused for the rest of this run, so it does not stall again on every message. The plugin list shows a notice, and the file is not renamed or deleted; fix or disable the problem file and click "Reload" to bring it back. When reloading everything at once, later plugins may not finish loading because of an earlier timeout, so deal with the first timed-out file in the log first. JS timers that keep failing or timing out stop repeating.
+
+**Restricted Lua functions**:
+
+- `os.exit` cannot shut down the whole bot; quit from the web panel or the tray.
+- `debug.sethook` cannot override the execution time limit.
+- `io.popen` only supports read mode, with at most 2 MiB of output; write mode `w` and ongoing interaction are not supported.
+
+Native libraries and system functions that a plugin calls on its own are not covered by these protections.
+
 ## Compatibility
 
 On the Lua side, the original Dice! mod ecosystem is supported; on the JS side, the compatibility target is the **SealDice plugin API**, not the old Dice! JS system (including the `seal.vars` character sheet bridge and `commands.disable` to override built-in commands). SealDice rule plugins can also be converted and packaged as rule packs for distribution; see [Example: Converting a SealDice Plugin](/en/develop/rulepack-example-fu) and [Writing Rule Packs](/en/develop/rulepack).

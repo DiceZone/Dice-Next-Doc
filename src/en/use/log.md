@@ -113,6 +113,15 @@ In the web panel under **Data → Session logs → Log management** you can:
 
 The panel's group management also offers **group file viewing and downloading**, so you can get log files sent during sessions back from there directly.
 
+### Sessions
+
+The **Sessions** tab on the same page lists cross-group game sessions, 20 per page:
+
+- Search by session name, session code, the name / ID of a joined group, GM or player; the search covers all sessions, not just the current page.
+- Sort by status (in-progress sessions first by default), name, code, creation time or number of logs.
+- The creation time is the time of the session's earliest log; it stays empty when there are no logs.
+- Ending, deleting and exporting apply to the whole session. Deleting a session does not delete its logs; they remain in Log Management.
+
 ### Image source
 
 In [Basic settings → Image hosting](/en/manage/settings#images-in-session-logs), choose QQ hosting (default), Do not upload, a third-party host, or panel links. This applies to new player messages and bot replies. Live logs carry CQ image codes from the selected source. Do not upload records only `[图片]`, including custom emoji. URLs missing from old records cannot be recovered.
