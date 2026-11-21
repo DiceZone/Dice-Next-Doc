@@ -39,6 +39,7 @@ The project is split into several repositories; clone the ones relevant to your 
 | `Dice-Next-Docker` | Container deployment |
 | `onedice-cpp-lib` | OneDice expression engine (required to build the backend; place it next to the main repository) |
 | `dicescript-c-lib` | DiceScript C99-compatible engine (required to build the backend; place it next to the main repository) |
+| `CatOfficial` | QQ official bot protocol layer (required to build the backend; place it next to the main repository) |
 
 For the full steps and directory layout, see [Building from Source](/en/develop/build). In short:
 

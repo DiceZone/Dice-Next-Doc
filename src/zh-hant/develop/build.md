@@ -28,10 +28,11 @@ Dice!Next 拆分為多個倉庫，構建/打包指令碼按**同級目錄**互�
 ├── Dice-Next-Doc/      ← 本文档站（VitePress）
 ├── Dice-Next-Docker/   ← 容器化部署（可选）
 ├── onedice-cpp-lib/    ← OneDice V1 表达式引擎（CMake 必需）
-└── dicescript-c-lib/   ← DiceScript C99 兼容引擎（CMake 必需）
+├── dicescript-c-lib/   ← DiceScript C99 兼容引擎（CMake 必需）
+└── CatOfficial/        ← QQ 官方機器人協議層（CMake 必需）
 ```
 
-`server/CMakeLists.txt` 通過 `add_subdirectory` 引入同級的 `onedice-cpp-lib` 與 `dicescript-c-lib`，缺少任一倉庫都會使 CMake 配置直接失敗；打包指令碼預設在同級找 `Dice-Next-WebUI/dist` 與 `Dice-Next-Doc`（也可用環境變數 `DICENEXT_WEB_ROOT` / `DICENEXT_DOC_ROOT` 指定別處）。
+`server/CMakeLists.txt` 通過 `add_subdirectory` 引入同級的 `onedice-cpp-lib`、`dicescript-c-lib` 與 `CatOfficial`，缺少任一倉庫都會使 CMake 配置直接失敗；打包指令碼預設在同級找 `Dice-Next-WebUI/dist` 與 `Dice-Next-Doc`（也可用環境變數 `DICENEXT_WEB_ROOT` / `DICENEXT_DOC_ROOT` 指定別處）。
 :::
 
 ## Windows（推薦 / 已驗證）
@@ -79,7 +80,7 @@ Release CI 已構建 Linux x64 / ARM64、macOS ARM64 和 Windows x64 / ARM64，�
 
 ```bash
 git clone https://github.com/Microsoft/vcpkg.git ~/vcpkg && ~/vcpkg/bootstrap-vcpkg.sh
-# Dice-Next、onedice-cpp-lib 与 dicescript-c-lib 需在同一父目录下
+# Dice-Next、onedice-cpp-lib、dicescript-c-lib 與 CatOfficial 需在同一父目錄下
 cd Dice-Next
 cmake -B server/build -S server \
   -DCMAKE_TOOLCHAIN_FILE=$HOME/vcpkg/scripts/buildsystems/vcpkg.cmake \

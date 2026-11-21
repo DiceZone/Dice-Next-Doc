@@ -23,10 +23,11 @@ Dice!Next は複数のリポジトリに分かれており、ビルド / パッ�
 ├── Dice-Next-Doc/      ← このドキュメントサイト（VitePress）
 ├── Dice-Next-Docker/   ← コンテナでのデプロイ（任意）
 ├── onedice-cpp-lib/    ← OneDice V1 の式のエンジン（CMake に必須）
-└── dicescript-c-lib/   ← DiceScript の C99 互換のエンジン（CMake に必須）
+├── dicescript-c-lib/   ← DiceScript の C99 互換のエンジン（CMake に必須）
+└── CatOfficial/        ← QQ 公式ボットのプロトコル層（CMake に必須）
 ```
 
-`server/CMakeLists.txt` は `add_subdirectory` で同じ階層の `onedice-cpp-lib` と `dicescript-c-lib` を取り込むため、どちらかのリポジトリがないと CMake の構成がすぐに失敗します。パッケージ作成のスクリプトは、既定で同じ階層の `Dice-Next-WebUI/dist` と `Dice-Next-Doc` を探します（環境変数 `DICENEXT_WEB_ROOT` / `DICENEXT_DOC_ROOT` で別の場所も指定できます）。
+`server/CMakeLists.txt` は `add_subdirectory` で同じ階層の `onedice-cpp-lib`、`dicescript-c-lib`、`CatOfficial` を取り込むため、いずれかのリポジトリがないと CMake の構成がすぐに失敗します。パッケージ作成のスクリプトは、既定で同じ階層の `Dice-Next-WebUI/dist` と `Dice-Next-Doc` を探します（環境変数 `DICENEXT_WEB_ROOT` / `DICENEXT_DOC_ROOT` で別の場所も指定できます）。
 :::
 
 ## Windows（推奨 / 確認済み）
@@ -74,7 +75,7 @@ Release の CI は Linux x64 / ARM64、macOS ARM64、Windows x64 / ARM64 をビ�
 
 ```bash
 git clone https://github.com/Microsoft/vcpkg.git ~/vcpkg && ~/vcpkg/bootstrap-vcpkg.sh
-# Dice-Next、onedice-cpp-lib、dicescript-c-lib は同じ親フォルダーに置く必要があります
+# Dice-Next、onedice-cpp-lib、dicescript-c-lib、CatOfficial は同じ親フォルダーに置く必要があります
 cd Dice-Next
 cmake -B server/build -S server \
   -DCMAKE_TOOLCHAIN_FILE=$HOME/vcpkg/scripts/buildsystems/vcpkg.cmake \

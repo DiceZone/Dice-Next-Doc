@@ -23,10 +23,11 @@ your working directory/
 ├── Dice-Next-Doc/      ← this documentation site (VitePress)
 ├── Dice-Next-Docker/   ← container deployment (optional)
 ├── onedice-cpp-lib/    ← OneDice V1 expression engine (required by CMake)
-└── dicescript-c-lib/   ← DiceScript C99-compatible engine (required by CMake)
+├── dicescript-c-lib/   ← DiceScript C99-compatible engine (required by CMake)
+└── CatOfficial/        ← QQ official bot protocol layer (required by CMake)
 ```
 
-`server/CMakeLists.txt` brings in the sibling `onedice-cpp-lib` and `dicescript-c-lib` with `add_subdirectory`, so CMake configuration fails immediately if either repository is missing. The packaging script looks for `Dice-Next-WebUI/dist` and `Dice-Next-Doc` in sibling directories by default (you can also point elsewhere with the environment variables `DICENEXT_WEB_ROOT` / `DICENEXT_DOC_ROOT`).
+`server/CMakeLists.txt` brings in the sibling `onedice-cpp-lib`, `dicescript-c-lib` and `CatOfficial` with `add_subdirectory`, so CMake configuration fails immediately if any of these repositories is missing. The packaging script looks for `Dice-Next-WebUI/dist` and `Dice-Next-Doc` in sibling directories by default (you can also point elsewhere with the environment variables `DICENEXT_WEB_ROOT` / `DICENEXT_DOC_ROOT`).
 :::
 
 ## Windows (Recommended / Verified)
@@ -74,7 +75,7 @@ Release CI builds Linux x64 / ARM64, macOS ARM64 and Windows x64 / ARM64, and se
 
 ```bash
 git clone https://github.com/Microsoft/vcpkg.git ~/vcpkg && ~/vcpkg/bootstrap-vcpkg.sh
-# Dice-Next, onedice-cpp-lib and dicescript-c-lib must be in the same parent directory
+# Dice-Next, onedice-cpp-lib, dicescript-c-lib and CatOfficial must be in the same parent directory
 cd Dice-Next
 cmake -B server/build -S server \
   -DCMAKE_TOOLCHAIN_FILE=$HOME/vcpkg/scripts/buildsystems/vcpkg.cmake \

@@ -39,6 +39,7 @@ git push origin feature/my-feature
 | `Dice-Next-Docker` | コンテナでのデプロイ |
 | `onedice-cpp-lib` | OneDice の式のエンジン（バックエンドのビルドに必須。メインリポジトリと同じ階層に置く） |
 | `dicescript-c-lib` | DiceScript の C99 互換のエンジン（バックエンドのビルドに必須。メインリポジトリと同じ階層に置く） |
+| `CatOfficial` | QQ 公式ボットのプロトコル層（バックエンドのビルドに必須。メインリポジトリと同じ階層に置く） |
 
 完全な手順とフォルダーの配置は[ソースからビルド](/ja/develop/build)を参照してください。簡単には次のとおりです。
 

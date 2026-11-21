@@ -41,6 +41,7 @@ git push origin feature/my-feature
 | `Dice-Next-Docker` | 容器化部署 |
 | `onedice-cpp-lib` | OneDice 表示式引擎（編譯後端必需，與主倉放同級目錄） |
 | `dicescript-c-lib` | DiceScript C99 相容引擎（編譯後端必需，與主倉放同級目錄） |
+| `CatOfficial` | QQ 官方機器人協議層（編譯後端必需，與主倉放同級目錄） |
 
 完整步驟與目錄擺放見[從原始碼構建](/zh-hant/develop/build)，簡要：
 
