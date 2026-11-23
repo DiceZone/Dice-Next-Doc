@@ -348,3 +348,9 @@ POST /api/test/message
 ::: tip
 以上为接口概览；字段细节以实际版本为准。所有 `/api/*` 请求都需要携带访问密钥（或已登录的 Cookie 会话）。
 :::
+
+## 公开更新记录 {#release-feed}
+
+文档站提供 `GET https://docs.dice.zone/releases.json`，无需登录，允许跨域读取。返回 `schema: 1`、`repository: "DiceZone/Dice-Next"` 和 `releases` 数组；每项包含 `tag_name`、`html_url`、`published_at`、`body`。最多保留最近五个安装包与更新元数据均已上传的正式发布记录（含 Beta），不收录草稿。
+
+该文件由 GitHub Release 发布说明自动生成，不需要另外编写。DN 的关于页优先读取此接口，失败时尝试 GitHub；两者均不可用时显示上次成功读取的记录，并标注可能过期。该接口仅展示更新内容，不能用于决定安装包下载地址或校验值。

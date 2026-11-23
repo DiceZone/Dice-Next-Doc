@@ -348,3 +348,9 @@ This endpoint is the backend of the "Playground" page and **returns directly** `
 ::: tip
 The above is an overview of the endpoints; field details follow the actual version. All `/api/*` requests must carry the access key (or a logged-in cookie session).
 :::
+
+## Public release notes {#release-feed}
+
+`GET https://docs.dice.zone/releases.json` requires no authentication and permits cross-origin reads. Its fields are `schema: 1`, `repository: "DiceZone/Dice-Next"` and a `releases` array. Each entry contains `tag_name`, `html_url`, `published_at` and `body`. It includes up to five recent published releases, including Betas, with all platform packages and update metadata uploaded. Drafts are excluded.
+
+The file is generated from GitHub Release notes. The About page tries this feed first, then GitHub. If neither is reachable, it shows the last successfully loaded notes with an out-of-date warning. This feed is only for displaying changes, not selecting package download URLs or integrity checks.

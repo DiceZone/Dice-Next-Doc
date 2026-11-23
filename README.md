@@ -67,3 +67,11 @@ The project is currently in public beta. Please submit problems and feature sugg
 ## License
 
 This project is released under the **GNU Affero General Public License v3.0 or later (AGPL-3.0-or-later)**, the same as the [Dice-Next](https://github.com/DiceZone/Dice-Next) main repository. See [LICENSE](LICENSE) for the full terms.
+
+### Static release feed
+
+`src/public/releases.json` is generated from completed GitHub Releases. Refresh it with `node scripts/sync-release-feed.mjs`; run its tests with `node --test scripts/sync-release-feed.test.mjs`. Failed or empty upstream responses leave the previous file intact.
+
+The `Sync release notes` workflow runs on `release-published` repository dispatch, hourly, or manually. The core Release workflow sends that dispatch after publishing, using `DICEZONE_CI_TOKEN` with permission to dispatch to this repository. Without that permission the hourly job remains the fallback. Feed commits use the existing documentation deployment pipeline; deploy the documentation changes before expecting the URL to work.
+
+`edgeone.json` enables public CORS and a five-minute cache specifically for `/releases.json`, following the [EdgeOne response-header configuration](https://pages.edgeone.ai/document/edgeone-json). Other static hosts must provide the same headers. This public feed contains no login credentials and is never used as installation metadata.

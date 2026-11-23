@@ -2,6 +2,12 @@
 
 Answers for getting started, everyday maintenance and configuration recovery. For startup failures, disconnected adapters or unanswered commands, also see [Troubleshooting](/en/guide/troubleshooting).
 
+## How do I log out of the panel? {#logout}
+
+Use **Log out** on the right of the desktop header. On narrow screens, open the header’s **More** menu and choose **Log out**. The button in WebUI settings is also available. If you have unsaved changes, choose whether to discard them first.
+
+Logging out returns you to the login page and ends only the current panel session. Dice!Next and its bot accounts stay online. If logout fails, check your connection and try again.
+
 ## Forgot the panel password? {#reset-password}
 
 You need access to the server's configuration files. If your hosting service does not provide file access, contact its administrator. A QQ dice-master account, an adapter token and the WebUI password are different credentials.

@@ -350,3 +350,9 @@ POST /api/test/message
 ::: tip
 以上為介面概覽；欄位細節以實際版本為準。所有 `/api/*` 請求都需要攜帶訪問金鑰（或已登入的 Cookie 會話）。
 :::
+
+## 公開更新記錄 {#release-feed}
+
+文件站提供 `GET https://docs.dice.zone/releases.json`，無需登入，允許跨域讀取。返回 `schema: 1`、`repository: "DiceZone/Dice-Next"` 和 `releases` 陣列；每項包含 `tag_name`、`html_url`、`published_at`、`body`。最多保留最近五個安裝包與更新後設資料均已上傳的正式釋出記錄（含 Beta），不收錄草稿。
+
+該檔案由 GitHub Release 釋出說明自動生成，不需要另外編寫。DN 的關於頁優先讀取此介面，失敗時嘗試 GitHub；兩者均不可用時顯示上次成功讀取的記錄，並標註可能過期。該介面僅展示更新內容，不能用於決定安裝包下載地址或校驗值。

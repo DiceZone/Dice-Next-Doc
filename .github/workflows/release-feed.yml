@@ -1,0 +1,35 @@
+name: Sync release notes
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [release-published]
+  schedule:
+    - cron: '17 * * * *'
+permissions:
+  contents: write
+concurrency:
+  group: release-feed
+  cancel-in-progress: false
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '26.12.x'
+      - name: Refresh complete published releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/sync-release-feed.mjs
+      - name: Update static feed
+        run: |
+          git add src/public/releases.json
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'docs(release): 同步已发布版本的更新记录'
+          git pull --rebase origin main
+          git push origin HEAD:main
