@@ -4,6 +4,8 @@ Dice!Next comes with a web management panel: open the service address in a brows
 
 The server information on the home page shows CPU and memory usage for the last **10 minutes**, updated every **5 seconds**, keeping the raw value of each sample. The backend keeps the last hour of history, and the home page only plots the most recent 10 minutes of it; it starts accumulating again after the backend restarts. With less than 10 minutes of history, the actual samples are shown. The first load shows a loading placeholder, and when a refresh fails, the latest snapshot is kept with a notice. When an older backend has no history, the recent samples from this browser are used.
 
+Logs update live. If streaming is interrupted, the page fetches new records automatically.
+
 ::: tip Login and security
 - **Login password**: after setting a panel login password in [WebUI Settings](/en/manage/settings#webui-settings-page), opening the panel requires the password first (cookie session authentication); saving it empty turns login off.
 - **API Key**: the access key for the backend API, the same as `server/api_key` in the configuration file.
