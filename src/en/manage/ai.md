@@ -105,10 +105,9 @@ Let the bot chat in groups like a real person (group chats only).
 
 ### Triggers (three states)
 
-- **@mentioning the bot**: always replies, regardless of cooldown.
-- **Matching a keyword** (comma-separated, such as "骰娘, 在吗"): always replies, regardless of cooldown.
-- **Idle probability** (0–100): other messages get a random reply by probability, limited by the "per-group cooldown (seconds)"; don't set it too high or the bot will interrupt often.
-- **Decide before idle remarks**: when checked and the idle probability hits, the "Decision" model first judges whether to chime in right now (for example, someone is asking a question or the topic relates to the bot); if it says no, there's no reply. The decision only outputs a very short result, using less than generating a reply directly, so it suits a cheap, fast model for "Decision". @mentions and keyword matches skip this decision.
+- **Bot mentions and keyword matches** (comma-separated) bypass the standby cooldown. Messages mentioning only other members are skipped.
+- **Standby probability** (0–100) selects other group messages for evaluation, subject to the per-group cooldown.
+- **Use a dedicated decision model** — Group chat candidates are checked for whom the speaker is addressing. Prefer the decision model when enabled; otherwise use the reply or NPC model. The standby chance only selects messages to consider.
 
 ### Generation parameters
 
