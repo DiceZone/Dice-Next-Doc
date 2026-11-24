@@ -3,6 +3,12 @@
   "repository": "DiceZone/Dice-Next",
   "releases": [
     {
+      "tag_name": "v3.0.0-beta.987",
+      "html_url": "https://github.com/DiceZone/Dice-Next/releases/tag/v3.0.0-beta.987",
+      "published_at": "2026-11-24T02:47:00Z",
+      "body": "相较于 [v3.0.0-beta.986](https://github.com/DiceZone/Dice-Next/releases/tag/v3.0.0-beta.986)，本次包含以下改动。\n\n## 新增功能\n\n- 增加面板退出入口并支持从文档站读取更新记录（[WebUI · 79aaa3f](https://github.com/DiceZone/Dice-Next-WebUI/commit/79aaa3f5e9c7cd268b6d7c0238e6c3b060253ac2)）\n\n## 问题修复\n\n- 简化面板通知署名并在发版后同步更新记录（[主程序 · b72f955](https://github.com/DiceZone/Dice-Next/commit/b72f955ce0034f69ec21ed129f9a22398ad839ae)）\n- 根据群聊发言对象和话题判断是否接话（[主程序 · 4a29b39](https://github.com/DiceZone/Dice-Next/commit/4a29b394d54152f6635d9c31313b2758ad3c1e2e)）\n- 按发布附件清单校验源码版本记录（[主程序 · e80f9e4](https://github.com/DiceZone/Dice-Next/commit/e80f9e4dfb03d8df5e46c14a63513de496c2e779)）\n- 修正面板退出和更新记录测试的格式（[WebUI · 1ae9b31](https://github.com/DiceZone/Dice-Next-WebUI/commit/1ae9b31fbe84f34ea22f7053e836930fb69a44fd)）\n- 更新群聊触发条件与决策模型说明（[WebUI · 0b2b954](https://github.com/DiceZone/Dice-Next-WebUI/commit/0b2b954fa74a224f8faa4933e91fe1999f82f424)）"
+    },
+    {
       "tag_name": "v3.0.0-beta.986",
       "html_url": "https://github.com/DiceZone/Dice-Next/releases/tag/v3.0.0-beta.986",
       "published_at": "2026-11-23T06:19:15Z",
@@ -25,12 +31,6 @@
       "html_url": "https://github.com/DiceZone/Dice-Next/releases/tag/v3.0.0-beta.983",
       "published_at": "2026-11-19T21:47:08Z",
       "body": "相较于 [v3.0.0-beta.982](https://github.com/DiceZone/Dice-Next/releases/tag/v3.0.0-beta.982)，本次包含以下改动。\n\n## 新增功能\n\n- 高级视觉人物卡按表格展示并适配 QQ 官方回复（[主程序 · c1fb802](https://github.com/DiceZone/Dice-Next/commit/c1fb802cfd39f58e859562f5e18735805647c4fa)）\n- 增加掷骰公式预设和 Markdown 表格编辑预览（[WebUI · e3b3bee](https://github.com/DiceZone/Dice-Next-WebUI/commit/e3b3beea736df55b63960fbd7b247ee7372a06c7)）"
-    },
-    {
-      "tag_name": "v3.0.0-beta.982",
-      "html_url": "https://github.com/DiceZone/Dice-Next/releases/tag/v3.0.0-beta.982",
-      "published_at": "2026-11-19T19:36:57Z",
-      "body": "相较于 [v3.0.0-beta.981](https://github.com/DiceZone/Dice-Next/releases/tag/v3.0.0-beta.981)，本次包含以下改动。\n\n## 新增功能\n\n- 增加公式预设并补齐变量用途说明（[WebUI · 98a8df2](https://github.com/DiceZone/Dice-Next-WebUI/commit/98a8df2693fe9762ae161b32e529a81cb872629e)）"
     }
   ]
 }
