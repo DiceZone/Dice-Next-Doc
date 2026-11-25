@@ -3,6 +3,12 @@
   "repository": "DiceZone/Dice-Next",
   "releases": [
     {
+      "tag_name": "v3.0.0-beta.988",
+      "html_url": "https://github.com/DiceZone/Dice-Next/releases/tag/v3.0.0-beta.988",
+      "published_at": "2026-11-25T15:03:07Z",
+      "body": "相较于 [v3.0.0-beta.987](https://github.com/DiceZone/Dice-Next/releases/tag/v3.0.0-beta.987)，本次包含以下改动。\n\n## 新增功能\n\n- 支持统计区间与保留期限并修复适配器改名重连（[主程序 · dccea9b](https://github.com/DiceZone/Dice-Next/commit/dccea9b1c7cee1b3afbb641c79ad31d47a22eba3)）\n- 扩展统计日期筛选并统一回复编辑工具栏（[WebUI · a37cca8](https://github.com/DiceZone/Dice-Next-WebUI/commit/a37cca89ca6788aec004a5170b06e72a4c2a0c6c)）\n\n## 问题修复\n\n- 云人物卡请求改用 setContentTypeCode，修授权拿不到写入权限（[主程序 · 29b681e](https://github.com/DiceZone/Dice-Next/commit/29b681e31a931008aa3ee29afb03355cc0fe7731)）\n- 修复统计筛选和回复图片编辑的发布回归测试（[WebUI · e6df64f](https://github.com/DiceZone/Dice-Next-WebUI/commit/e6df64f0f289b31d445ea94395df7d87feec71df)）\n\n## 其他改进\n\n- 关于页改为响应式双栏并将项目致谢并入介绍（[WebUI · 8d8d4bb](https://github.com/DiceZone/Dice-Next-WebUI/commit/8d8d4bb6116bde383a03090a8af63def41c92f1b)）"
+    },
+    {
       "tag_name": "v3.0.0-beta.987",
       "html_url": "https://github.com/DiceZone/Dice-Next/releases/tag/v3.0.0-beta.987",
       "published_at": "2026-11-24T02:47:00Z",
@@ -25,12 +31,6 @@
       "html_url": "https://github.com/DiceZone/Dice-Next/releases/tag/v3.0.0-beta.984",
       "published_at": "2026-11-20T09:05:35Z",
       "body": "相较于 [v3.0.0-beta.983](https://github.com/DiceZone/Dice-Next/releases/tag/v3.0.0-beta.983)，本次包含以下改动。\n\n## 问题修复\n\n- 修复公式方框排版并统一测试台显示（[WebUI · eab49a7](https://github.com/DiceZone/Dice-Next-WebUI/commit/eab49a78eb49994b26d96e7db3b20c79f04e679d)）\n- 修复公式样式导致静态页面测试打包失败（[WebUI · 0db0cda](https://github.com/DiceZone/Dice-Next-WebUI/commit/0db0cda221a546b7f9a0276d184f07b98ee0e8a1)）"
-    },
-    {
-      "tag_name": "v3.0.0-beta.983",
-      "html_url": "https://github.com/DiceZone/Dice-Next/releases/tag/v3.0.0-beta.983",
-      "published_at": "2026-11-19T21:47:08Z",
-      "body": "相较于 [v3.0.0-beta.982](https://github.com/DiceZone/Dice-Next/releases/tag/v3.0.0-beta.982)，本次包含以下改动。\n\n## 新增功能\n\n- 高级视觉人物卡按表格展示并适配 QQ 官方回复（[主程序 · c1fb802](https://github.com/DiceZone/Dice-Next/commit/c1fb802cfd39f58e859562f5e18735805647c4fa)）\n- 增加掷骰公式预设和 Markdown 表格编辑预览（[WebUI · e3b3bee](https://github.com/DiceZone/Dice-Next-WebUI/commit/e3b3beea736df55b63960fbd7b247ee7372a06c7)）"
     }
   ]
 }
