@@ -92,3 +92,9 @@ Times keep milliseconds and are shown in the server's time zone, not recalculate
 - After startup the program **hides the console window and minimizes to the system tray by default** (a balloon notification appears the first time); set `dice/console_start_hidden` to `false` to show the console at startup again.
 - Hovering over the tray icon shows the port (such as `Dice!Next(18088)`, which helps tell several instances apart); the tray menu can open the web panel, show the console or exit the program.
 - Since build 926, you can customize the name under **System settings → Basic settings → Network & system → Windows tray tooltip text**, up to 10 Unicode characters; leave it empty to go back to `Dice!Next`, and it takes effect as soon as you save. The program appends the actual listening port automatically, such as `希亚骰(18089)`, so you don't need to enter it. This is a setting for the whole program and doesn't change with the adapter; it can only be changed on Windows.
+
+## Statistics dates and retention
+
+Choose today, yesterday, a recent period or a custom range of up to 366 days. Dates include both endpoints and follow the server time zone. Five-minute availability is available for ranges of up to seven days.
+
+Under the global data settings in Basic Settings, set retention separately for roll and command statistics (kept indefinitely by default) and performance samples (30 days by default). Zero keeps data indefinitely. Shortening the period allows background cleanup to delete expired statistics.
