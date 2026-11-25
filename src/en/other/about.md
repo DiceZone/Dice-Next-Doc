@@ -24,6 +24,7 @@ Dice!Next stands on the shoulders of those who came before. Our sincere respect 
 - **[LLOneBot](https://www.llonebot.com/)**: a QQ bot framework and OneBot protocol implementation.
 - **[SnowLuma](https://snowluma.github.io/)**: a remote protocol framework for the NTQQ and OneBot ecosystem.
 - [MaiBot](https://github.com/Mai-with-u/MaiBot) — Its group conversation and memory design informed Dice!Next’s AI chat.
+- [CatOfficial](https://github.com/DiceZone/CatOfficial) — Provides the protocol layer for official QQ bots.
 
 ### Technical Dependencies
 

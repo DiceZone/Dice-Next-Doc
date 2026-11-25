@@ -24,6 +24,7 @@ Dice!Next 站在前人的肩膀上。向以下项目与社区致以诚挚的敬�
 - **[LLOneBot](https://www.llonebot.com/)** —— QQ 机器人框架与 OneBot 协议实现。
 - **[SnowLuma](https://snowluma.github.io/)** —— 面向 NTQQ 与 OneBot 生态的远程协议框架。
 - [MaiBot](https://github.com/Mai-with-u/MaiBot) — 群聊决策与记忆设计为 Dice!Next 的 AI 对话提供了参考。
+- [CatOfficial](https://github.com/DiceZone/CatOfficial) — QQ 官方机器人协议层。
 
 ### 技术依赖
 

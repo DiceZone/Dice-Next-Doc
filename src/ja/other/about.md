@@ -24,6 +24,7 @@ Dice!Next は先人の肩の上に立っています。次のプロジェクト�
 - **[LLOneBot](https://www.llonebot.com/)**：QQ のボットのフレームワークと OneBot のプロトコルの実装です。
 - **[SnowLuma](https://snowluma.github.io/)**：NTQQ と OneBot の生態系向けのリモートのプロトコルのフレームワークです。
 - [MaiBot](https://github.com/Mai-with-u/MaiBot) — グループ会話の応答判断と記憶の設計を参考にしました。
+- [CatOfficial](https://github.com/DiceZone/CatOfficial) — QQ 公式ボットのプロトコル層を提供しています。
 
 ### 技術的な依存
 
