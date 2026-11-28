@@ -113,6 +113,10 @@ Let the bot chat in groups like a real person (group chats only).
 
 Context rounds (recent chat history read from the group as context), maximum reply length, per-group cooldown seconds, whether to @ the sender when replying, whether to forbid emoji in the output, custom filter words (watermarks / signatures / spam removed from the text before it is sent to the AI), and the persona and system prompt (leave empty for the built-in default, or click "Load default" to edit the template).
 
+The bot considers its persona before joining in. When it picks a message, it follows that speaker’s text, attachment and quote. If new messages arrive while it prepares a reply, it checks whether someone has answered the question or the speaker has withdrawn it. Enable thumbs-up reactions under AI → Chat to allow Milky and Discord to acknowledge a message with a like.
+
+For example, if the bot asks which path to take and other players start discussing a connection issue, the player can still answer “left” without mentioning the bot again. If the keeper answers a scheduling question by mentioning the player while the bot is waiting, the bot can leave that answer to the keeper.
+
 ### Group history memory (rolling summary)
 
 Open Stored group summaries or Stored facts to view a large memory dialog. Select a group and search its nodes; the relationship graph displays eight nodes per page. Select a node to view, edit or delete it. Fact edits regenerate embeddings and retain the original on failure. Deleting a summary preserves its folding watermark so old messages are not immediately summarized again. Background folding does not overwrite an intervening summary edit or deletion.
